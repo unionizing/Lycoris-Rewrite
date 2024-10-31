@@ -24,10 +24,43 @@ local movementMaid = Maid.new()
 
 -- Instances.
 local attachTarget = nil
+local bloodJarTarget = nil
 local originalCanCollideMap = {}
+local originalAgilityValue = nil
 
 -- Signals.
 local heartbeat = Signal.new(runService.Heartbeat)
+
+---@note: These setters are completely unnecessary - they're used to make the code look cleaner.
+---It's really ugly when we want to return and set something at the same time.
+
+---Set attach target
+---@param target Model?
+local function setAttachTarget(target)
+	attachTarget = target
+end
+
+---Reset blood jar tween.
+---@param tween Tween?
+local function resetBloodJarTween(tween)
+	movementMaid["bloodJarTween"] = nil
+end
+
+-- Find an empty altar.
+---@param bossRoomContainer Folder
+local function findEmptyAltar(bossRoomContainer)
+	for _, instance in next, bossRoomContainer:GetChildren() do
+		if instance.Name ~= "Altar" or not instance:IsA("Model") then
+			continue
+		end
+
+		if instance:FindFirstChild("BoneSpear") then
+			continue
+		end
+
+		return instance
+	end
+end
 
 ---Find nearest entity within studs range.
 ---@param position Vector3
@@ -60,12 +93,6 @@ local function findNearestEntityWithinStuds(position, studs)
 	end
 
 	return nearestEntity
-end
-
----Set attach target
----@param target Model?
-local function setAttachTarget(target)
-	attachTarget = target
 end
 
 ---Reset noclip.
@@ -149,7 +176,7 @@ local function updateInfiniteJump(rootPart)
 		or rootPart:FindFirstChildOfClass("BodyPosition")
 
 	if manipulationInst and manipulationInst ~= movementMaid["FlyBodyVelocity"] then
-		manipulationInst.Parent = nil
+		manipulationInst:Destroy()
 	end
 
 	rootPart.AssemblyAngularVelocity = rootPart.AssemblyAngularVelocity * Vector3.new(0, 1, 0)
@@ -193,6 +220,110 @@ local function updateAttachToBack(rootPart)
 	)
 end
 
+---Update agility spoofer.
+---@param character Model
+local function updateAgilitySpoofer(character)
+	local agility = character:FindFirstChild("Agility")
+	if not agility then
+		return
+	end
+
+	if not originalAgilityValue then
+		originalAgilityValue = agility.Value
+	end
+
+	---@note: For every 10 investment points, there are two real agility points.
+	-- With 40 investment points, we can have 16 real agility points.
+	-- However, with 30 investment points, we can only have 14 real agility points.
+	-- This means that the starting value must be 8 and we must increase by 2 for every 10 investment points.
+
+	agility.Value = 8 + (Options.AgilitySpoof.Value / 10) * 2
+end
+
+---Reset agility spoofer.
+---@param character Model
+local function resetAgilitySpoofer(character)
+	local agility = character:FindFirstChild("Agility")
+	if not agility then
+		return
+	end
+
+	if not originalAgilityValue then
+		return
+	end
+
+	agility.Value = originalAgilityValue
+end
+
+---Tween to altars.
+---@param rootPart BasePart
+---@param bossRoomContainer Folder
+local function tweenToAltars(rootPart, bossRoomContainer)
+	if movementMaid["altarTween"] then
+		return
+	end
+
+	local emptyAltar = findEmptyAltar(bossRoomContainer)
+
+	if not emptyAltar then
+		return
+	end
+
+	local distance = (emptyAltar:GetPivot().Position - rootPart.Position).Magnitude
+	local altarTween = InstanceWrapper.tween(movementMaid, "altarTween", rootPart, TweenInfo.new(distance / 80), {
+		CFrame = CFrame.new(emptyAltar:GetPivot().Position),
+	})
+
+	altarTween:Play()
+	altarTween.Completed:Connect(function()
+		movementMaid["altarTween"] = nil
+	end)
+end
+
+---Tween to blood jars.
+---@param rootPart BasePart
+---@param chaserEntity Model
+local function tweenToBloodJars(rootPart, chaserEntity)
+	local chaserHrp = chaserEntity:FindFirstChild("HumanoidRootPart")
+	local bloodJar = chaserHrp and chaserHrp:FindFirstChild("BloodJar") or nil
+
+	if not bloodJar or not bloodJar.Value or bloodJarTarget ~= bloodJar.Value then
+		return resetBloodJarTween()
+	end
+
+	if movementMaid["bloodJarTween"] then
+		return
+	end
+
+	bloodJarTarget = bloodJar.Value
+
+	local distance = (bloodJar:GetPivot().Position - rootPart.HumanoidRootPart.Position).Magnitude
+	local bloodJarTween = InstanceWrapper.tween(movementMaid, "bloodJarTween", rootPart, TweenInfo.new(distance / 80), {
+		CFrame = CFrame.new(bloodJar:GetPivot().Position),
+	})
+
+	bloodJarTween:Play()
+	bloodJarTween.Completed:Connect(function()
+		movementMaid["bloodJarTween"] = nil
+	end)
+end
+
+---Update tween to objectives.
+---@param rootPart BasePart
+local function updateTweenToObjectives(rootPart)
+	local bossRoom = workspace:FindFirstChild("TrueAvatarBossRoom")
+	local bossRoomContainer = bossRoom and bossRoom:FindFirstChild("Floor1Stuff") or nil
+
+	if bossRoomContainer then
+		return tweenToAltars(rootPart, bossRoomContainer)
+	end
+
+	local chaserEntity = workspace.Live:FindFirstChild(".chaser")
+	if chaserEntity then
+		return tweenToBloodJars(rootPart, chaserEntity)
+	end
+end
+
 ---Update movement.
 local function updateMovement()
 	local localPlayer = players.LocalPlayer
@@ -214,7 +345,7 @@ local function updateMovement()
 	if Toggles.AttachToBack.Value then
 		updateAttachToBack(rootPart)
 	else
-		setAttachTarget(nil)
+		attachTarget = nil
 	end
 
 	if Toggles.Fly.Value then
@@ -234,6 +365,19 @@ local function updateMovement()
 	elseif #originalCanCollideMap > 0 then
 		resetNoClip()
 	end
+
+	if Toggles.AgilitySpoof.Value then
+		updateAgilitySpoofer(character)
+	else
+		resetAgilitySpoofer(character)
+	end
+
+	if Toggles.TweenToObjectives.Value then
+		updateTweenToObjectives(rootPart)
+	else
+		movementMaid["altarTween"] = nil
+		movementMaid["bloodJarTween"] = nil
+	end
 end
 
 ---Initialize movement.
@@ -246,6 +390,15 @@ function Movement.detach()
 	movementMaid:clean()
 
 	resetNoClip()
+
+	local localPlayer = players.LocalPlayer
+	local character = localPlayer.Character
+
+	if not character then
+		return
+	end
+
+	resetAgilitySpoofer(character)
 end
 
 -- Return Movement module.

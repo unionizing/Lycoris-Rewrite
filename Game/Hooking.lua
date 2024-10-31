@@ -21,6 +21,7 @@ local oldNameCall = nil
 local oldGetFenv = nil
 local oldIndex = nil
 local oldNewIndex = nil
+local oldTick = nil
 
 ---Replicate gesture.
 ---@param gestureName string
@@ -100,6 +101,50 @@ local function replicateGesture(gestureName)
 	mobileActionEffect:Remove()
 
 	stopGestureAnimations()
+end
+
+---On tick.
+---@return any
+local function onTick(...)
+	if checkcaller() then
+		return oldTick(...)
+	end
+
+	if not Toggles.AutoSprint.Value then
+		return oldTick(...)
+	end
+
+	local debugInfoSuccess, debugInfoResult = pcall(debug.getinfo, 3)
+	if not debugInfoSuccess then
+		return oldTick(...)
+	end
+
+	if not debugInfoResult.source:match("InputClient") then
+		return oldTick(...)
+	end
+
+	local firstConstantSuccess, firstConstant = pcall(debug.getconstant, debugInfoResult.func, 1)
+	if not firstConstantSuccess then
+		return oldTick(...)
+	end
+
+	if firstConstant ~= "UserInputType" then
+		return oldTick(...)
+	end
+
+	local tickStackSuccess, tickStack = pcall(debug.getstack, 3)
+	if not tickStackSuccess then
+		return oldTick(...)
+	end
+
+	---@note: Filter for any other spots that might be using tick() through the stack.
+	local tickStackValue = tickStack[6]
+	if tickStackValue ~= "W" and tickStackValue ~= "A" and tickStackValue ~= "S" and tickStackValue ~= "D" then
+		return oldTick(...)
+	end
+
+	---@note: Set the timestamp set by sprinting to -math.huge so it's always over 0.25s.
+	return -math.huge
 end
 
 ---On name call.
@@ -278,6 +323,7 @@ function Hooking.init()
 	oldNameCall = hookmetamethod(game, "__namecall", newcclosure(onNameCall))
 	oldIndex = hookmetamethod(game, "__index", newcclosure(onIndex))
 	oldNewIndex = hookmetamethod(game, "__newindex", newcclosure(onNewIndex))
+	oldTick = hookfunction(tick, newcclosure(onTick))
 
 	local playerScripts = localPlayer:WaitForChild("PlayerScripts", 5)
 	local clientActor = playerScripts and playerScripts:WaitForChild("ClientActor", 5)

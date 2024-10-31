@@ -1,14 +1,15 @@
 -- PlayerTab module.
 local PlayerTab = {}
 
----Initialize atach to back section.
+---Initialize movement section.
 ---@param groupbox table
-function PlayerTab.initAtbSection(groupbox)
+function PlayerTab.initMovementSection(groupbox)
 	local atbDepBox = groupbox:AddDependencyBox()
 	local speedDepBox = groupbox:AddDependencyBox()
 	local flyDepBox = groupbox:AddDependencyBox()
 	local noclipDepBox = groupbox:AddDependencyBox()
 	local infiniteJumpDepBox = groupbox:AddDependencyBox()
+	local agilitySpoofDepBox = groupbox:AddDependencyBox()
 
 	groupbox
 		:AddToggle("Speedhack", {
@@ -73,10 +74,7 @@ function PlayerTab.initAtbSection(groupbox)
 			Tooltip = "Start following the nearest entity based on a distance and height offset.",
 			Default = false,
 		})
-		:AddKeyPicker(
-			"AttachToBackKeybind",
-			{ Default = "[", SyncToggleState = true, NoUI = false, Text = "Attach To Back" }
-		)
+		:AddKeyPicker("AttachToBackKeybind", { Default = "[", SyncToggleState = true, Text = "Attach To Back" })
 
 	groupbox:AddToggle("InfiniteJump", {
 		Text = "Infinite Jump",
@@ -111,9 +109,40 @@ function PlayerTab.initAtbSection(groupbox)
 		Rounding = 0,
 	})
 
-	---@todo: Rewrite auto-sprint with tick() hook.
-	---@note: Knocked ownership will be in the exploits section later.
-	---@todo: Add tween to objective & agility spoof.
+	groupbox:AddToggle("AgilitySpoof", {
+		Text = "Agility Spoofer",
+		Tooltip = "Set your Agility investment points to boost movement realistically.",
+		Default = false,
+	})
+
+	agilitySpoofDepBox:AddSlider("AgilitySpoof", {
+		Text = "Agility Value",
+		Default = 0,
+		Min = 0,
+		Max = 200,
+		Suffix = "pts",
+		Rounding = 0,
+	})
+
+	groupbox
+		:AddToggle("TweenToObjectives", {
+			Text = "Tween To Objectives",
+			Tooltip = "Smoothly move to objectives inside of Ethiron and Chaser's boss fights.",
+			Default = false,
+		})
+		:AddKeyPicker(
+			"TweenToObjectivesKeybind",
+			{ Default = "V", SyncToggleState = true, Text = "Tween To Objectives" }
+		)
+
+	groupbox:AddToggle("AutoSprint", {
+		Text = "Auto Sprint",
+		Tooltip = "Instantly invoke a sprint when pressing a key in any direction.",
+		Default = false,
+	})
+
+	---@todo: Add removals section.
+	---@todo: After, add ESP.
 
 	infiniteJumpDepBox:SetupDependencies({
 		{ Toggles.InfiniteJump, true },
@@ -142,7 +171,7 @@ function PlayerTab.init(window)
 	local tab = window:AddTab("Player")
 
 	-- Initialize sections.
-	PlayerTab.initAtbSection(tab:AddLeftGroupbox("Attach To Back"))
+	PlayerTab.initMovementSection(tab:AddLeftGroupbox("Movement"))
 end
 
 -- Return PlayerTab module.

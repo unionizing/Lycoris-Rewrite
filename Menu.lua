@@ -41,6 +41,8 @@ function Menu.init()
 	-- Automation tab which houses auto-farm, auto-maestro, auto-quest, and other automation-related features.
 	-- Settings tab which houses keybinds, UI settings, and other settings-related features.
 
+	---@note: Knocked ownership will be in the exploits section - it's not included as a player feature.
+
 	-- Initialize all tabs.
 	CombatTab.init(window)
 	AutomationTab.init(window)

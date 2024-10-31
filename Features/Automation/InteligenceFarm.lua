@@ -89,11 +89,11 @@ local function updateInteligence()
 		return
 	end
 
-	local expected = nil
 	local operation = desc.Text:lower()
+	local text = desc.Text:split(" ")
 
-	local text = string.split(desc.Text, " ")
-	local numberOne, numberTwo = tonumber(text[3]), tonumber(string.gsub(text[5], "?", ""))
+	local expected = nil
+	local numberOne, numberTwo = tonumber(text[3]), tonumber(text[5]:gsub("?", ""))
 
 	if operation:match("times") then
 		expected = numberOne * numberTwo

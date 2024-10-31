@@ -43,6 +43,10 @@ function Maid:__newindex(index, new_task)
 			oldTask()
 		elseif typeof(oldTask) == "RBXScriptConnection" then
 			oldTask:Disconnect()
+		elseif typeof(oldTask) == "Instance" and oldTask:IsA("Tween") then
+			oldTask:Pause()
+			oldTask:Cancel()
+			oldTask:Destroy()
 		elseif oldTask.Destroy then
 			oldTask:Destroy()
 		elseif oldTask.detach then
@@ -98,6 +102,10 @@ function Maid:clean()
 			task()
 		elseif typeof(task) == "RBXScriptConnection" then
 			task:Disconnect()
+		elseif typeof(task) == "Instance" and task:IsA("Tween") then
+			task:Pause()
+			task:Cancel()
+			task:Destroy()
 		elseif task.Destroy then
 			task:Destroy()
 		elseif task.detach then

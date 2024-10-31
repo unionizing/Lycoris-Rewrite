@@ -13,9 +13,11 @@ local SendInput = require("Utility/SendInput")
 ---@module Utility.Signal
 local Signal = require("Utility/Signal")
 
+---@module Utility.InstanceWrapper
+local InstanceWrapper = require("Utility/InstanceWrapper")
+
 -- Services.
 local memStoreService = game:GetService("MemStorageService")
-local tweenService = game:GetService("TweenService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local players = game:GetService("Players")
 local runService = game:GetService("RunService")
@@ -59,11 +61,9 @@ local function nonDangerInteractMaestro(maestro, rootPart, dialogueFrame)
 		return
 	end
 
-	maestroFarmMaid["interactTween"] = tweenService:Create(rootPart, TweenInfo.new(0.6), {
+	InstanceWrapper.tween(maestroFarmMaid, "interactTween", rootPart, TweenInfo.new(0.6), {
 		CFrame = maestro.HumanoidRootPart.CFrame * CFrame.new(0, 0, -3) * CFrame.Angles(0, math.rad(180), 0),
-	})
-
-	maestroFarmMaid["interactTween"]:Play()
+	}):Play()
 end
 
 ---Talk stage.
@@ -155,11 +155,9 @@ local function lootMaestro(humanoid, character)
 
 	-- Go towards chest.
 	if not playerGui:FindFirstChild("ChoicePrompt") and not maestroFarmMaid["ChestTween"] then
-		maestroFarmMaid["chestTween"] = tweenService:Create(hrp, TweenInfo.new(0.6), {
+		InstanceWrapper.tween(maestroFarmMaid, "chestTween", hrp, TweenInfo.new(0.6), {
 			CFrame = maestroChestCFrame,
-		})
-
-		maestroFarmMaid["chestTween"]:Play()
+		}):Play()
 	end
 
 	-- Open chest while it's not open.

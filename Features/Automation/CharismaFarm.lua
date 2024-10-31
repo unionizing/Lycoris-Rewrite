@@ -73,10 +73,15 @@ local function updateCharisma()
 		return
 	end
 
-	local desc = choiceFrame:FindFirstChild("Desc")
-	local text = string.split(desc.Text, "\n")
-	local realText = string.sub(text[2], 2, -2)
-	choice:InvokeServer(realText)
+	local description = choiceFrame:FindFirstChild("Desc")
+	if not description then
+		return
+	end
+
+	local text = description.Text:split("\n")
+	local charismaLine = text[2]:sub(2, -2)
+
+	choice:InvokeServer(charismaLine)
 
 	if Attributes.isNotAtCap("Stat_Charisma", Options.CharismaCap.Value) then
 		return

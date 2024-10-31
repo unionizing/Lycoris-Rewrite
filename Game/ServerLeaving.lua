@@ -1,5 +1,5 @@
 -- Anything related to leaving a server is handled here.
-local ServerLeaving = {}
+local ServerLeaving = { hopping = false }
 
 ---@module Utility.SendInput
 local SendInput = require("Utility/SendInput")
@@ -12,7 +12,7 @@ local coreGui = game:GetService("CoreGui")
 local playersService = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
----Block first avaliable user.
+---Block first avaliable user. This will yield.
 local function blockFirstAvaliableUser()
 	local localPlayer = playersService.LocalPlayer
 
@@ -83,9 +83,11 @@ function ServerLeaving.log()
 	choice:FireServer(true)
 end
 
----Hop from a server to leave.
+---Hop from a server to leave. This will yield.
 function ServerLeaving.hop()
 	local localPlayer = playersService.LocalPlayer
+
+	ServerLeaving.hopping = true
 
 	memStorageService:SetItem("ServerHop", localPlayer:GetAttribute("DataSlot"))
 	memStorageService:SetItem("ServerHopJobId", Options.ServerHopJobId.Value)

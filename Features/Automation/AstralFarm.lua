@@ -289,7 +289,7 @@ local function astralFarmLoop()
 	end
 
 	if PlayerScanning.hasModerators() then
-		return ServerLeaving.hop()
+		return ServerLeaving.hopping and nil or ServerLeaving.hop()
 	end
 
 	local success, result = pcall(isInVoidSea, rootPart.Position)
