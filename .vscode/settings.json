@@ -32,7 +32,9 @@
         "queue_on_teleport",
         "request",
         "Lycoris",
-        "base64"
+        "base64",
+        "cloneref",
+        "sethiddenproperty"
     ],
     "editor.formatOnSave": true,
     "robloxLsp.suggestedImports.importIgnore": [

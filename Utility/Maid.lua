@@ -26,7 +26,7 @@ end
 ---@param new_task any
 function Maid:__newindex(index, new_task)
 	if Maid[index] ~= nil then
-		return error(("'%s' is reserved"):format(tostring(index)), 2)
+		return warn(("'%s' is reserved"):format(tostring(index)), 2)
 	end
 
 	local tasks = self._tasks
