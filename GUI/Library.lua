@@ -2976,14 +2976,27 @@ function Library:Notify(Text, Time)
 
 	pcall(NotifyOuter.TweenSize, NotifyOuter, UDim2.new(0, XSize + 8 + 4, 0, YSize), "Out", "Quad", 0.4, true)
 
-	task.spawn(function()
-		task.wait(Time or 5)
-
+	local function TweenOut()
 		pcall(NotifyOuter.TweenSize, NotifyOuter, UDim2.new(0, 0, 0, YSize), "Out", "Quad", 0.4, true)
 
 		task.wait(0.4)
 
 		NotifyOuter:Destroy()
+	end
+
+	local Connection = nil
+
+	Connection = InnerFrame.InputBegan:Connect(function(Input)
+		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+			TweenOut()
+			Connection:Disconnect()
+		end
+	end)
+
+	task.spawn(function()
+		task.wait(Time or 5)
+
+		TweenOut()
 	end)
 end
 

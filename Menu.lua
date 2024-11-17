@@ -32,7 +32,7 @@ local Logger = require("Utility/Logger")
 function Menu.init()
 	-- Create window.
 	local window = Library:CreateWindow({
-		Title = "ArmorShield Test",
+		Title = "Biggie Smalls Hack",
 		Center = true,
 		AutoShow = false,
 		TabPadding = 8,

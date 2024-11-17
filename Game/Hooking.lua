@@ -313,9 +313,6 @@ end
 local function onCoroutineWrap(...)
 	local args = { ... }
 
-	local func = args[1]
-	local consts = debug.getconstants(func)
-
 	---@note: Prevent InputClient detection 16.2 from happening so the Disconnect call never happens.
 	if debug.getinfo(3).source:match("InputClient") then
 		local function onCoroutineCall(arg1)
