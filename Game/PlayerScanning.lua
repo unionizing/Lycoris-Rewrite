@@ -40,7 +40,7 @@ local function fetchRobloxData(url)
 			break
 		end
 
-		Logger.notify("Player scanning is being rate limited - results will be delayed.")
+		Logger.notify("Player scanning is being rate-limited and results will be delayed - proceed with caution.")
 
 		task.wait(30)
 	end
