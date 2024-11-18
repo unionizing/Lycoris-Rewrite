@@ -170,7 +170,7 @@ local function onDescendantAdded(descendant)
 	local isInLiveFolder = descendant.Parent == workspace:WaitForChild("Live")
 
 	if descendant:IsA("Model") then
-		if isInLiveFolder and playerFromCharacter and playerFromCharacter ~= players.LocalPlayer then
+		if playerFromCharacter and playerFromCharacter ~= players.LocalPlayer then
 			emplaceObject(descendant, HumanoidESP.new("Player", descendant, playerESPNameCallback))
 			return
 		end

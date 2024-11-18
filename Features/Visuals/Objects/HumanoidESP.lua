@@ -45,7 +45,7 @@ function HumanoidESP:update()
 	local viewportPosition, viewPortOnScreen = currentCamera:WorldToViewportPoint(position)
 	local headPosition, headOnScreen = currentCamera:WorldToViewportPoint(position + Vector3.new(0, 3, 0))
 
-	if not viewPortOnScreen and not headOnScreen then
+	if not viewPortOnScreen or not headOnScreen then
 		return self:setVisible(false)
 	end
 
