@@ -70,12 +70,12 @@ function Menu.init()
 
 	-- Configure ThemeManager.
 	ThemeManager:SetLibrary(Library)
-	ThemeManager:SetFolder("Lycoris")
+	ThemeManager:SetFolder("Lycoris-Rewrite")
 
 	-- Configure SaveManager.
 	SaveManager:SetLibrary(Library)
 	SaveManager:IgnoreThemeSettings()
-	SaveManager:SetFolder("Lycoris")
+	SaveManager:SetFolder("Lycoris-Rewrite")
 
 	-- Initialize all tabs.
 	CombatTab.init(window)
