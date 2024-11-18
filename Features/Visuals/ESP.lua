@@ -49,16 +49,41 @@ local espMap = {}
 -- Constants.
 local ESP_DISTANCE_FORMAT = "%s [%i]"
 local ESP_DISTANCE_HUMANOID_FORMAT = "%s [%i/%i] [%i]"
+local ESP_DISTANCE_PLAYER_FORMAT = "%s [%i/%i] [%i] [Power %i]"
 local ESP_HUMANOID_FORMAT = "%s [%i/%i]"
+local ESP_PLAYER_FORMAT = "%s [%i/%i] [Power %i]"
 
----Humanoid ESP name callback.
+---Player ESP name callback.
 ---@param self HumanoidESP
 ---@param humanoid Humanoid
 ---@param distance number
-local function humanoidESPNameCallback(self, humanoid, distance)
+local function playerESPNameCallback(self, humanoid, distance)
 	local health = math.floor(humanoid.Health)
 	local maxHealth = math.floor(humanoid.MaxHealth)
-	local name = self.instance:GetAttribute("CharacterName") or self.instance.Name
+
+	local player = players:GetPlayerFromCharacter(self.instance)
+	if not player then
+		return "No Player Found"
+	end
+
+	local name = player:GetAttribute("CharacterName") or self.instance.Name
+	local level = self.instance:GetAttribute("Level") or -1
+
+	if Toggles[VisualsTab.identify(self.identifier, "Distance")].Value then
+		return ESP_DISTANCE_PLAYER_FORMAT:format(name, health, maxHealth, distance, level)
+	else
+		return ESP_PLAYER_FORMAT:format(name, health, maxHealth, level)
+	end
+end
+
+---Mob ESP name callback.
+---@param self HumanoidESP
+---@param humanoid Humanoid
+---@param distance number
+local function mobESPNameCallback(self, humanoid, distance)
+	local health = math.floor(humanoid.Health)
+	local maxHealth = math.floor(humanoid.MaxHealth)
+	local name = self.instance:GetAttribute("MOB_rich_name") or self.instance.Name
 
 	if Toggles[VisualsTab.identify(self.identifier, "Distance")].Value then
 		return ESP_DISTANCE_HUMANOID_FORMAT:format(name, health, maxHealth, distance)
@@ -146,17 +171,17 @@ local function onDescendantAdded(descendant)
 
 	if descendant:IsA("Model") then
 		if isInLiveFolder and playerFromCharacter and playerFromCharacter ~= players.LocalPlayer then
-			emplaceObject(descendant, HumanoidESP.new("Player", descendant, humanoidESPNameCallback))
+			emplaceObject(descendant, HumanoidESP.new("Player", descendant, playerESPNameCallback))
 			return
 		end
 
 		if isInLiveFolder and not playerFromCharacter then
-			emplaceObject(descendant, HumanoidESP.new("Mob", descendant, humanoidESPNameCallback))
+			emplaceObject(descendant, HumanoidESP.new("Mob", descendant, mobESPNameCallback))
 			return
 		end
 
 		if descendant.Parent == workspace:WaitForChild("NPCs") then
-			emplaceObject(descendant, HumanoidESP.new("NPC", descendant, humanoidESPNameCallback))
+			emplaceObject(descendant, BasicESP.new("NPC", descendant, createESPNameCallback("NPC")))
 			return
 		end
 	end

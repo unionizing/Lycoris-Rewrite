@@ -44,9 +44,8 @@ function HumanoidESP:update()
 
 	local viewportPosition, viewPortOnScreen = currentCamera:WorldToViewportPoint(position)
 	local headPosition, headOnScreen = currentCamera:WorldToViewportPoint(position + Vector3.new(0, 3, 0))
-	local legPosition, legOnScreen = currentCamera:WorldToViewportPoint(position - Vector3.new(0, 0.5, 0))
 
-	if not headOnScreen or not viewPortOnScreen or not legOnScreen then
+	if not viewPortOnScreen and not headOnScreen then
 		return self:setVisible(false)
 	end
 
@@ -56,25 +55,20 @@ function HumanoidESP:update()
 	text:set("Color", Configuration.expectOptionValue(VisualsTab.identify(self.identifier, "Color")))
 	text:set("Visible", true)
 
-	local baseBox = self:getDrawing("baseBox")
-	baseBox:set("Visible", Configuration.expectToggleValue(VisualsTab.identify(self.identifier, "Box")))
-	baseBox:set("Color", Configuration.expectOptionValue(VisualsTab.identify(self.identifier, "BoxColor")))
-	baseBox:set("Size", Vector2.new(1000 / viewportPosition.Z, headPosition.Y - legPosition.Y))
-	baseBox:set(
-		"Position",
-		Vector2.new(viewportPosition.X - baseBox:get("Size").X / 2, viewportPosition.Y - baseBox:get("Size").Y / 2)
-	)
-
 	local frustrumHeight = math.tan(math.rad(currentCamera.FieldOfView * 0.5)) * 2 * viewportPosition.Z
 	local healthBarSize = currentCamera.ViewportSize.Y / frustrumHeight * Vector2.new(4, 4)
-	local healthBarOffset = (Vector2.new(viewportPosition.X, viewportPosition.Y) - healthBarSize * 0.5)
-	local healthPercentage = humanoid.Health / humanoid.MaxHealth
+
+	local viewportScreenPos = Vector2.new(viewportPosition.X, viewportPosition.Y)
+	local healthBarFrom = viewportScreenPos - (healthBarSize * 0.5) - Vector2.xAxis * 5
+	local healthBarTo = viewportScreenPos - (healthBarSize * Vector2.new(0.5, -0.5)) - Vector2.xAxis * 5
 
 	local healthBarOutline = self:getDrawing("healthBarOutline")
 	healthBarOutline:set("Visible", Configuration.expectToggleValue(VisualsTab.identify(self.identifier, "HealthBar")))
 	healthBarOutline:set("Thickness", 123 / distance + 2)
-	healthBarOutline:set("From", ((healthBarOffset * 0.5) - Vector2.xAxis * 5) - Vector2.yAxis)
-	healthBarOutline:set("To", (healthBarOffset * Vector2.new(0.5, -0.5)) + Vector2.yAxis)
+	healthBarOutline:set("From", healthBarFrom - Vector2.yAxis)
+	healthBarOutline:set("To", healthBarTo + Vector2.yAxis)
+
+	local healthPercentage = humanoid.Health / humanoid.MaxHealth
 
 	local healthBar = self:getDrawing("healthBar")
 	healthBar:set("Thickness", 123 / distance + 1)

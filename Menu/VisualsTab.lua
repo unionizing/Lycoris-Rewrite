@@ -59,15 +59,6 @@ function VisualsTab.initHumanoidESPSection(identifier, groupbox)
 		Text = "Show Health Bar",
 		Default = false,
 	})
-
-	groupbox
-		:AddToggle(VisualsTab.identify(identifier, "Box"), {
-			Text = "Show Boxes",
-			Default = false,
-		})
-		:AddColorPicker(VisualsTab.identify(identifier, "BoxColor"), {
-			Default = Color3.new(1, 1, 1),
-		})
 end
 
 ---Initialize player alerts section.
@@ -103,7 +94,7 @@ function VisualsTab.init(window)
 	-- Initialize ESP sections.
 	VisualsTab.initHumanoidESPSection("Player", createGroupbox(tab, "Player ESP"))
 	VisualsTab.initHumanoidESPSection("Mob", createGroupbox(tab, "Mob ESP"))
-	VisualsTab.initHumanoidESPSection("NPC", createGroupbox(tab, "NPC ESP"))
+	VisualsTab.initBasicESPSection("NPC", createGroupbox(tab, "NPC ESP"))
 	VisualsTab.initBasicESPSection("Chest", createGroupbox(tab, "Chest ESP"))
 	VisualsTab.initBasicESPSection("AreaMarker", createGroupbox(tab, "Area Marker ESP"))
 	VisualsTab.initBasicESPSection("JobBoard", createGroupbox(tab, "Job Board ESP"))

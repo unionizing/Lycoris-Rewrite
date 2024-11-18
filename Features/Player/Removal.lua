@@ -26,13 +26,17 @@ local originalFogStart = nil
 local originalBlindInstance = nil
 local originalBlurSize = nil
 local originalEchoModifiersMap = {}
-local originalKillBricksMap = {}
+
+-- Kill bricks.
+local killBricksMap = {}
 
 -- Maids.
 local removalMaid = Maid.new()
 
 -- Signals.
 local renderStepped = Signal.new(runService.RenderStepped)
+local workspaceDescendantAdded = Signal.new(workspace.DescendantAdded)
+local workspaceDescendantRemoving = Signal.new(workspace.DescendantRemoving)
 
 ---@note: These setters are completely unnecessary - they're used to make the code look cleaner.
 ---It's really ugly when we want to return and set something at the same time.
@@ -73,50 +77,16 @@ end
 
 ---Update no kill bricks.
 local function updateNoKillBricks()
-	for _, instance in pairs(workspace:GetChildren()) do
-		if originalKillBricksMap[instance] then
-			continue
-		end
-
-		local killInstance = instance.Name == "KillBrick" or instance.Name == "KillPlane"
-		local killChasm = instance.Name:match("Chasm") and instance:FindFirstChildOfClass("TouchTransmitter")
-
-		if not killInstance and not killChasm then
-			continue
-		end
-
-		originalKillBricksMap[instance] = instance.CFrame
-
-		instance.CFrame = Vector3.new(math.huge, math.huge, math.huge)
-	end
-
-	local layer2Floor1 = workspace:FindFirstChild("Layer2Floor1")
-	if not layer2Floor1 then
-		return
-	end
-
-	for _, instance in pairs(layer2Floor1:GetChildren()) do
-		if originalKillBricksMap[instance] then
-			continue
-		end
-
-		if instance.Name ~= "SuperWall" then
-			continue
-		end
-
-		originalKillBricksMap[instance] = instance.CFrame
-
-		instance.CFrame = Vector3.new(math.huge, math.huge, math.huge)
+	for instance, _ in next, killBricksMap do
+		instance.CFrame = CFrame.new(math.huge, math.huge, math.huge)
 	end
 end
 
 ---Reset no kill bricks.
 local function resetNoKillBricks()
-	for instance, cframe in pairs(originalKillBricksMap) do
+	for instance, cframe in next, killBricksMap do
 		instance.CFrame = cframe
 	end
-
-	originalKillBricksMap = {}
 end
 
 ---Update no fog.
@@ -332,6 +302,34 @@ local function updateRemovalEffects(effect)
 	end
 end
 
+---On workspace descendant added.
+---@param descendant Instance
+local function onWorkspaceDescendantAdded(descendant)
+	if not descendant:IsA("BasePart") then
+		return
+	end
+
+	local killInstance = descendant.Name == "KillBrick" or descendant.Name == "KillPlane"
+	local killChasm = descendant.Name:match("Chasm") and descendant:FindFirstChildOfClass("TouchTransmitter")
+	local superWall = descendant.Name == "SuperWall"
+
+	if not killInstance and not killChasm and not superWall then
+		return
+	end
+
+	killBricksMap[descendant] = descendant.CFrame
+end
+
+---On workspace descendant removing.
+---@param descendant Instance
+local function onWorkspaceDescendantRemoving(descendant)
+	if not killBricksMap[descendant] then
+		return
+	end
+
+	killBricksMap[descendant] = nil
+end
+
 ---Initalize removal.
 function Removal.init()
 	---@note: Not type of RBXScriptSignal - but it works.
@@ -339,8 +337,17 @@ function Removal.init()
 	local effectReplicatorModule = require(effectReplicator)
 	local effectAddedSignal = Signal.new(effectReplicatorModule.EffectAdded)
 
+	removalMaid:add(workspaceDescendantAdded:connect("Removal_WorkspaceDescendantAdded", onWorkspaceDescendantAdded))
+	removalMaid:add(
+		workspaceDescendantRemoving:connect("Removal_WorkspaceDescendantRemoving", onWorkspaceDescendantRemoving)
+	)
+
 	removalMaid:add(renderStepped:connect("Removal_RenderStepped", updateRemoval))
 	removalMaid:add(effectAddedSignal:connect("Removal_EffectAdded", updateRemovalEffects))
+
+	for _, descendant in pairs(workspace:GetDescendants()) do
+		onWorkspaceDescendantAdded(descendant)
+	end
 
 	for _, effect in next, effectReplicatorModule.Effects do
 		updateRemovalEffects(effect)
