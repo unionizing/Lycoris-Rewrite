@@ -99,6 +99,47 @@ function VisualsTab.initESPAdjustment(groupbox)
 	)
 end
 
+---Initialize world section.
+---@param groupbox table
+function VisualsTab.initWorldSection(groupbox)
+	groupbox
+		:AddToggle("ModifyAmbience", {
+			Text = "Modify Ambience",
+			Tooltip = "Modify the ambience of the game.",
+			Default = false,
+		})
+		:AddColorPicker("AmbienceColor", {
+			Default = Color3.fromHex("FFFFFF"),
+		})
+
+	local oacDepBox = groupbox:AddDependencyBox()
+
+	oacDepBox:AddToggle("OriginalAmbienceColor", {
+		Text = "Original Ambience Color",
+		Tooltip = "Use the game's original ambience color instead of a custom one.",
+		Default = false,
+	})
+
+	local umacDepBox = groupbox:AddDependencyBox()
+
+	umacDepBox:AddSlider("OriginalAmbienceColorBrightness", {
+		Text = "Original Ambience Brightness",
+		Default = 0,
+		Min = 0,
+		Max = 255,
+		Suffix = "+",
+		Rounding = 0,
+	})
+
+	oacDepBox:SetupDependencies({
+		{ Toggles.ModifyAmbience, true },
+	})
+
+	umacDepBox:SetupDependencies({
+		{ Toggles.OriginalAmbienceColor, true },
+	})
+end
+
 ---Initialize tab.
 ---@param window table
 function VisualsTab.init(window)
@@ -108,6 +149,7 @@ function VisualsTab.init(window)
 	-- Initialize Visual sections.
 	VisualsTab.initPlayerAlertsSection(createGroupbox(tab, "Player Alerts"))
 	VisualsTab.initESPAdjustment(createGroupbox(tab, "ESP Adjustment"))
+	VisualsTab.initWorldSection(createGroupbox(tab, "World Visuals"))
 
 	-- Initialize ESP sections.
 	VisualsTab.initHumanoidESPSection("Player", createGroupbox(tab, "Player ESP"))

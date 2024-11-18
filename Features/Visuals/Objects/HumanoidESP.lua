@@ -23,7 +23,9 @@ function HumanoidESP:update()
 	end
 
 	local humanoid = self.instance:FindFirstChildOfClass("Humanoid")
-	if not humanoid then
+	local rootPart = self.instance:FindFirstChild("HumanoidRootPart")
+
+	if not humanoid or not rootPart then
 		return self:setVisible(false)
 	end
 

@@ -247,37 +247,6 @@ function PlayerTab.initRemovalSection(groupbox)
 		Tooltip = "Shadow effects are hidden.",
 		Default = false,
 	})
-
-	groupbox
-		:AddToggle("ModifyAmbience", {
-			Text = "Modify Ambience",
-			Tooltip = "Modify the ambience of the game.",
-			Default = false,
-		})
-		:AddColorPicker("AmbienceColor", {
-			Default = Color3.fromHex("FFFFFF"),
-		})
-
-	groupbox:AddToggle("OriginalAmbienceColor", {
-		Text = "Original Ambience Color",
-		Tooltip = "Use the game's original ambience color instead of a custom one.",
-		Default = false,
-	})
-
-	local umacDepBox = groupbox:AddDependencyBox()
-
-	umacDepBox:AddSlider("OriginalAmbienceColorBrightness", {
-		Text = "Original Ambience Brightness",
-		Default = 0,
-		Min = 0,
-		Max = 255,
-		Suffix = "+",
-		Rounding = 0,
-	})
-
-	umacDepBox:SetupDependencies({
-		{ Toggles.OriginalAmbienceColor, true },
-	})
 end
 
 ---Initialize tab.

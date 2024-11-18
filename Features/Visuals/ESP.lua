@@ -178,7 +178,7 @@ local function onDescendantAdded(descendant)
 		end
 
 		if descendant.Parent == workspace:WaitForChild("NPCs") then
-			emplaceObject(descendant, BasicESP.new("NPC", descendant, createESPNameCallback("NPC")))
+			emplaceObject(descendant, BasicESP.new("NPC", descendant, createESPNameCallback(descendant.Name)))
 			return
 		end
 	end
@@ -212,7 +212,7 @@ local function onDescendantAdded(descendant)
 	end
 
 	if descendant.Name:match("GuildDoor") then
-		emplaceObject(descendant, BasicESP.new("GuildDoor", descendant, createESPNameCallback("Guild Door")))
+		emplaceObject(descendant, BasicESP.new("GuildDoor", descendant, createESPNameCallback(descendant.Name)))
 		return
 	end
 
