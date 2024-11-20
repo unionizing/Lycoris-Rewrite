@@ -6,7 +6,11 @@ DrawingWrapper.__index = DrawingWrapper
 
 ---Remove drawing from being rendered and delete itself.
 function DrawingWrapper:remove()
-	self.object:Remove()
+	if self.object ~= nil then
+		self.object:Remove()
+	end
+
+	self.object = nil
 	self = nil
 end
 
