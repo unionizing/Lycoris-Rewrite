@@ -328,9 +328,10 @@ local function onDescendantAdded(descendant)
 	end
 end
 
----Find instance in stack.
+---Find instance in stack and return corrosponding object.
 ---@param stack BasicESP[]
 ---@param instance Instance
+---@return BasicESP
 local function findInstanceInStack(stack, instance)
 	for _, object in next, stack do
 		if object.instance ~= instance then
