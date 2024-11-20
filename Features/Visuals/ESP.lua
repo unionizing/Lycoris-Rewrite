@@ -328,17 +328,17 @@ local function onDescendantAdded(descendant)
 	end
 end
 
----Find instance in stack and return corrosponding object.
+---Find instance in stack and return corrosponding key & value.
 ---@param stack BasicESP[]
 ---@param instance Instance
----@return BasicESP
+---@return number, BasicESP
 local function findInstanceInStack(stack, instance)
-	for _, object in next, stack do
+	for idx, object in next, stack do
 		if object.instance ~= instance then
 			continue
 		end
 
-		return object
+		return idx, object
 	end
 end
 
@@ -350,13 +350,14 @@ local function onDescendantRemoving(descendant)
 
 		---@note: it's O(N) unless we want to manage a map and a stack at the same time :(
 		--- oh well, who cares.
-		local object = findInstanceInStack(stack, descendant)
-		if not object then
+		local idx, object = findInstanceInStack(stack, descendant)
+		if not idx or not object then
 			continue
 		end
 
 		object:detach()
-		object = nil
+
+		stack[idx] = nil
 	end
 end
 
