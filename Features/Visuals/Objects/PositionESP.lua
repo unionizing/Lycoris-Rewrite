@@ -17,9 +17,6 @@ PositionESP.__index = PositionESP
 -- Formats.
 local ESP_DISTANCE_FORMAT = "%s [%i]"
 
--- Drawing fonts.
-local drawingFonts = Drawing.Fonts
-
 ---Hide PositionESP and delay the next update.
 function PositionESP:hide()
 	if Configuration.toggleValue("ESPCheckDelay") then
@@ -92,8 +89,8 @@ function PositionESP:update(position, tags)
 	text:set("Position", Vector2.new(screenPosition.X, screenPosition.Y))
 	text:set("Color", VisualsTab.optionValue(identifier, "Color"))
 	text:set("Size", Configuration.optionValue("FontSize"))
-	text:set("Font", drawingFonts[Configuration.optionValue("Font")])
 	text:set("Visible", true)
+	text:font(Configuration.optionValue("Font"))
 end
 
 ---Setup drawings of PositionESP.
@@ -102,7 +99,7 @@ function PositionESP:setupDrawings()
 	baseText:set("Size", 14)
 	baseText:set("Center", true)
 	baseText:set("Outline", true)
-	baseText:set("Font", "Plex")
+	baseText:font("Plex")
 end
 
 ---Create new PositionESP object.

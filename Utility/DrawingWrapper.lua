@@ -4,6 +4,9 @@
 local DrawingWrapper = {}
 DrawingWrapper.__index = DrawingWrapper
 
+-- Cached drawing fonts.
+local drawingFonts = Drawing.Fonts
+
 ---Remove drawing from being rendered and delete itself.
 function DrawingWrapper:remove()
 	if self.object ~= nil then
@@ -19,6 +22,12 @@ end
 ---@return any
 function DrawingWrapper:get(key)
 	return self.object[key]
+end
+
+---Set font in drawing object.
+---@param font string
+function DrawingWrapper:font(font)
+	self:set("Font", drawingFonts[font])
 end
 
 ---Set key in drawing object.
