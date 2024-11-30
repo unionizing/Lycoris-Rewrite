@@ -37,7 +37,8 @@
         "sethiddenproperty",
         "isfunctionhooked",
         "restorefunction",
-        "getconnections"
+        "getconnections",
+        "getexecutorname"
     ],
     "editor.formatOnSave": true,
     "robloxLsp.suggestedImports.importIgnore": [

@@ -8,34 +8,40 @@
 Tabs have a marker to desiginate whether or not the menu elements are finished.
 
 # Ordered Menu Design
-- Combat ❌
-    - Combat Targeting ❌
+- Combat ✅
+    - Combat Targeting ✅
+        - Player Selection Type ❌
+            - Closest In Distance ❌ 
+            - Closest To Crosshair ❌
+            - Least Health ❌
         - Player Whitelist ❌
+            - Username List ❌
             - Username Input Box ❌
             - Add Username To Whitelist ❌
+            - Remove Selected Username ❌
+        - FOV Limit ❌
         - Ignore Mobs ❌
         - Ignore Friends ❌
         - Must Face Target ❌
-        - Target Must Face You ❌
-    - Auto Defense ❌
+    - Auto Defense ✅
         - Enable Auto Defense ❌
         - Auto Defense Confinguration ❌
         - Auto Defense Notifications ❌
         - Auto Defense Visualizations ❌
-    - Feint Detection ❌
+    - Feint Detection ✅
         - Detect M1 Feints ❌
         - Detect Mantra Feints ❌
         - React To Feints ❌
             - Feint Reaction Chance ❌
-    - Attack Assistance ❌
+    - Attack Assistance ✅
         - Feint M1 While Defending ❌
         - Feint Mantras While Defending ❌
-    - Input Assistance ❌
+    - Input Assistance ✅
         - Block M1 While Defending ❌
         - Block Critical While Defending ❌
         - Block Mantras While Defending ❌
         - Block Seconds ❌
-    - Combat Assistance ❌
+    - Combat Assistance ✅
         - Silent Aim ❌
         - Allow Flourish Feints ❌
         - Allow Attacks While Rolling ❌
@@ -174,7 +180,7 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Auto Intelligence Farm ✅
             - Intelligence Cap ✅
     - Effect Automation ✅
-        - Auto Extinguish Fire ⚠️⚠️
+        - Auto Extinguish Fire ✅
 
     Add Auto Loot and Account for Innate Stats
 
