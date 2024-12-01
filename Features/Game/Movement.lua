@@ -45,7 +45,7 @@ local agilitySpoofer = movementMaid:mark(OriginalStore.new())
 local noClipMap = movementMaid:mark(OriginalStoreManager.new())
 
 -- Signals.
-local heartbeat = Signal.new(runService.Heartbeat)
+local preSimulation = Signal.new(runService.PreSimulation)
 
 ---Reset blood jar tween.
 ---@param tween Tween?
@@ -87,7 +87,9 @@ local function updateNoClip(character, rootPart)
 			continue
 		end
 
+		local saved = instance.CanCollide
 		noClipMap:add(instance, "CanCollide", knockedRestore and noClipMap:get(instance):get() or false)
+		print("noclip iteration", instance, saved, instance.CanCollide)
 	end
 end
 
@@ -311,7 +313,7 @@ end
 
 ---Initialize movement.
 function Movement.init()
-	movementMaid:add(heartbeat:connect("Movement_Heartbeat", updateMovement))
+	movementMaid:add(preSimulation:connect("Movement_PreSimulation", updateMovement))
 end
 
 ---Detach movement.
