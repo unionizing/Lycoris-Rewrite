@@ -73,9 +73,10 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Attach To Back ✅
             - Height Offset ✅
             - Back Offset ✅
-        - Freestylers Band Spoofer ✅
-        - Konga's Clutch Ring Spoofer ✅
+        - Freestylers Band Spoofer ✅    --> group these 2 as talent spoofer
+        - Konga's Clutch Ring Spoofer ✅ ^
         - Emote Spoofer ✅ 
+        - Remove "Loot All" CD ❌
     - Effect Removals ✅
         - No Speed Debuff ✅
         - No Stun ✅
@@ -94,6 +95,8 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Void Walker Contract Notifications ✅
         - Legendary Weapon Notifications ✅
         - Mod Notifications ✅
+        - Show All Players in Map ❌
+        - Chat Spy ❌
     
     Check out "Hide From Heartbeat Sensor"
 
@@ -159,16 +162,17 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
     Check out "Danger Timer ESP"
 
 - Automation ✅
-    - Astral Farm ⚠️⚠️ (optimize route and more stablilty)
+    - Astral Farm ⚠️⚠️ (optimize route and more stablilty) **REMOVAL SINCE ASTRAL IS ALOT MORE EASIER TO GET + MORE WAYS NOW**
         - Astral Speed ✅
         - Use Carnivore ✅
         - Hunger Level ✅
         - Water Level ✅
         - Webhook Notification ✅
             - Webhook Link ✅
-    - Maestro Farm ⚠️⚠️ (auto-eat and optimize route)
+    - Maestro Farm ⚠️⚠️ (auto-eat and optimize route) (they fr can just enchant with gluttony but ok)
         - Use Critical ✅
         - Webhook Link ✅
+        - Auto Sell after X amount of Maestro kills ❌
     - Fish Farm ⚠️⚠️⚠️ (rework fish farm)
         - Hold Time ✅
         - Kill Caught Mudskippers ✅
