@@ -29,7 +29,7 @@ end
 function LycorisTab.initUISettingsSection(groupbox)
 	local menuBindLabel = groupbox:AddLabel("Menu Bind")
 
-	menuBindLabel:AddKeyPicker("MenuKeybind", { Default = "Insert", NoUI = true, Text = "Menu Keybind" })
+	menuBindLabel:AddKeyPicker("MenuKeybind", { Default = "LeftAlt", NoUI = true, Text = "Menu Keybind" })
 
 	local keybindFrameLabel = groupbox:AddLabel("Keybind List Bind")
 
@@ -47,7 +47,7 @@ end
 ---Initialize tab.
 function LycorisTab.init(window)
 	-- Create tab.
-	local tab = window:AddTab("Lycoris")
+	local tab = window:AddTab("Settings") -- dont change the name, it's more confusing if its named that way
 
 	-- Initialize sections.
 	LycorisTab.initCheatSettingsSection(tab:AddLeftGroupbox("Cheat Settings"))

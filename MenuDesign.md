@@ -49,7 +49,8 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Allow Flourish Feints ❌
         - Allow Attacks While Rolling ❌
         - Attack Animation Speed ❌
-            - Animation Speed Slider (0.5x - 1x - 2x) ❌
+            - Animation Speed Slider (0.5x - 1x - 2x) ❌ 
+            ###### side note: if this was to be made, what u would do is that you would make it force speed 0 at .15s until desired speed slider, making it look more legit and not breaking deepwoken's mechanics
         - Maximum Momentum ❌
         - Perfect Mantra Cast ❌
 
@@ -76,9 +77,10 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Attach To Back ✅
             - Height Offset ✅
             - Back Offset ✅
-        - Freestylers Band Spoofer ✅
-        - Konga's Clutch Ring Spoofer ✅
+        - Freestylers Band Spoofer ✅    --> group these 2 as talent spoofer
+        - Konga's Clutch Ring Spoofer ✅ ^
         - Emote Spoofer ✅ 
+        - Remove "Loot All" CD ❌
     - Effect Removals ✅
         - No Speed Debuff ✅
         - No Stun ✅
@@ -97,6 +99,8 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Void Walker Contract Notifications ✅
         - Legendary Weapon Notifications ✅
         - Mod Notifications ✅
+        - Show All Players in Map ❌
+        - Chat Spy ❌
     
     Check out "Hide From Heartbeat Sensor"
 
@@ -162,16 +166,19 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
     Check out "Danger Timer ESP"
 
 - Automation ✅
-    - Astral Farm ⚠️⚠️ (optimize route and more stablilty)
+    - Astral Farm ⚠️⚠️ (optimize route and more stablilty) **REMOVAL SINCE ASTRAL IS ALOT MORE EASIER TO GET + MORE WAYS NOW**
         - Astral Speed ✅
         - Use Carnivore ✅
         - Hunger Level ✅
         - Water Level ✅
         - Webhook Notification ✅
             - Webhook Link ✅
-    - Maestro Farm ⚠️⚠️ (auto-eat and optimize route)
+    - Maestro Farm ⚠️⚠️ (auto-eat and optimize route) (they fr can just enchant with gluttony but ok)
         - Use Critical ✅
         - Webhook Link ✅
+        - Auto Sell after X amount of Maestro kills ❌
+            - Sell to Guildbase Antiquarian ❌
+            ###### spawn a gb and sell to the antiquarian in it, or as default it would "tween" into the antiquarian near training area (tween below them)
     - Fish Farm ⚠️⚠️⚠️ (rework fish farm)
         - Hold Time ✅
         - Kill Caught Mudskippers ✅
@@ -198,6 +205,7 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Move While Knocked ✅
 
     Check out "Extended Item Pickup"
+    ###### mostly with firetouchdetector, we can find these itempickups by tags from collectionservice aswell
 
 - Lycoris ✅
     - Cheat Settings ✅
