@@ -151,6 +151,25 @@ function GameTab.initLocalCharacterSection(groupbox)
 		Default = false,
 	})
 
+	local asDepBox = groupbox:AddDependencyBox()
+
+	asDepBox:AddToggle("AutoSprintDelay", {
+		Text = "Auto Sprint Delay",
+		Tooltip = "Delay the automated sprint activation after pressing a key.",
+		Default = false,
+	})
+
+	local asDelayDepBox = asDepBox:AddDependencyBox()
+
+	asDelayDepBox:AddSlider("AutoSprintDelayTime", {
+		Text = "Auto Sprint Delay Time",
+		Default = 0.2,
+		Min = 0,
+		Max = 5,
+		Suffix = "s",
+		Rounding = 2,
+	})
+
 	groupbox:AddToggle("FreestylersBandSpoof", {
 		Text = "Freestylers Band Spoofer",
 		Tooltip = "Use the Freestylers Band without equipping it.",
@@ -167,6 +186,14 @@ function GameTab.initLocalCharacterSection(groupbox)
 		Text = "Emote Spoofer",
 		Tooltip = "Unlock all emotes and use them without owning them.",
 		Default = false,
+	})
+
+	asDepBox:SetupDependencies({
+		{ Toggles.AutoSprint, true },
+	})
+
+	asDelayDepBox:SetupDependencies({
+		{ Toggles.AutoSprintDelay, true },
 	})
 
 	infiniteJumpDepBox:SetupDependencies({
@@ -277,15 +304,9 @@ function GameTab.initEffectRemovalsSection(groupbox)
 		Default = false,
 	})
 
-	groupbox:AddToggle("NoAcid", {
-		Text = "No Acid",
-		Tooltip = "Remove any 'Acid Damage' requests to the server.",
-		Default = false,
-	})
-
-	groupbox:AddToggle("No Wind", {
-		Text = "No Wind",
-		Tooltip = "Remove any 'Wind' effects from the server.",
+	groupbox:AddToggle("NoAcidWater", {
+		Text = "No Acid Water",
+		Tooltip = "Remove any 'Acid Water Damage' requests to the server.",
 		Default = false,
 	})
 

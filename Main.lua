@@ -24,6 +24,7 @@ local Profiler = require("Utility/Profiler")
 local Lycoris = require("Lycoris")
 
 ---Find existing instances and initialize the script.
+---@todo: Virtualize parts of the source.
 local function initializeScript()
 	-- Check if there's already another instance.
 	if environment.Lycoris then

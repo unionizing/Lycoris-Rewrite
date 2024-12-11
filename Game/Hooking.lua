@@ -138,6 +138,11 @@ local function onTick(...)
 		return oldTick(...)
 	end
 
+	---@note: We can indeed set a delay in here. The active thread is InputClient.
+	if Configuration.expectToggleValue("AutoSprintDelay") then
+		task.wait(Configuration.expectOptionValue("AutoSprintDelayTime"))
+	end
+
 	---@note: Set the timestamp set by sprinting to -math.huge so it's always over 0.25s.
 	return -math.huge
 end
@@ -155,7 +160,7 @@ local function onNameCall(...)
 		return
 	end
 
-	if self.Name == "AcidCheck" and Configuration.expectToggleValue("NoAcid") then
+	if self.Name == "AcidCheck" and Configuration.expectToggleValue("NoAcidWater") then
 		return
 	end
 
@@ -227,6 +232,7 @@ end
 ---On get function environment.
 ---@return any
 local function onGetFunctionEnvironment(...)
+	---@note: Virtualize this part. Unleaked KH Bypass.
 	local functionEnvironment = oldGetFenv(...)
 
 	if not functionEnvironment then
@@ -245,6 +251,7 @@ local function onIndex(...)
 
 	local stripped_index = index:sub(1, 7)
 
+	---@note: Virtualize this part. Unleaked KH Bypass.
 	if self == game and (stripped_index == "HttpGet" or stripped_index == "httpGet") then
 		return oldIndex(self, "HttpGet\255")
 	end
@@ -342,6 +349,7 @@ end
 local function onProtectedCall(...)
 	local callSuccess, callResult = oldProtectedCall(...)
 
+	---@note: Virtualize this part. Unleaked KH Bypass.
 	if lastErrorLevel == 4 then
 		callSuccess, callResult = false, "LYCORIS_ON_TOP"
 	end
@@ -365,6 +373,7 @@ end
 local function onError(...)
 	local args = { ... }
 
+	---@note: Virtualize this part. Unleaked KH Bypass.
 	lastErrorResult = args[1]
 	lastErrorLevel = args[2]
 
@@ -377,6 +386,7 @@ local function onToString(...)
 	local args = { ... }
 	local variable = args[1]
 
+	---@note: Don't virtualize this part. Unleaked KH Bypass.
 	if typeof(variable) == "string" and variable:match("EEKE") and checkcaller() then
 		Logger.longNotify("[1] Screenshot this message, send it to the developers, and leave the game when possible.")
 		return error("LYCORIS_ON_TOP")
@@ -391,6 +401,7 @@ function Hooking.init()
 	local localPlayer = playersService.LocalPlayer
 	local playerScripts = localPlayer.PlayerScripts
 
+	---@todo: Optimize hooks - preferably filter out calls slowing performance.
 	oldToString = hookfunction(tostring, onToString)
 	oldFireServer = hookfunction(Instance.new("RemoteEvent").FireServer, onFireServer)
 	oldUnreliableFireServer = hookfunction(Instance.new("UnreliableRemoteEvent").FireServer, onUnreliFireServer)

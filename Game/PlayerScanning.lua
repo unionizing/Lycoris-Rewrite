@@ -19,6 +19,9 @@ local Logger = require("Utility/Logger")
 ---@module Utility.Configuration
 local Configuration = require("Utility/Configuration")
 
+---@module Utility.TaskSpawner
+local TaskSpawner = require("Utility.TaskSpawner")
+
 -- Services.
 local players = game:GetService("Players")
 local httpService = game:GetService("HttpService")
@@ -156,7 +159,7 @@ local function runPlayerScans()
 
 		Logger.notify("Player scanning finished scanning %s in queue.", player.Name)
 
-		playerScanningMaid:add(task.spawn(function()
+		playerScanningMaid:add(TaskSpawner.spawn("PlayerScanning_FriendCheck", function()
 			-- Perform a friend check that will yield.
 			local success, result = pcall(player.IsFriendsWith, player, players.LocalPlayer.UserId)
 

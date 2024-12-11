@@ -47,6 +47,15 @@ function VisualsTab.initESPCustomization(groupbox)
 		Rounding = 0,
 	})
 
+	groupbox:AddSlider("ESPSplitLineLength", {
+		Text = "ESP Split Line Length",
+		Tooltip = "The total length of a ESP label line before it splits into a new line.",
+		Default = 30,
+		Min = 10,
+		Max = 100,
+		Rounding = 0,
+	})
+
 	groupbox:AddDropdown("Font", { Text = "ESP Fonts", Default = 1, Values = { "Plex", "Monospace", "UI", "System" } })
 end
 

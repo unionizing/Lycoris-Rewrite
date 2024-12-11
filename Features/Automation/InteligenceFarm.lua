@@ -31,12 +31,19 @@ local autoIntelligenceMaid = Maid.new()
 
 ---Update inteligence.
 local function updateInteligence()
-	if not Configuration.expectToggleValue("IntelligenceFarm") then
+	local inteligenceFarm = Configuration.expectToggleValue("IntelligenceFarm")
+	if not inteligenceFarm then
 		return
 	end
 
-	if not Attributes.isNotAtCap("Stat_Intelligence", Options.IntelligenceCap.Value) then
-		return Toggles.InteligenceFarm:SetValue(false)
+	local inteligenceFarmCap = Configuration.expectOptionValue("IntelligenceFarmCap")
+	if not inteligenceFarmCap then
+		return
+	end
+
+	if not Attributes.isNotAtCap("Stat_Intelligence", inteligenceFarmCap) then
+		Logger.longNotify("Intelligence AutoFarm is automatically stopping.")
+		return inteligenceFarm:SetValue(false)
 	end
 
 	local localPlayer = players.LocalPlayer
@@ -129,7 +136,7 @@ local function updateInteligence()
 
 	choice:FireServer(buttonMap[deltaTable[1]])
 
-	if Attributes.isNotAtCap("Stat_Intelligence", Options.IntelligenceCap.Value) then
+	if Attributes.isNotAtCap("Stat_Intelligence", inteligenceFarmCap) then
 		return
 	end
 

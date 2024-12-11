@@ -20,9 +20,12 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
             - Add Username To Whitelist ❌
             - Remove Selected Username ❌
         - FOV Limit ❌
+        - Distance Limit ❌
+        - Visible Check ❌
         - Ignore Mobs ❌
         - Ignore Friends ❌
         - Must Face Target ❌
+        - Max Targets ❌
     - Auto Defense ✅
         - Enable Auto Defense ❌
         - Auto Defense Confinguration ❌

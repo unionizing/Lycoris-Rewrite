@@ -188,7 +188,7 @@ local function updateRemovalEffects(effect)
 		return hideEffect(effect)
 	end
 
-	if effect.Class == "BeingWinded" and Configuration.expectToggleValue("AntiWind") then
+	if effect.Class == "BeingWinded" and Configuration.expectToggleValue("NoWind") then
 		return hideEffect(effect)
 	end
 

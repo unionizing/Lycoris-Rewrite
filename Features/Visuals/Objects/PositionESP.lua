@@ -27,7 +27,6 @@ function PositionESP:hide()
 end
 
 ---Build text.
----@todo: This is ugly and doesn't make a new line if the second line is going to be smaller than the first one.
 ---@param label string
 ---@param tags string[]
 ---@return string
@@ -42,7 +41,7 @@ function PositionESP:build(label, tags)
 	for _, tag in next, tags do
 		local line = lines[#lines] or label
 
-		if #line > 40 then
+		if #line > Configuration.optionValue("ESPSplitLineLength") then
 			lines[#lines + 1] = tag
 			continue
 		end
