@@ -108,15 +108,6 @@ function VisualsTab.initESPOptimizations(groupbox)
 	})
 end
 
----Initialize Interface Visuals section.
----@param groupbox table
-function VisualsTab.initInterfaceVisuals(groupbox)
-	groupbox:AddToggle("ShowRobloxChat", {
-		Text = "Show Roblox Chat",
-		Default = true,
-	})
-end
-
 ---Initialize World Visuals section.
 ---@param groupbox table
 function VisualsTab.initWorldVisualsSection(groupbox)
@@ -370,7 +361,6 @@ function VisualsTab.init(window)
 	-- Initialize sections.
 	VisualsTab.initESPCustomization(tab:AddDynamicGroupbox("ESP Customization"))
 	VisualsTab.initESPOptimizations(tab:AddDynamicGroupbox("ESP Optimizations"))
-	VisualsTab.initInterfaceVisuals(tab:AddDynamicGroupbox("Interface Visuals"))
 	VisualsTab.initWorldVisualsSection(tab:AddDynamicGroupbox("World Visuals"))
 	VisualsTab.initVisualRemovalsSection(tab:AddDynamicGroupbox("Visual Removals"))
 	VisualsTab.addPlayerESP(VisualsTab.initBaseESPSection("Player", tab:AddDynamicGroupbox("Player ESP")))

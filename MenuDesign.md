@@ -100,6 +100,7 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Void Walker Contract Notifications ✅
         - Legendary Weapon Notifications ✅
         - Mod Notifications ✅
+        - Show Roblox Chat ✅
         - Show All Players in Map ❌
         - Chat Spy ❌
     
@@ -125,8 +126,6 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Object Check Delay ✅
             - Ignore Humanoids ✅
             - Delay Time ✅
-    - Interface Visuals ✅
-        - Show Roblox Chat ✅
     - World Visuals ✅
         - Modify Field Of View ✅
             - FOV Slider ✅

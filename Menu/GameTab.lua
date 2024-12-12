@@ -249,6 +249,11 @@ function GameTab.initPlayerMonitoringSection(groupbox)
 		Default = false,
 	})
 
+	groupbox:AddToggle("ShowRobloxChat", {
+		Text = "Show Roblox Chat",
+		Default = true,
+	})
+
 	groupbox:AddToggle("PlayerProximity", {
 		Text = "Player Proximity Notifications",
 		Tooltip = "When other players are within specified distance, notify the user.",
