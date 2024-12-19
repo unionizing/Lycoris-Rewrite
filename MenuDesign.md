@@ -35,15 +35,16 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Detect M1 Feints ❌
         - Detect Mantra Feints ❌
         - React To Feints ❌
+            - Feint Reaction Type ❌
+                - Dodge ❌
+                - Parry ❌
             - Feint Reaction Chance ❌
     - Attack Assistance ✅
         - Feint M1 While Defending ❌
         - Feint Mantras While Defending ❌
-    - Input Assistance ✅
-        - Block M1 While Defending ❌
-        - Block Critical While Defending ❌
-        - Block Mantras While Defending ❌
-        - Block Seconds ❌
+        - Block Punishable M1s ❌
+        - Block Punishable Criticals❌
+        - Block Punishable Mantras ❌
     - Combat Assistance ✅
         - Silent Aim ❌
         - Allow Flourish Feints ❌
