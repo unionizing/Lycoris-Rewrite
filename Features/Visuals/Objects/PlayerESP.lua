@@ -123,6 +123,11 @@ function PlayerESP.new(identifier, player, character)
 	self.player = player
 	self.character = character
 	self.identifier = identifier
+
+	if character and character:IsA("Model") then
+		character.ModelStreamingMode = Enum.ModelStreamingMode.Persistent
+	end
+
 	return self
 end
 

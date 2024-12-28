@@ -28,6 +28,8 @@ function ModelESP.new(identifier, model, label)
 		return error(string.format("ModelESP expected model on %s creation.", identifier))
 	end
 
+	model.ModelStreamingMode = Enum.ModelStreamingMode.Persistent
+
 	local self = setmetatable(PositionESP.new(identifier, label), ModelESP)
 	self.model = model
 	return self
