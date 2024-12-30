@@ -1,13 +1,17 @@
----@module Features.Combat.Timings.TimingContainer
-local TimingContainer = require("Features.Combat.Timings.TimingContainer")
+---@module Game.Timings.TimingSave
+local TimingContainer = require("Game/Timings/TimingContainer")
 
----@module Features.Combat.Timings.Timing
-local Timing = require("Features.Combat.Timings.Timing")
+---@module Game.Timings.Timing
+local Timing = require("Game/Timings/Timing")
 
 ---@class TimingSave
 ---@field _data TimingContainer[]
 local TimingSave = {}
 TimingSave.__index = TimingSave
+
+---Timing save version constant.
+---@note: Increment me when the data structure changes and we need to add backwards compatibility.
+local TIMING_SAVE_VERSION = 1
 
 ---@alias MergeType
 ---| '1' # Only add new timings
@@ -53,10 +57,20 @@ function TimingSave:load(values)
 	if typeof(values.sound) == "table" then
 		data.sound:load(values.sound)
 	end
+end
 
-	if typeof(values.keyframe) == "table" then
-		data.keyframe:load(values.keyframe)
-	end
+---Return a serializable table.
+---@return table
+function TimingSave:serialize()
+	local data = self._data
+
+	return {
+		version = TIMING_SAVE_VERSION,
+		animation = data.animation:serialize(),
+		effect = data.effect:serialize(),
+		part = data.part:serialize(),
+		sound = data.sound:serialize(),
+	}
 end
 
 ---Create new TimingSave object.
@@ -70,7 +84,6 @@ function TimingSave.new(values)
 		effect = TimingContainer.new(Timing),
 		part = TimingContainer.new(Timing),
 		sound = TimingContainer.new(Timing),
-		keyframe = TimingContainer.new(Timing),
 	}
 
 	if values then

@@ -19,6 +19,9 @@ local Features = require("Features")
 ---@module Game.PlayerScanning
 local PlayerScanning = require("Game/PlayerScanning")
 
+---@module Game.Timings.SaveManager
+local SaveManager = require("Game/Timings/SaveManager")
+
 -- Services.
 local memStorageService = game:GetService("MemStorageService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -135,6 +138,8 @@ function Lycoris.init()
 	end
 
 	Hooking.init()
+
+	SaveManager.init()
 
 	ControlModule.init()
 

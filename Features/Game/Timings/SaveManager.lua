@@ -1,5 +1,8 @@
----@module Features.Combat.Timings.TimingSave
-local TimingSave = require("Features/Combat/Timings/TimingSave")
+---@module Game.Timings.TimingSave
+local TimingSave = require("Game/Timings/TimingSave")
+
+---@module Game.Timings.TimingContainerPair
+local TimingContainerPair = require("Game/Timings/TimingContainerPair")
 
 -- SaveManager module.
 local SaveManager = {
@@ -30,6 +33,7 @@ function SaveManager.list()
 
 	for idx = 1, #list do
 		local file = list[idx]
+
 		if file:sub(-4) ~= ".bin" then
 			continue
 		end
@@ -133,7 +137,7 @@ end
 ---Write timing as config name.
 ---@param name string
 function SaveManager.write(name)
-	local success, result = pcall(Serializer.marshal, SaveManager.config)
+	local success, result = pcall(Serializer.marshal, SaveManager.config:serialize())
 
 	if not success then
 		Logger.longNotify("Failed to serialize config file %s.", name)
@@ -195,13 +199,28 @@ function SaveManager.init()
 	---@todo: Load default timings from server.
 	SaveManager.default:load({})
 
-	-- Load auto-load config.
+	-- Attempt to read auto-load config.
 	local success, result = pcall(fs.read, fs, "autoload.txt")
-	if not success then
-		return
+
+	-- Load auto-load config if it exists.
+	if success and result then
+		SaveManager.load(result)
 	end
 
-	SaveManager.load(result)
+	-- Animation stack.
+	SaveManager.as = TimingContainerPair.new(SaveManager.default:get().animation, SaveManager.config:get().animation)
+
+	-- Effect stack.
+	SaveManager.es:push(SaveManager.default:get().effect)
+	SaveManager.es:push(SaveManager.config:get().effect)
+
+	-- Part stack.
+	SaveManager.ps:push(SaveManager.default:get().part)
+	SaveManager.ps:push(SaveManager.config:get().part)
+
+	-- Sound stack.
+	SaveManager.ss:push(SaveManager.default:get().sound)
+	SaveManager.ss:push(SaveManager.config:get().sound)
 end
 
 -- Return SaveManager module.

@@ -16,8 +16,8 @@ local Exploits = require("Features/Exploits/Exploits")
 ---@module Features.Visuals.Visuals
 local Visuals = require("Features/Visuals/Visuals")
 
----@module Features.Removal
-local Removal = require("Features/Removal")
+---@module Features.Game.Removal
+local Removal = require("Features/Game/Removal")
 
 ---@module Features.Game.Monitoring
 local Monitoring = require("Features/Game/Monitoring")
@@ -31,12 +31,8 @@ local Logger = require("Utility/Logger")
 ---@module Features.Combat.Defense
 local Defense = require("Features/Combat/Defense")
 
----@module Features.Combat.Timings.SaveManager
-local SaveManager = require("Features/Combat/Timings/SaveManager")
-
 ---Initialize features.
 function Features.init()
-	SaveManager.init()
 	Defense.init()
 	Visuals.init()
 	Movement.init()

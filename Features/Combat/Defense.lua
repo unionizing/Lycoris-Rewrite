@@ -4,8 +4,8 @@ local Signal = require("Utility/Signal")
 ---@module Utility.Maid
 local Maid = require("Utility/Maid")
 
----@module Features.Combat.Object.AnimatorDefender
-local AnimatorDefender = require("Features/Combat/Object/AnimatorDefender")
+---@module Features.Combat.Objects.AnimatorDefender
+local AnimatorDefender = require("Features/Combat/Objects/AnimatorDefender")
 
 -- Handle all defense related functions.
 local Defense = {}
