@@ -70,7 +70,7 @@ function ActionContainer:serialize()
 	local data = {}
 
 	for _, action in next, self._data do
-		table.insert(data, action)
+		table.insert(data, action:serialize())
 	end
 
 	return data

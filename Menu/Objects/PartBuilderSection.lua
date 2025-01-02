@@ -22,6 +22,12 @@ function PartBuilderSection:check()
 		return Logger.longNotify("Please enter a valid part name.")
 	end
 
+	local found = self.pair:config().timings[self.partName.Value]
+
+	if found then
+		return Logger.longNotify("The timing '%s' already has the same part name.", found.name)
+	end
+
 	return true
 end
 
@@ -41,24 +47,6 @@ function PartBuilderSection:extra(tab)
 
 	self.partName = tab:AddInput(nil, {
 		Text = "Part Name",
-	})
-
-	self.initialMinimumDistance = tab:AddSlider(nil, {
-		Text = "Initial Minimum Distance",
-		Min = 0,
-		Max = 300,
-		Suffix = "s",
-		Default = 10,
-		Rounding = 0,
-	})
-
-	self.initialMaximumDistance = tab:AddSlider(nil, {
-		Text = "Initial Maximum Distance",
-		Min = 300,
-		Max = 2500,
-		Suffix = "s",
-		Default = 1000,
-		Rounding = 0,
 	})
 end
 
@@ -125,8 +113,6 @@ function PartBuilderSection:load(timing)
 
 	self.partName:SetValue(timing.pname)
 	self.timingDelay:SetValue(timing.td)
-	self.initialMaximumDistance:SetValue(timing.imdd)
-	self.initialMinimumDistance:SetValue(timing.imxd)
 
 	self.partContentFilter:SetValues(timing.filter)
 	self.partContentFilter:SetValue({})
@@ -139,8 +125,6 @@ function PartBuilderSection:write()
 
 	self.timing.pname = self.partName.Value
 	self.timing.td = self.timingDelay.Value
-	self.timing.imdd = self.initialMaximumDistance.Value
-	self.timing.imxd = self.initialMinimumDistance.Value
 	self.timing.filter = self.partContentFilter.Values
 end
 

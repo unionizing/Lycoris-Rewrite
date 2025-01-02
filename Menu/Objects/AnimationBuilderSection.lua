@@ -19,6 +19,12 @@ function AnimationBuilderSection:check()
 		return Logger.longNotify("Please enter a valid animation ID.")
 	end
 
+	local found = self.pair:config().timings[self.animationId.Value]
+
+	if found then
+		return Logger.longNotify("The timing '%s' already has the same animation ID.", found.name)
+	end
+
 	return true
 end
 

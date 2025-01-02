@@ -46,12 +46,17 @@ function TimingContainer:remove(timing)
 	self.timings[id] = nil
 end
 
----Overwrite a timing to the list.
+---Push a timing to the list.
 ---@param timing Timing
-function TimingContainer:overwrite(timing)
+function TimingContainer:push(timing)
 	local id = timing:id()
 	if not id then
 		return
+	end
+
+	---@note: Timing array keys must all be unique.
+	if self.timings[id] then
+		return error(string.format("Timing identifier '%s' already exists in container.", id))
 	end
 
 	---@note: Every timing must have unique names.

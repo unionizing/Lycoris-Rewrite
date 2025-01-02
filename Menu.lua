@@ -74,6 +74,7 @@ function Menu.init()
 	SaveManager:SetLibrary(Library)
 	SaveManager:IgnoreThemeSettings()
 	SaveManager:SetFolder("Lycoris-Rewrite-Configs")
+	SaveManager:SetIgnoreIndexes({ "Fly", "Noclip", "Speedhack", "InfiniteJump" })
 
 	-- Initialize all tabs.
 	CombatTab.init(window)
