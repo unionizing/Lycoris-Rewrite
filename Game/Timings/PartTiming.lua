@@ -5,8 +5,6 @@ local Timing = require("Game/Timings/Timing")
 ---@field pname string Part name.
 ---@field td number Timing delay.
 ---@field filter string[] Part names to look for.
----@field imdd number Initial minimum distance.
----@field imxd number Initial maximum distance.
 local PartTiming = setmetatable({}, { __index = Timing })
 PartTiming.__index = PartTiming
 
@@ -32,14 +30,6 @@ function PartTiming:load(values)
 	if typeof(values.filter) == "table" then
 		self.filter = values.filter
 	end
-
-	if typeof(values.imdd) == "number" then
-		self.imdd = values.imdd
-	end
-
-	if typeof(values.imxd) == "number" then
-		self.imxd = values.imxd
-	end
 end
 
 ---Clone timing.
@@ -50,8 +40,6 @@ function PartTiming:clone()
 	clone.pname = self.pname
 	clone.td = self.td
 	clone.filter = self.filter
-	clone.imdd = self.imdd
-	clone.imxd = self.imxd
 
 	return clone
 end
@@ -64,8 +52,6 @@ function PartTiming:serialize()
 	serializable.pname = self.pname
 	serializable.td = self.td
 	serializable.filter = self.filter
-	serializable.imdd = self.imdd
-	serializable.imxd = self.imxd
 
 	return serializable
 end
@@ -79,8 +65,6 @@ function PartTiming.new(values)
 	self.pname = ""
 	self.filter = {}
 	self.td = 0
-	self.imdd = 0
-	self.imxd = 0
 
 	if values then
 		self:load(values)

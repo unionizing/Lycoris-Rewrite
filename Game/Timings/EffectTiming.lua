@@ -37,7 +37,7 @@ end
 function EffectTiming:clone()
 	local clone = setmetatable(Timing.clone(self), EffectTiming)
 
-	clone.id = self.id
+	clone.ename = self.ename
 	clone.rpd = self.rpd
 	clone.rpue = self.rpue
 
@@ -49,7 +49,7 @@ end
 function EffectTiming:serialize()
 	local serializable = Timing.serialize(self)
 
-	serializable.id = self.id
+	serializable.ename = self.ename
 	serializable.rpue = self.rpue
 	serializable.rpd = self.rpd
 
@@ -62,7 +62,7 @@ end
 function EffectTiming.new(values)
 	local self = setmetatable(Timing.new(), EffectTiming)
 
-	self.id = ""
+	self.ename = ""
 	self.rpue = false
 	self.rpd = 0
 

@@ -4,7 +4,8 @@ local ActionContainer = require("Game/Timings/ActionContainer")
 ---@class Timing
 ---@field name string
 ---@field tag string
----@field hitbox Vector3
+---@field imdd number Initial minimum distance from position.
+---@field imxd number Initial maximum distance from position.
 ---@field duih boolean Delay until in hitbox.
 ---@field actions ActionContainer
 local Timing = {}
@@ -27,8 +28,12 @@ function Timing:load(values)
 		self.tag = values.tag
 	end
 
-	if typeof(values.hitbox) == "table" then
-		self.hitbox = Vector3.new(values.hitbox.X, values.hitbox.Y, values.hitbox.Z)
+	if typeof(values.imdd) == "number" then
+		self.imdd = values.imdd
+	end
+
+	if typeof(values.imxd) == "number" then
+		self.imxd = values.imxd
 	end
 
 	if typeof(values.duih) == "boolean" then
@@ -47,8 +52,9 @@ function Timing:clone()
 
 	clone.name = self.name
 	clone.tag = self.tag
-	clone.hitbox = self.hitbox
 	clone.duih = self.duih
+	clone.imdd = self.imdd
+	clone.imxd = self.imxd
 	clone.actions = self.actions:clone()
 
 	return clone
@@ -60,11 +66,9 @@ function Timing:serialize()
 	return {
 		name = self.name,
 		tag = self.tag,
-		hitbox = {
-			X = self.hitbox.X,
-			Y = self.hitbox.Y,
-			Z = self.hitbox.Z,
-		},
+		imdd = self.imdd,
+		imxd = self.imxd,
+		duih = self.duih,
 		actions = self.actions:serialize(),
 	}
 end
@@ -77,7 +81,8 @@ function Timing.new(values)
 
 	self.tag = "Undefined"
 	self.name = "N/A"
-	self.hitbox = Vector3.zero
+	self.imdd = 0
+	self.imxd = 0
 	self.duih = false
 	self.actions = ActionContainer.new()
 

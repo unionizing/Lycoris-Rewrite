@@ -19,6 +19,12 @@ function EffectBuilderSection:check()
 		return Logger.longNotify("Please enter a valid effect name.")
 	end
 
+	local found = self.pair:config().timings[self.effectName.Value]
+
+	if found then
+		return Logger.longNotify("The timing '%s' already has the same effect name.", found.name)
+	end
+
 	return true
 end
 

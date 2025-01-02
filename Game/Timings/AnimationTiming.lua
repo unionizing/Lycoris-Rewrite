@@ -39,7 +39,7 @@ function AnimationTiming:clone()
 
 	clone.rpd = self.rpd
 	clone.rpue = self.rpue
-	clone.id = self.id
+	clone._id = self._id
 
 	return clone
 end

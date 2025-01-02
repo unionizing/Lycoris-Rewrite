@@ -19,6 +19,12 @@ function SoundBuilderSection:check()
 		return Logger.longNotify("Please enter a valid sound ID.")
 	end
 
+	local found = self.pair:config().timings[self.soundId.Value]
+
+	if found then
+		return Logger.longNotify("The timing '%s' already has the same sound ID.", found.name)
+	end
+
 	return true
 end
 
@@ -73,7 +79,7 @@ end
 function SoundBuilderSection:write()
 	BuilderSection.write(self)
 
-	self.timing._id = self.animationId.Value
+	self.timing._id = self.soundId.Value
 	self.timing.rpue = self.repeatUntilParryEnd.Value
 	self.timing.rpd = self.repeatParryDelay.Value
 end

@@ -22,6 +22,8 @@ local Logger = require("Utility/Logger")
 ---@field hitboxWidth table
 ---@field hitboxHeight table
 ---@field delayUntilInHitbox table
+---@field initialMinimumDistance table
+---@field initialMaximumDistance table
 ---@field actionList table
 ---@field actionName table
 ---@field actionDelay table
@@ -53,13 +55,15 @@ function BuilderSection:load(timing)
 	-- Then, set the elements correctly.
 	self.timingName:SetValue(timing.name)
 	self.timingTag:SetValue(timing.tag)
-	self.hitboxLength:SetValue(timing.hitbox.X)
-	self.hitboxHeight:SetValue(timing.hitbox.Y)
-	self.hitboxWidth:SetValue(timing.hitbox.Z)
+	self.initialMaximumDistance:SetValue(timing.imxd)
+	self.initialMinimumDistance:SetValue(timing.imdd)
 	self.delayUntilInHitbox:SetValue(timing.duih)
 	self.actionName:SetValue("")
 	self.actionDelay:SetValue(0)
 	self.actionType:SetValue("Parry")
+	self.hitboxHeight:SetValue(0)
+	self.hitboxLength:SetValue(0)
+	self.hitboxWidth:SetValue(0)
 
 	-- Refresh the action list.
 	self:crefresh()
@@ -69,16 +73,17 @@ end
 function BuilderSection:write()
 	self.timing.name = self.timingName.Value
 	self.timing.tag = self.timingTag.Value
-	self.timing.hitbox = Vector3.new(self.hitboxLength.Value, self.hitboxHeight.Value, self.hitboxWidth.Value)
+	self.timing.imdd = self.initialMinimumDistance.Value
+	self.timing.imxd = self.initialMaximumDistance.Value
 	self.timing.duih = self.delayUntilInHitbox.Value
 	self.timing.actions = self.container:clone()
 end
 
----Overwrite the timing. Add or update the timing.
-function BuilderSection:overwrite()
+---Push the timing to the list.
+function BuilderSection:push()
 	local config = self.pair:config()
 
-	config:overwrite(self.timing:clone())
+	config:push(self.timing:clone())
 
 	self:refresh()
 end
@@ -141,6 +146,9 @@ function BuilderSection:baction(base)
 			self.actionName:SetValue(action.name)
 			self.actionDelay:SetValue(action.when)
 			self.actionType:SetValue(action._type)
+			self.hitboxWidth:SetValue(action.hitbox.X)
+			self.hitboxHeight:SetValue(action.hitbox.Y)
+			self.hitboxLength:SetValue(action.hitbox.Z)
 		end,
 	})
 
@@ -159,12 +167,41 @@ function BuilderSection:baction(base)
 		Default = 1,
 	})
 
+	self.hitboxLength = base:AddSlider(nil, {
+		Text = "Hitbox Length",
+		Min = 0,
+		Max = 300,
+		Suffix = "s",
+		Default = 0,
+		Rounding = 0,
+	})
+
+	self.hitboxWidth = base:AddSlider(nil, {
+		Text = "Hitbox Width",
+		Min = 0,
+		Max = 300,
+		Suffix = "s",
+		Default = 0,
+		Rounding = 0,
+	})
+
+	self.hitboxHeight = base:AddSlider(nil, {
+		Text = "Hitbox Height",
+		Min = 0,
+		Max = 300,
+		Suffix = "s",
+		Default = 0,
+		Rounding = 0,
+	})
+
 	base:AddButton("Add Action To List", function()
 		if #self.actionName.Value <= 0 then
 			return Logger.longNotify("Please enter a valid action name.")
 		end
 
-		if not self.actionDelay.Value or self.actionDelay.Value <= 0 then
+		local actionDelay = self.actionDelay.Value and tonumber(self.actionDelay.Value) or 0
+
+		if not actionDelay or actionDelay < 0 then
 			return Logger.longNotify("Please enter a valid action delay.")
 		end
 
@@ -175,7 +212,10 @@ function BuilderSection:baction(base)
 		local action = Action.new()
 		action._type = self.actionType.Value
 		action.name = self.actionName.Value
-		action.when = self.actionDelay.Value
+		action.when = actionDelay
+		action.hitbox.X = self.hitboxWidth.Value
+		action.hitbox.Y = self.hitboxHeight.Value
+		action.hitbox.Z = self.hitboxLength.Value
 
 		self.container:push(action)
 		self:crefresh()
@@ -229,30 +269,21 @@ function BuilderSection:builder()
 		Default = 1,
 	})
 
-	self.hitboxLength = tab:AddSlider(nil, {
-		Text = "Hitbox Length",
+	self.initialMinimumDistance = tab:AddSlider(nil, {
+		Text = "Initial Minimum Distance",
 		Min = 0,
 		Max = 300,
 		Suffix = "s",
-		Default = 0,
+		Default = 10,
 		Rounding = 0,
 	})
 
-	self.hitboxWidth = tab:AddSlider(nil, {
-		Text = "Hitbox Width",
-		Min = 0,
-		Max = 300,
+	self.initialMaximumDistance = tab:AddSlider(nil, {
+		Text = "Initial Maximum Distance",
+		Min = 300,
+		Max = 2500,
 		Suffix = "s",
-		Default = 0,
-		Rounding = 0,
-	})
-
-	self.hitboxHeight = tab:AddSlider(nil, {
-		Text = "Hitbox Height",
-		Min = 0,
-		Max = 300,
-		Suffix = "s",
-		Default = 0,
+		Default = 1000,
 		Rounding = 0,
 	})
 
@@ -263,7 +294,7 @@ function BuilderSection:builder()
 
 	self:extra(tab)
 
-	tab:AddButton("Write Timing To List", function()
+	tab:AddButton("Add Timing To List", function()
 		if #self.timingName.Value <= 0 then
 			return Logger.longNotify("Please enter a valid timing name.")
 		end
@@ -278,7 +309,7 @@ function BuilderSection:builder()
 
 		self:write()
 
-		self:overwrite()
+		self:push()
 	end)
 
 	tab:AddButton("Remove Timing From List", function()
