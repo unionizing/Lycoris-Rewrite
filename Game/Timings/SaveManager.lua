@@ -147,6 +147,10 @@ end
 ---Create timing as config name.
 ---@param name string
 function SaveManager.create(name)
+	if not name or #name <= 0 then
+		return Logger.longNotify("Config name cannot be empty.")
+	end
+
 	if fs:file(name .. ".bin") then
 		return Logger.longNotify("Config file %s already exists.", name)
 	end
@@ -157,6 +161,10 @@ end
 ---Save timing as config name.
 ---@param name string
 function SaveManager.save(name)
+	if not name or #name <= 0 then
+		return Logger.longNotify("Config name cannot be empty.")
+	end
+
 	if not fs:file(name .. ".bin") then
 		return Logger.longNotify("Config file %s does not exist.", name)
 	end
