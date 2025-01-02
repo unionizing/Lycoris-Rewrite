@@ -1595,7 +1595,7 @@ do
 					Button.Label.Text = "Are you sure?"
 					Button.Locked = true
 
-					local clicked = WaitForEvent(Button.Outer.InputBegan, 0.5, ValidateClick)
+					local clicked = WaitForEvent(Button.Outer.InputBegan, 2, ValidateClick)
 
 					Library:RemoveFromRegistry(Button.Label)
 					Library:AddToRegistry(Button.Label, { TextColor3 = "FontColor" })

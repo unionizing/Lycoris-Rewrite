@@ -149,17 +149,18 @@ function BuilderTab.init(window)
 	BuilderTab.initMergeManagerSection(tab:AddDynamicGroupbox("Merge Manager"))
 	BuilderTab.initLoggerSection(tab:AddDynamicGroupbox("Logger"))
 
-	-- Initialize builder tabboxes.
-	local atb = tab:AddDynamicTabbox()
-	local etb = tab:AddDynamicTabbox()
-	local ptb = tab:AddDynamicTabbox()
-	local stb = tab:AddDynamicTabbox()
+	-- Create builder sections.
+	BuilderTab.ebs = EffectBuilderSection.new("Effect", tab:AddDynamicTabbox(), SaveManager.es, EffectTiming.new())
+	BuilderTab.pbs = PartBuilderSection.new("Part", tab:AddDynamicTabbox(), SaveManager.ps, PartTiming.new())
+	BuilderTab.sbs = SoundBuilderSection.new("Sound", tab:AddDynamicTabbox(), SaveManager.ss, SoundTiming.new())
+	BuilderTab.abs =
+		AnimationBuilderSection.new("Animation", tab:AddDynamicTabbox(), SaveManager.as, AnimationTiming.new())
 
-	-- Initalize builder sections.
-	BuilderTab.abs = AnimationBuilderSection.new("Animation", atb, SaveManager.as, AnimationTiming.new()):init()
-	BuilderTab.ebs = EffectBuilderSection.new("Effect", etb, SaveManager.es, EffectTiming.new()):init()
-	BuilderTab.pbs = PartBuilderSection.new("Part", ptb, SaveManager.ps, PartTiming.new()):init()
-	BuilderTab.sbs = SoundBuilderSection.new("Sound", stb, SaveManager.ss, SoundTiming.new()):init()
+	-- Initialize builder sections.
+	BuilderTab.abs:init()
+	BuilderTab.ebs:init()
+	BuilderTab.pbs:init()
+	BuilderTab.sbs:init()
 end
 
 -- Return CombatTab module.
