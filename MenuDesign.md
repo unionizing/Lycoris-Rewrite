@@ -10,22 +10,20 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
 # Ordered Menu Design
 - Combat ✅
     - Combat Targeting ✅
-        - Player Selection Type ❌
-            - Closest In Distance ❌ 
-            - Closest To Crosshair ❌
-            - Least Health ❌
-        - Player Whitelist ❌
-            - Username List ❌
-            - Username Input Box ❌
-            - Add Username To Whitelist ❌
-            - Remove Selected Username ❌
-        - FOV Limit ❌
-        - Distance Limit ❌
-        - Visible Check ❌
-        - Ignore Mobs ❌
-        - Ignore Friends ❌
-        - Must Face Target ❌
-        - Max Targets ❌
+        - Player Selection Type ✅
+            - Closest In Distance ✅ 
+            - Closest To Crosshair ✅
+            - Least Health ✅
+        - Player Whitelist ✅
+            - Username List ✅
+            - Username Input Box ✅
+            - Add Username To Whitelist ✅
+            - Remove Selected Username ✅
+        - FOV Limit ✅
+        - Distance Limit ✅
+        - Ignore Mobs ✅
+        - Ignore Friends ✅
+        - Max Targets ✅
     - Auto Defense ✅
         - Enable Auto Defense ❌
         - Auto Defense Configuration ❌

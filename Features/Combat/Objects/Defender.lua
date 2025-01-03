@@ -64,10 +64,8 @@ local function fetchInputClientData()
 	end
 end
 
----Detach defender.
-function Defender:detach()
-	self.maid:clean()
-end
+---Detach function. Override me.
+function Defender:detach() end
 
 ---Parry action.
 ---@note: Re-created InputClient parry. We can't access the main proto or the input handler.
@@ -130,8 +128,8 @@ end
 
 ---Dodge action.
 ---@note: Re-created InputClient dodge. We can't access the main proto or input handler.
----@param hrp Instance
----@param humanoid Instance
+---@param hrp Part
+---@param humanoid Humanoid
 function Defender:dodge(hrp, humanoid)
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then

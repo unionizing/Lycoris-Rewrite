@@ -264,9 +264,9 @@ function GameTab.initPlayerMonitoringSection(groupbox)
 
 	ppDepBox:AddSlider("PlayerProximityRange", {
 		Text = "Player Proximity Distance",
-		Default = 350,
+		Default = 1000,
 		Min = 50,
-		Max = 1000,
+		Max = 2500,
 		Suffix = "studs",
 		Rounding = 0,
 	})

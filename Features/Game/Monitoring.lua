@@ -99,6 +99,7 @@ local function onSpectateInputBegan(player, input)
 end
 
 ---Update spectating.
+---@todo: Start streaming around the player when spectating.
 local function updateSpectating()
 	local leaderboardMap, updateLeaderboard = getLeaderboardData()
 	if not leaderboardMap or not updateLeaderboard then

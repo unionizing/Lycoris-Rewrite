@@ -195,7 +195,7 @@ function VisualsTab.initBaseESPSection(identifier, groupbox)
 		Tooltip = "If the distance is greater than this value, the ESP object will not be shown.",
 		Default = 2000,
 		Min = 0,
-		Max = 10000,
+		Max = 100000,
 		Suffix = "studs",
 		Rounding = 0,
 	})
