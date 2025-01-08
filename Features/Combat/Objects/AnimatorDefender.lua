@@ -191,6 +191,7 @@ function AnimatorDefender:process(track)
 		return
 	end
 
+	---@note: Clean up previous tasks that are still waiting or suspended because they're in a different track.
 	self.tasks:clean()
 	self.track = track
 	self.heffects = {}
