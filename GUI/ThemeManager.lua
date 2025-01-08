@@ -271,7 +271,9 @@ do
 		self.Library = lib
 	end
 
-	function ThemeManager:BuildFolderTree() end
+	function ThemeManager:BuildFolderTree()
+		makefolder(self.Folder)
+	end
 
 	function ThemeManager:SetFolder(folder)
 		self.Folder = folder
