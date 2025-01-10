@@ -25,24 +25,30 @@ local function onLiveDescendantAdded(child)
 		return
 	end
 
-	local localCharacter = players.LocalPlayer.Character
-
-	if localCharacter and child:IsDescendantOf(players.LocalPlayer.Character) then
-		return
-	end
-
 	defenderObjects[child] = AnimatorDefender.new(child)
 end
 
 -- On live descendant removed.
 local function onLiveDescendantRemoved(child)
-	local defenderObject = defenderObjects[child]
-	if not defenderObject then
+	local object = defenderObjects[child]
+	if not object then
 		return
 	end
 
-	defenderObject:detach()
-	defenderObject[child] = nil
+	object:detach()
+	object[child] = nil
+end
+
+---Check if objects have active tasks.
+---@return boolean
+function Defense.active()
+	for _, object in next, defenderObjects do
+		if not object:active() then
+			continue
+		end
+
+		return true
+	end
 end
 
 ---Initialize defense.
@@ -63,8 +69,8 @@ end
 
 ---Detach defense.
 function Defense.detach()
-	for _, defenderObject in next, defenderObjects do
-		defenderObject:detach()
+	for _, object in next, defenderObjects do
+		object:detach()
 	end
 
 	defenseMaid:clean()

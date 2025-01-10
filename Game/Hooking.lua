@@ -16,11 +16,17 @@ local Monitoring = require("Features/Game/Monitoring")
 ---@module Game.InputClient
 local InputClient = require("Game/InputClient")
 
+---@module Features.Combat.Defense
+local Defense = require("Features/Combat/Defense")
+
 -- Services.
 local playersService = game:GetService("Players")
 local runService = game:GetService("RunService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local lighting = game:GetService("Lighting")
+
+---@note: Store reference to used & hooked khGetRemote.
+local khGetRemote = nil
 
 -- Old hooked functions.
 local oldFireServer = nil
@@ -35,6 +41,7 @@ local oldTaskSpawn = nil
 local oldProtectedCall = nil
 local oldError = nil
 local oldToString = nil
+local oldGetRemote = nil
 
 -- Last state.
 local lastErrorResult = nil
@@ -160,6 +167,11 @@ local function onNameCall(...)
 	local method = getnamecallmethod()
 
 	if self == heavenRemote or self == hellRemote then
+		return
+	end
+
+	---@note: Mantra block input.
+	if self.Name == "ActivateMantra" and Defense.active() then
 		return
 	end
 
@@ -402,6 +414,24 @@ local function onToString(...)
 	return oldToString(...)
 end
 
+---On get remote.
+---@return any
+local function onGetRemote(...)
+	local args = { ... }
+	local identifier = args[1]
+
+	if typeof(identifier) ~= "string" then
+		return oldGetRemote(...)
+	end
+
+	---@note: Return a fake remote event to block the input.
+	if (identifier == "LeftClick" or identifier == "CriticalClick") and Defense.active() then
+		return Instance.new("RemoteEvent")
+	end
+
+	return oldGetRemote(...)
+end
+
 ---Hooking initialization.
 ---@note: Careful with checkcaller() on hooks where it is called from us during KeyHandling phase.
 function Hooking.init()
@@ -422,8 +452,16 @@ function Hooking.init()
 	oldNewIndex = hookfunction(getrawmetatable(game).__newindex, onNewIndex)
 	oldTick = hookfunction(tick, onTick)
 
-	---@note: This is longer for lower-end devices.
-	---@note: This part is crucial because of the Actor and the error detection.
+	-- Fetch the 'khGetRemote' function.
+	khGetRemote = KeyHandling.getRemoteRaw()
+	if not khGetRemote then
+		return error("Failed to get the 'khGetRemote' function.")
+	end
+
+	-- Hook the 'khGetRemote' function.
+	oldGetRemote = hookfunction(khGetRemote, onGetRemote)
+
+	---@note: This is longer for lower-end devices. Crucial part because of the actor and the error detection.
 	---@improvement: Add a listener for this script.
 	local clientActor = playerScripts and playerScripts:WaitForChild("ClientActor", 25)
 	local clientManager = clientActor and clientActor:WaitForChild("ClientManager", 25)
@@ -451,6 +489,10 @@ function Hooking.detach()
 	hookfunction(getrawmetatable(game).__newindex, oldNewIndex)
 	hookfunction(Instance.new("RemoteEvent").FireServer, oldFireServer)
 	hookfunction(Instance.new("UnreliableRemoteEvent").FireServer, oldUnreliableFireServer)
+
+	if khGetRemote and oldGetRemote then
+		hookfunction(khGetRemote, oldGetRemote)
+	end
 
 	local playerScripts = localPlayer:FindFirstChild("PlayerScripts")
 	local clientActor = playerScripts and playerScripts:FindFirstChild("ClientActor")

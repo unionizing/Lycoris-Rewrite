@@ -33,26 +33,37 @@ function KeyHandling.getAntiCheatRemotes()
 	return stack[86], stack[85]
 end
 
+---Get the 'khGetRemote' funciton.
+---@return function
+function KeyHandling.getRemoteRaw()
+	local keyHandlerModule = require(keyHandler)
+	if not keyHandlerModule then
+		return
+	end
+
+	local keyHandlerObject = keyHandlerModule()
+	if not keyHandlerObject then
+		return
+	end
+
+	return keyHandlerObject[1]
+end
+
 ---Get remote from a specific remote name.
 ---@param remoteName string
 ---@return Instance|nil
 function KeyHandling.getRemote(remoteName)
 	local integrityModule = require(integrity)
-	local keyHandlerModule = require(keyHandler)
-
-	if not integrityModule or not keyHandlerModule then
+	if not integrityModule then
 		return
 	end
 
 	local keyHandlerKey = integrityModule()
-	local keyHandlerObject = keyHandlerModule()
-
-	if not keyHandlerKey or not keyHandlerObject then
+	if not keyHandlerKey then
 		return
 	end
 
-	local khGetRemote = keyHandlerObject[1]
-
+	local khGetRemote = KeyHandling.getRemoteRaw()
 	if not khGetRemote then
 		return
 	end

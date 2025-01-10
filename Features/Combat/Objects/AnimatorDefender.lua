@@ -188,6 +188,11 @@ function AnimatorDefender:process(track)
 		return
 	end
 
+	local localCharacter = players.LocalPlayer.Character
+	if localCharacter and self.entity == localCharacter then
+		return
+	end
+
 	---@type AnimationTiming
 	local timing = SaveManager.as:index(tostring(track.Animation.AnimationId))
 	if not timing then

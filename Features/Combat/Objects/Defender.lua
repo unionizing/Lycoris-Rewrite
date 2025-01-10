@@ -88,17 +88,45 @@ function Defender:handle(action)
 	end
 end
 
+---Check if we have active tasks.
+---@return boolean
+function Defender:active()
+	for _, task in next, self.tasks._tasks do
+		if typeof(task) ~= "thread" then
+			continue
+		end
+
+		if coroutine.status(task) == "dead" then
+			continue
+		end
+
+		return true
+	end
+end
+
 ---Add actions from timing to defender object.
 ---@param timing Timing
 function Defender:actions(timing)
 	for _, action in next, timing.actions:get() do
-		local ping = self:ping()
-		local atask =
-			TaskSpawner.delay(string.format("Action_%s", action._type), action:when() - ping, self.handle, self, action)
+		local actionPing = self:ping()
 
-		self:log(timing, "Added action '%s' (%.2fs) with ping '%.2f' subtracted.", action.name, action:when(), ping)
+		local actionTask = TaskSpawner.delay(
+			string.format("Action_%s", action._type),
+			action:when() - actionPing,
+			self.handle,
+			self,
+			action
+		)
 
-		self.tasks:mark(atask)
+		self:log(
+			timing,
+			"Added action '%s' (%.2fs) with ping '%.2f' subtracted.",
+			action.name,
+			action:when(),
+			actionPing
+		)
+
+		self.tasks:mark(actionTask)
 	end
 end
 
