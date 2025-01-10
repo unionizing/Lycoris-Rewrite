@@ -78,8 +78,8 @@ function EffectBuilderSection:load(timing)
 
 	self.effectName:SetValue(timing.ename)
 	self.repeatUntilParryEnd:SetValue(timing.rpue)
-	self.repeatParryDelay:SetValue(timing.rpd)
-	self.repeatStartDelay:SetValue(timing.rsd)
+	self.repeatParryDelay:SetValue(timing._rpd)
+	self.repeatStartDelay:SetValue(timing._rsd)
 end
 
 ---Write to the current timing.
@@ -87,9 +87,9 @@ function EffectBuilderSection:write()
 	BuilderSection.write(self)
 
 	self.timing.ename = self.effectName.Value
-	self.timing.rsd = self.repeatStartDelay.Value
+	self.timing._rsd = self.repeatStartDelay.Value
 	self.timing.rpue = self.repeatUntilParryEnd.Value
-	self.timing.rpd = self.repeatParryDelay.Value
+	self.timing._rpd = self.repeatParryDelay.Value
 end
 
 ---Create new EffectBuilderSection object.

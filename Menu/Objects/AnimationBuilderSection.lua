@@ -77,9 +77,9 @@ function AnimationBuilderSection:load(timing)
 	BuilderSection.load(self, timing)
 
 	self.animationId:SetValue(timing._id)
-	self.repeatStartDelay:SetValue(timing.rsd)
+	self.repeatStartDelay:SetValue(timing._rsd)
 	self.repeatUntilParryEnd:SetValue(timing.rpue)
-	self.repeatParryDelay:SetValue(timing.rpd)
+	self.repeatParryDelay:SetValue(timing._rpd)
 end
 
 ---Write to the current timing.
@@ -87,9 +87,9 @@ function AnimationBuilderSection:write()
 	BuilderSection.write(self)
 
 	self.timing._id = self.animationId.Value
-	self.timing.rsd = self.repeatStartDelay.Value
+	self.timing._rsd = self.repeatStartDelay.Value
 	self.timing.rpue = self.repeatUntilParryEnd.Value
-	self.timing.rpd = self.repeatParryDelay.Value
+	self.timing._rpd = self.repeatParryDelay.Value
 end
 
 ---Create new AnimationBuilderSection object.

@@ -144,7 +144,7 @@ function BuilderSection:baction(base)
 			end
 
 			self.actionName:SetValue(action.name)
-			self.actionDelay:SetValue(action.when)
+			self.actionDelay:SetValue(action._when)
 			self.actionType:SetValue(action._type)
 			self.hitboxWidth:SetValue(action.hitbox.X)
 			self.hitboxHeight:SetValue(action.hitbox.Y)
@@ -212,7 +212,7 @@ function BuilderSection:baction(base)
 		local action = Action.new()
 		action._type = self.actionType.Value
 		action.name = self.actionName.Value
-		action.when = actionDelay
+		action._when = actionDelay
 		action.hitbox = Vector3.new(self.hitboxWidth.Value, self.hitboxHeight.Value, self.hitboxLength.Value)
 
 		self.container:push(action)

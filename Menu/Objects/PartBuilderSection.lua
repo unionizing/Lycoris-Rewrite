@@ -112,7 +112,7 @@ function PartBuilderSection:load(timing)
 	BuilderSection.load(self, timing)
 
 	self.partName:SetValue(timing.pname)
-	self.timingDelay:SetValue(timing.td)
+	self.timingDelay:SetValue(timing._td)
 
 	self.partContentFilter:SetValues(timing.filter)
 	self.partContentFilter:SetValue({})
@@ -124,7 +124,7 @@ function PartBuilderSection:write()
 	BuilderSection.write(self)
 
 	self.timing.pname = self.partName.Value
-	self.timing.td = self.timingDelay.Value
+	self.timing._td = self.timingDelay.Value
 	self.timing.filter = self.partContentFilter.Values
 end
 
