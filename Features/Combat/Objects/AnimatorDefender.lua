@@ -164,12 +164,18 @@ end
 ---@param track AnimationTrack
 ---@param timing AnimationTiming
 function AnimatorDefender:rpue(track, timing)
+	local index = 0
+
 	while self.track.IsPlaying do
 		task.wait(timing:rpd() - self:ping())
 
 		if not self:initial(timing) then
 			continue
 		end
+
+		index = index + 1
+
+		self:log(timing, "Action 'RPUE Parry' is being executed at index %d.", index)
 
 		InputClient.parry()
 	end
