@@ -34,8 +34,8 @@ local function sliceArray(input, start, stop)
 		stop = #input + stop + 1
 	end
 
-	for i = start, stop do
-		table.insert(out, input[i])
+	for idx = start, stop do
+		table.insert(out, input[idx])
 	end
 
 	return out
