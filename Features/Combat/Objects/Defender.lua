@@ -109,8 +109,8 @@ function Defender:handle(timing, action)
 
 	---@note: Okay, we'll assume that we're in the parry state. There's no other type.
 	if effectReplicatorModule:FindEffect("ParryCool") and Configuration.expectToggleValue("RollOnParryCooldown") then
-		return InputClient.dodge(root, humanoid)
-			and self:notify(timing, "Action type 'Parry' overrided to 'Dodge' type.")
+		return self:notify(timing, "Action type 'Parry' overrided to 'Dodge' type.")
+			and InputClient.dodge(root, humanoid)
 	end
 
 	InputClient.parry()
