@@ -93,7 +93,7 @@ function Defender:handle(timing, action)
 		return
 	end
 
-	Logger.notify("Action type '%s' is being executed.", action._type)
+	self:notify(timing, "Action type '%s' is being executed.", action._type)
 
 	if action._type == "Start Block" then
 		return InputClient.bstart()
@@ -157,7 +157,7 @@ function Defender:actions(timing)
 		)
 
 		-- Log.
-		self:log(timing, "Added action '%s' (%.2fs) with ping '%.2f' subtracted.", action.name, action:when(), ping)
+		self:notify(timing, "Added action '%s' (%.2fs) with ping '%.2f' subtracted.", action.name, action:when(), ping)
 	end
 end
 

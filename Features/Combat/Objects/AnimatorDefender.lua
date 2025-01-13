@@ -182,7 +182,7 @@ function AnimatorDefender:rpue(track, timing, index)
 		return
 	end
 
-	self:log(timing, "(%i) Action 'RPUE Parry' is being executed.", index)
+	self:notify(timing, "(%i) Action 'RPUE Parry' is being executed.", index)
 
 	InputClient.parry()
 end
@@ -278,7 +278,7 @@ function AnimatorDefender:process(track)
 		Task.new(string.format("RPUE_%s", timing.name), timing:rsd() - self:ping(), self.rpue, self, track, timing, 0)
 	)
 
-	self:log(
+	self:notify(
 		timing,
 		"Added RPUE '%s' (%.2fs, then every %.2fs) with relevant ping subtracted.",
 		timing.name,

@@ -428,13 +428,13 @@ local function onGetRemote(...)
 	end
 
 	if identifier == "LeftClick" then
-		return (Configuration.expectToggleValue("BlockPunishableM1s") and Defense.blocking())
-			and Instance.new("UnreliableRemoteEvent")
+		local block = (Configuration.expectToggleValue("BlockPunishableM1s") and Defense.blocking())
+		return block and Instance.new("UnreliableRemoteEvent") or oldGetRemote(...)
 	end
 
 	if identifier == "CriticalClick" then
-		return (Configuration.expectToggleValue("BlockPunishableCriticals") and Defense.blocking())
-			and Instance.new("UnreliableRemoteEvent")
+		local block = (Configuration.expectToggleValue("BlockPunishableM1s") and Defense.blocking())
+		return block and Instance.new("UnreliableRemoteEvent") or oldGetRemote(...)
 	end
 
 	return oldGetRemote(...)
