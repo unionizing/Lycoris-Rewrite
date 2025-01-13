@@ -258,7 +258,19 @@ function AnimatorDefender:process(track)
 	local shouldFeintMantra = effectReplicatorModule:FindEffect("CastingSpell")
 		and Configuration.expectToggleValue("FeintMantrasWhileDefending")
 
+	Logger.warn(
+		"FeintAttack(%s) and FeintMantra(%s) - Animation %s is being processed from entity %s.",
+		tostring(shouldFeintAttack),
+		tostring(shouldFeintMantra),
+		track.Animation.AnimationId,
+		self.entity.Name
+	)
+
 	if not effectReplicatorModule:FindEffect("FeintCool") and (shouldFeintAttack or shouldFeintMantra) then
+		-- Log.
+		self:log(timing, "Automatically feinting for block input.")
+
+		-- Feint.
 		InputClient.feint(humanoidRootPart)
 	end
 
