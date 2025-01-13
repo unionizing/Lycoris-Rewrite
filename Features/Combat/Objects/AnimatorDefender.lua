@@ -191,6 +191,10 @@ end
 ---@todo: Logger module.
 ---@param track AnimationTrack
 function AnimatorDefender:process(track)
+	if not Configuration.expectToggleValue("EnableAutoDefense") then
+		return
+	end
+
 	if track.Priority == Enum.AnimationPriority.Core then
 		return
 	end
