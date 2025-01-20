@@ -113,6 +113,7 @@ local function updateSpectating()
 		if Configuration.expectToggleValue("ShowHiddenPlayers") then
 			showHiddenMap:add(frame, "Visible", true)
 		else
+			---@todo: STOP! STOP! Restoring will fuck up the leaderboard here. We need proper restore functions instead of defaulting to map.
 			showHiddenMap:restore()
 		end
 

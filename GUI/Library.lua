@@ -110,12 +110,10 @@ function Library:SafeCallback(label, f, ...)
 		return
 	end
 
-	local success, event = pcall(Profiler.wrap(label, f), ...)
-
-	if not success then
-		warn(string.format("Library:SafeCallback - failed on label %s - %s", label, event))
+	xpcall(Profiler.wrap(label, f), function(err)
+		warn(string.format("Library:SafeCallback - failed on label %s - %s", label, err))
 		warn(debug.traceback())
-	end
+	end, ...)
 end
 
 function Library:AttemptSave()
@@ -1803,6 +1801,46 @@ do
 
 		Library:ApplyTextStroke(Box)
 
+		local Connection = nil
+
+		function Textbox:SetRawValue(Text)
+			if Info.MaxLength and #Text > Info.MaxLength then
+				Text = Text:sub(1, Info.MaxLength)
+			end
+
+			if Textbox.Numeric then
+				if (not tonumber(Text)) and Text:len() > 0 then
+					Text = Textbox.Value
+				end
+			end
+
+			Textbox.Value = Text
+
+			if Connection then
+				Connection:Disconnect()
+			end
+
+			Box.Text = Text
+
+			if Connection then
+				if Textbox.Finished then
+					Connection = Box.FocusLost:Connect(function(enter)
+						if not enter then
+							return
+						end
+
+						Textbox:SetValue(Box.Text)
+						Library:AttemptSave()
+					end)
+				else
+					Connection = Box:GetPropertyChangedSignal("Text"):Connect(function()
+						Textbox:SetValue(Box.Text)
+						Library:AttemptSave()
+					end)
+				end
+			end
+		end
+
 		function Textbox:SetValue(Text)
 			if Info.MaxLength and #Text > Info.MaxLength then
 				Text = Text:sub(1, Info.MaxLength)
@@ -1822,7 +1860,7 @@ do
 		end
 
 		if Textbox.Finished then
-			Box.FocusLost:Connect(function(enter)
+			Connection = Box.FocusLost:Connect(function(enter)
 				if not enter then
 					return
 				end
@@ -1831,7 +1869,7 @@ do
 				Library:AttemptSave()
 			end)
 		else
-			Box:GetPropertyChangedSignal("Text"):Connect(function()
+			Connection = Box:GetPropertyChangedSignal("Text"):Connect(function()
 				Textbox:SetValue(Box.Text)
 				Library:AttemptSave()
 			end)
@@ -1983,6 +2021,20 @@ do
 		function Toggle:OnChanged(Func)
 			Toggle.Changed = Func
 			Func(Toggle.Value)
+		end
+
+		function Toggle:SetRawValue(Bool)
+			Bool = not not Bool
+
+			Toggle.Value = Bool
+			Toggle:Display()
+
+			for _, Addon in next, Toggle.Addons do
+				if Addon.Type == "KeyPicker" and Addon.SyncToggleState then
+					Addon.Toggled = Bool
+					Addon:Update()
+				end
+			end
 		end
 
 		function Toggle:SetValue(Bool)
@@ -2170,6 +2222,19 @@ do
 
 		function Slider:GetValueFromXOffset(X)
 			return Round(Library:MapValue(X, 0, Slider.MaxSize, Slider.Min, Slider.Max))
+		end
+
+		function Slider:SetRawValue(Value)
+			local Num = tonumber(Value)
+
+			if not Num then
+				return
+			end
+
+			Num = math.clamp(Num, Slider.Min, Slider.Max)
+
+			Slider.Value = Num
+			Slider:Display()
 		end
 
 		function Slider:SetValue(Str)
@@ -2538,6 +2603,8 @@ do
 								for _, OtherButton in next, Buttons do
 									OtherButton:UpdateButton()
 								end
+
+								Library:UpdateDependencyBoxes()
 							end
 
 							Table:UpdateButton()
@@ -2594,6 +2661,28 @@ do
 		function Dropdown:OnChanged(Func)
 			Dropdown.Changed = Func
 			Func(Dropdown.Value)
+		end
+
+		function Dropdown:SetRawValue(Val)
+			if Dropdown.Multi then
+				local nTable = {}
+
+				for Value, Bool in next, Val do
+					if table.find(Dropdown.Values, Value) then
+						nTable[Value] = true
+					end
+				end
+
+				Dropdown.Value = nTable
+			else
+				if not Val then
+					Dropdown.Value = nil
+				elseif table.find(Dropdown.Values, Val) then
+					Dropdown.Value = Val
+				end
+			end
+
+			Dropdown:BuildDropdownList()
 		end
 
 		function Dropdown:SetValue(Val)
@@ -2742,6 +2831,12 @@ do
 				local Value = Dependency[2]
 
 				if Elem.Type == "Toggle" and Elem.Value ~= Value then
+					Holder.Visible = false
+					Depbox:Resize()
+					return
+				end
+
+				if Elem.Type == "Dropdown" and Elem.Value ~= Value then
 					Holder.Visible = false
 					Depbox:Resize()
 					return

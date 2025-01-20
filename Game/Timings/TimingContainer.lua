@@ -35,6 +35,20 @@ function TimingContainer:find(name)
 	end
 end
 
+---Get names of all timings.
+---@return string[]
+function TimingContainer:names()
+	local names = {}
+
+	for _, timing in next, self.timings do
+		names[#names + 1] = timing.name
+	end
+
+	table.sort(names)
+
+	return names
+end
+
 ---Remove a timing from the list.
 ---@param timing Timing
 function TimingContainer:remove(timing)

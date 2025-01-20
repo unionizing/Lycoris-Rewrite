@@ -141,11 +141,11 @@ function BuilderTab.init(window)
 	BuilderTab.initLoggerSection(tab:AddDynamicGroupbox("Logger"))
 
 	-- Create builder sections.
-	BuilderTab.ebs = EffectBuilderSection.new("Effect", tab:AddDynamicTabbox(), SaveManager.es, EffectTiming.new())
-	BuilderTab.pbs = PartBuilderSection.new("Part", tab:AddDynamicTabbox(), SaveManager.ps, PartTiming.new())
-	BuilderTab.sbs = SoundBuilderSection.new("Sound", tab:AddDynamicTabbox(), SaveManager.ss, SoundTiming.new())
 	BuilderTab.abs =
 		AnimationBuilderSection.new("Animation", tab:AddDynamicTabbox(), SaveManager.as, AnimationTiming.new())
+	BuilderTab.pbs = PartBuilderSection.new("Part", tab:AddDynamicTabbox(), SaveManager.ps, PartTiming.new())
+	BuilderTab.ebs = EffectBuilderSection.new("Effect", tab:AddDynamicTabbox(), SaveManager.es, EffectTiming.new())
+	BuilderTab.sbs = SoundBuilderSection.new("Sound", tab:AddDynamicTabbox(), SaveManager.ss, SoundTiming.new())
 
 	-- Initialize builder sections.
 	BuilderTab.abs:init()

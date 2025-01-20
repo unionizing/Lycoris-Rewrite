@@ -1,4 +1,5 @@
 -- Hooking related stuff is handled here.
+---@note: We need to be extra careful here. On exploits, the error detection might get us really bad.
 local Hooking = {}
 
 ---@module Game.KeyHandling
@@ -24,6 +25,14 @@ local playersService = game:GetService("Players")
 local runService = game:GetService("RunService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local lighting = game:GetService("Lighting")
+local scriptContext = game:GetService("ScriptContext")
+
+-- Error signal.
+local errorSignal = scriptContext.Error
+
+-- Fake instances.
+local fakeInstance = Instance.new("Part")
+local fakeInstanceSignal = fakeInstance:GetAttributeChangedSignal("LYCORIS_ON_TOP")
 
 ---@note: Store reference to used & hooked khGetRemote.
 local khGetRemote = nil
@@ -42,6 +51,7 @@ local oldProtectedCall = nil
 local oldError = nil
 local oldToString = nil
 local oldGetRemote = nil
+local oldErrorConnect = nil
 
 -- Last state.
 local lastErrorResult = nil
@@ -278,6 +288,10 @@ local function onIndex(...)
 		return true
 	end
 
+	if self == scriptContext and index == "Error" then
+		return fakeInstanceSignal
+	end
+
 	return oldIndex(...)
 end
 
@@ -351,7 +365,6 @@ end
 ---@return any
 local function onTaskSpawn(...)
 	local args = { ... }
-
 	local func = args[1]
 	local consts = debug.getconstants(func)
 
@@ -433,20 +446,45 @@ local function onGetRemote(...)
 	end
 
 	if identifier == "CriticalClick" then
-		local block = (Configuration.expectToggleValue("BlockPunishableM1s") and Defense.blocking())
+		local block = (Configuration.expectToggleValue("BlockPunishableCriticals") and Defense.blocking())
 		return block and Instance.new("UnreliableRemoteEvent") or oldGetRemote(...)
 	end
 
 	return oldGetRemote(...)
 end
 
+---On error signal connect.
+---@return any
+local function onErrorSignalConnect(...)
+	local args = { ... }
+
+	if typeof(args[2]) == "function" then
+		args[2] = function() end
+	end
+
+	return oldErrorConnect(unpack(args))
+end
+
 ---Hooking initialization.
 ---@note: Careful with checkcaller() on hooks where it is called from us during KeyHandling phase.
 function Hooking.init()
 	local localPlayer = playersService.LocalPlayer
-	local playerScripts = localPlayer.PlayerScripts
+
+	---@improvement: Add a listener for this script.
+	local playerScripts = localPlayer:WaitForChild("PlayerScripts")
+	local clientActor = playerScripts:WaitForChild("ClientActor")
+	local clientManager = clientActor:WaitForChild("ClientManager")
+
+	---@note: Crucial part because of the actor and the error detection.
+	clientManager.Enabled = false
+
+	---@note: Disable all error detections
+	for _, connection in next, getconnections(scriptContext.Error) do
+		connection:Disable()
+	end
 
 	---@todo: Optimize hooks - preferably filter out calls slowing performance.
+	oldErrorConnect = hookfunction(errorSignal.Connect, onErrorSignalConnect)
 	oldToString = hookfunction(tostring, onToString)
 	oldFireServer = hookfunction(Instance.new("RemoteEvent").FireServer, onFireServer)
 	oldUnreliableFireServer = hookfunction(Instance.new("UnreliableRemoteEvent").FireServer, onUnreliFireServer)
@@ -469,15 +507,7 @@ function Hooking.init()
 	-- Hook the 'khGetRemote' function.
 	oldGetRemote = hookfunction(khGetRemote, onGetRemote)
 
-	---@note: This is longer for lower-end devices. Crucial part because of the actor and the error detection.
-	---@improvement: Add a listener for this script.
-	local clientActor = playerScripts and playerScripts:WaitForChild("ClientActor", 25)
-	local clientManager = clientActor and clientActor:WaitForChild("ClientManager", 25)
-
-	if clientManager then
-		clientManager.Enabled = false
-	end
-
+	-- Okay, we're done.
 	Logger.warn("Client-side anticheat has been penetrated.")
 end
 
@@ -485,6 +515,7 @@ end
 function Hooking.detach()
 	local localPlayer = playersService.LocalPlayer
 
+	hookfunction(errorSignal.Connect, oldErrorConnect)
 	hookfunction(tostring, oldToString)
 	hookfunction(tick, oldTick)
 	hookfunction(task.spawn, oldTaskSpawn)

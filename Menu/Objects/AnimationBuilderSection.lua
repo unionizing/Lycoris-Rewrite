@@ -4,6 +4,9 @@ local BuilderSection = require("Menu/Objects/BuilderSection")
 ---@module Utility.Logger
 local Logger = require("Utility/Logger")
 
+---@module Game.Timings.AnimationTiming
+local AnimationTiming = require("Game/Timings/AnimationTiming")
+
 ---@class AnimationBuilderSection: BuilderSection
 ---@field animationId table
 ---@field repeatStartDelay table
@@ -13,28 +16,57 @@ local Logger = require("Utility/Logger")
 local AnimationBuilderSection = setmetatable({}, { __index = BuilderSection })
 AnimationBuilderSection.__index = AnimationBuilderSection
 
----Check before writing.
+---Create timing ID element. Override me.
+---@param tab table
+function AnimationBuilderSection:tide(tab)
+	self.animationId = tab:AddInput(nil, {
+		Text = "Animation ID",
+	})
+end
+
+---Load the extra elements. Override me.
+---@param timing Timing
+function AnimationBuilderSection:exload(timing)
+	self.animationId:SetRawValue(timing._id)
+	self.repeatStartDelay:SetRawValue(timing._rsd)
+	self.repeatUntilParryEnd:SetRawValue(timing.rpue)
+	self.repeatParryDelay:SetRawValue(timing._rpd)
+end
+
+---Reset the elements. Extend me.
+function AnimationBuilderSection:reset()
+	BuilderSection.reset(self)
+	self.animationId:SetRawValue("")
+	self.repeatParryDelay:SetRawValue(0)
+	self.repeatStartDelay:SetRawValue(0)
+	self.repeatUntilParryEnd:SetRawValue(false)
+end
+
+---Check before creating new timing. Override me.
 ---@return boolean
 function AnimationBuilderSection:check()
+	if not BuilderSection.check(self) then
+		return false
+	end
+
 	if not self.animationId.Value or #self.animationId.Value <= 0 then
 		return Logger.longNotify("Please enter a valid animation ID.")
 	end
 
-	local found = self.pair:config().timings[self.animationId.Value]
-
-	if found then
-		return Logger.longNotify("The timing '%s' already has the same animation ID.", found.name)
+	if self.pair:index(self.animationId.Value) then
+		return Logger.longNotify("The timing ID '%s' is already in the list.", self.animationId.Value)
 	end
 
 	return true
 end
 
----Add extra elements to the builder tab.
----@param tab table
-function AnimationBuilderSection:extra(tab)
-	self.animationId = tab:AddInput(nil, {
-		Text = "Animation ID",
-	})
+---Create new timing. Override me.
+---@return Timing
+function AnimationBuilderSection:create()
+	local timing = AnimationTiming.new()
+	timing.name = self.timingName.Value
+	timing._id = self.animationId.Value
+	return timing
 end
 
 ---Initialize action tab.
@@ -44,6 +76,9 @@ function AnimationBuilderSection:action()
 	self.repeatUntilParryEnd = tab:AddToggle(nil, {
 		Text = "Repeat Parry Until End",
 		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing.rpue = value
+		end),
 	})
 
 	local depBoxOn = tab:AddDependencyBox()
@@ -51,11 +86,17 @@ function AnimationBuilderSection:action()
 	self.repeatStartDelay = depBoxOn:AddInput(nil, {
 		Text = "Repeat Start Delay",
 		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing._rsd = value
+		end),
 	})
 
 	self.repeatParryDelay = depBoxOn:AddInput(nil, {
 		Text = "Repeat Parry Delay",
 		Numeric = true,
+		Callback = self:tnc(function(timing, value)
+			timing._rpd = value
+		end),
 	})
 
 	local depBoxOff = tab:AddDependencyBox()
@@ -69,27 +110,6 @@ function AnimationBuilderSection:action()
 	depBoxOff:SetupDependencies({
 		{ self.repeatUntilParryEnd, false },
 	})
-end
-
----Load the timing.
----@param timing AnimationTiming
-function AnimationBuilderSection:load(timing)
-	BuilderSection.load(self, timing)
-
-	self.animationId:SetValue(timing._id)
-	self.repeatStartDelay:SetValue(timing._rsd)
-	self.repeatUntilParryEnd:SetValue(timing.rpue)
-	self.repeatParryDelay:SetValue(timing._rpd)
-end
-
----Write to the current timing.
-function AnimationBuilderSection:write()
-	BuilderSection.write(self)
-
-	self.timing._id = self.animationId.Value
-	self.timing._rsd = self.repeatStartDelay.Value
-	self.timing.rpue = self.repeatUntilParryEnd.Value
-	self.timing._rpd = self.repeatParryDelay.Value
 end
 
 ---Create new AnimationBuilderSection object.
