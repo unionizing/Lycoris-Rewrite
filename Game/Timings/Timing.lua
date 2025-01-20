@@ -17,6 +17,12 @@ function Timing:id()
 	return self.name
 end
 
+---Set timing ID. Override me.
+---@param id string
+function Timing:set(id)
+	self.name = id
+end
+
 ---Load from partial values.
 ---@param values table
 function Timing:load(values)

@@ -15,6 +15,7 @@ local SoundTiming = require("Game/Timings/SoundTiming")
 
 ---@class TimingSave
 ---@field _data TimingContainer[]
+---@field _removals table<string, string[]> For every container, a list of timing IDs that we need to remove from the internal data.
 local TimingSave = {}
 TimingSave.__index = TimingSave
 
@@ -40,16 +41,16 @@ function TimingSave:clear()
 end
 
 ---Merge with another TimingSave object.
----@param other TimingSave
+---@param save TimingSave The other save.
 ---@param type MergeType
-function TimingSave:merge(other, type)
-	for idx, otherContainer in next, other._data do
+function TimingSave:merge(save, type)
+	for idx, other in next, save._data do
 		local container = self._data[idx]
 		if not container then
 			continue
 		end
 
-		container:merge(otherContainer, type)
+		container:merge(other, type)
 	end
 end
 

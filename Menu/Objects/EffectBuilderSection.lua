@@ -4,6 +4,9 @@ local BuilderSection = require("Menu/Objects/BuilderSection")
 ---@module Utility.Logger
 local Logger = require("Utility/Logger")
 
+---@module Game.Timings.EffectTiming
+local EffectTiming = require("Game/Timings/EffectTiming")
+
 ---@class EffectBuilderSection: BuilderSection
 ---@field effectName table
 ---@field repeatStartDelay table
@@ -13,28 +16,57 @@ local Logger = require("Utility/Logger")
 local EffectBuilderSection = setmetatable({}, { __index = BuilderSection })
 EffectBuilderSection.__index = EffectBuilderSection
 
----Check before writing.
+---Create timing ID element. Override me.
+---@param tab table
+function EffectBuilderSection:tide(tab)
+	self.effectName = tab:AddInput(nil, {
+		Text = "Effect Name",
+	})
+end
+
+---Load the extra elements. Override me.
+---@param timing Timing
+function EffectBuilderSection:exload(timing)
+	self.effectName:SetRawValue(timing.ename)
+	self.repeatStartDelay:SetRawValue(timing._rsd)
+	self.repeatUntilParryEnd:SetRawValue(timing.rpue)
+	self.repeatParryDelay:SetRawValue(timing._rpd)
+end
+
+---Reset the elements. Extend me.
+function EffectBuilderSection:reset()
+	BuilderSection.reset(self)
+	self.effectName:SetRawValue("")
+	self.repeatParryDelay:SetRawValue(0)
+	self.repeatStartDelay:SetRawValue(0)
+	self.repeatUntilParryEnd:SetRawValue(false)
+end
+
+---Check before creating new timing. Override me.
 ---@return boolean
 function EffectBuilderSection:check()
+	if not BuilderSection.check(self) then
+		return false
+	end
+
 	if not self.effectName.Value or #self.effectName.Value <= 0 then
 		return Logger.longNotify("Please enter a valid effect name.")
 	end
 
-	local found = self.pair:config().timings[self.effectName.Value]
-
-	if found then
-		return Logger.longNotify("The timing '%s' already has the same effect name.", found.name)
+	if self.pair:index(self.effectName.Value) then
+		return Logger.longNotify("The timing ID '%s' is already in the list.", self.effectName.Value)
 	end
 
 	return true
 end
 
----Add extra elements to the builder tab.
----@param tab table
-function EffectBuilderSection:extra(tab)
-	self.effectName = tab:AddInput(nil, {
-		Text = "Effect Name",
-	})
+---Create new timing. Override me.
+---@return Timing
+function EffectBuilderSection:create()
+	local timing = EffectTiming.new()
+	timing.name = self.timingName.Value
+	timing.ename = self.effectName.Value
+	return timing
 end
 
 ---Initialize action tab.
@@ -44,6 +76,9 @@ function EffectBuilderSection:action()
 	self.repeatUntilParryEnd = tab:AddToggle(nil, {
 		Text = "Repeat Parry Until End",
 		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing.rpue = value
+		end),
 	})
 
 	local depBoxOn = tab:AddDependencyBox()
@@ -51,11 +86,17 @@ function EffectBuilderSection:action()
 	self.repeatStartDelay = depBoxOn:AddInput(nil, {
 		Text = "Repeat Start Delay",
 		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing._rsd = value
+		end),
 	})
 
 	self.repeatParryDelay = depBoxOn:AddInput(nil, {
 		Text = "Repeat Parry Delay",
 		Numeric = true,
+		Callback = self:tnc(function(timing, value)
+			timing._rpd = value
+		end),
 	})
 
 	local depBoxOff = tab:AddDependencyBox()
@@ -69,27 +110,6 @@ function EffectBuilderSection:action()
 	depBoxOff:SetupDependencies({
 		{ self.repeatUntilParryEnd, false },
 	})
-end
-
----Load the timing.
----@param timing EffectTiming
-function EffectBuilderSection:load(timing)
-	BuilderSection.load(self, timing)
-
-	self.effectName:SetValue(timing.ename)
-	self.repeatUntilParryEnd:SetValue(timing.rpue)
-	self.repeatParryDelay:SetValue(timing._rpd)
-	self.repeatStartDelay:SetValue(timing._rsd)
-end
-
----Write to the current timing.
-function EffectBuilderSection:write()
-	BuilderSection.write(self)
-
-	self.timing.ename = self.effectName.Value
-	self.timing._rsd = self.repeatStartDelay.Value
-	self.timing.rpue = self.repeatUntilParryEnd.Value
-	self.timing._rpd = self.repeatParryDelay.Value
 end
 
 ---Create new EffectBuilderSection object.

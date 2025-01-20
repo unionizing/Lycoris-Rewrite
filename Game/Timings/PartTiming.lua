@@ -14,7 +14,7 @@ function PartTiming:id()
 	return self.pname
 end
 
--- Getter for timing delay in seconds.
+---Getter for timing delay in seconds.
 ---@return number
 function PartTiming:td()
 	return self._td / 1000

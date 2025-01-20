@@ -79,6 +79,9 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Show Animation Visualizer ❌
         - Animation Visualizer ID ❌
     - Animation ✅
+        - Builder Type ✅
+            - Internal ✅
+            - Config ✅
         - Timing List ✅
         - Timing Name ✅
         - Timing Tag ✅
@@ -102,11 +105,17 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
                 - Dodge ✅
                 - Start Block ✅
                 - End Block ✅
-            - Add Action To List ✅
+            - Create New Action ✅
             - Remove Action From List ✅
-        - Write Timing To List ✅
+        - If Builder Type Is Config ✅
+            - Create New Timing ✅
+        - Else If Builder Type Is Internal ✅
+            - Clone To Config ✅
         - Remove Selected Timing ✅
     - Part ✅
+        - Builder Type ✅
+            - Internal ✅
+            - Config ✅
         - Timing List ✅
         - Timing Name ✅
         - Timing Tag ✅
@@ -135,11 +144,17 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
             - Dodge ✅
             - Start Block ✅
             - End Block ✅
-        - Add Action To List ✅
+        - Create New Action ✅
         - Remove Action From List ✅
-        - Write Timing To List ✅
+        - If Builder Type Is Config ✅
+            - Create New Timing ✅
+        - Else If Builder Type Is Internal ✅
+            - Clone To Config ✅
         - Remove Selected Timing ✅
     - Sound ✅
+        - Builder Type ✅
+            - Internal ✅
+            - Config ✅
         - Timing List ✅
         - Timing Name ✅
         - Timing Tag ✅
@@ -163,11 +178,17 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
                 - Dodge ✅
                 - Start Block ✅
                 - End Block ✅
-            - Add Action To List ✅
+            - Create New Action ✅
             - Remove Action From List ✅
-        - Write Timing To List ✅
+        - If Builder Type Is Config ✅
+            - Create New Timing ✅
+        - Else If Builder Type Is Internal ✅
+            - Clone To Config ✅
         - Remove Selected Timing ✅
     - Effect ✅
+        - Builder Type ✅
+            - Internal ✅
+            - Config ✅
         - Timing List ✅
         - Timing Name ✅
         - Timing Tag ✅
@@ -191,9 +212,12 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
                 - Dodge ✅
                 - Start Block ✅
                 - End Block ✅
-            - Add Action To List ✅
+            - Create New Action ✅
             - Remove Action From List ✅
-        - Write Timing To List ✅
+        - If Builder Type Is Config ✅
+            - Create New Timing ✅
+        - Else If Builder Type Is Internal ✅
+            - Clone To Config ✅
         - Remove Selected Timing ✅
 
 - Game ✅
