@@ -51,7 +51,7 @@ function CombatTab.initCombatTargetingSection(tab)
 
 	tab:AddToggle("IgnoreMobs", {
 		Text = "Ignore Mobs",
-		Default = true,
+		Default = false,
 	})
 
 	tab:AddToggle("IgnoreAllies", {
