@@ -103,7 +103,7 @@ function GameTab.initLocalCharacterSection(groupbox)
 
 	infJumpToggle:AddKeyPicker(
 		"InfiniteJumpKeybind",
-		{ Default = "None", SyncToggleState = true, Text = "Infinite Jump" }
+		{ Default = "N/A", SyncToggleState = true, Text = "Infinite Jump" }
 	)
 
 	local infiniteJumpDepBox = groupbox:AddDependencyBox()
