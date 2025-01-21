@@ -342,6 +342,12 @@ function GameTab.initInstanceRemovalsSection(groupbox)
 		Tooltip = "Remove any 'Castle Light Barrier' parts on the client.",
 		Default = false,
 	})
+
+	groupbox:AddToggle("NoYunShulBarrier", {
+		Text = "No Yun Shul Barrier",
+		Tooltip = "Remove any 'Yun Shul Barrier' parts on the client.",
+		Default = false,
+	})
 end
 
 ---Initialize tab.

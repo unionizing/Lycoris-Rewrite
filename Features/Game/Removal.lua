@@ -38,6 +38,7 @@ local noFogMap = removalMaid:mark(OriginalStoreManager.new())
 local noBlindMap = removalMaid:mark(OriginalStoreManager.new())
 local killBricksMap = removalMaid:mark(OriginalStoreManager.new())
 local lightBarrierMap = removalMaid:mark(OriginalStoreManager.new())
+local yunShulBarrierMap = removalMaid:mark(OriginalStoreManager.new())
 
 -- Signals.
 local renderStepped = Signal.new(runService.RenderStepped)
@@ -137,6 +138,18 @@ local function updateNoBlur()
 	noBlur:set(genericBlur, "Size", 0.0)
 end
 
+---Update no yun shul barrier.
+local function updateNoYunShulBarrier()
+	for _, store in next, yunShulBarrierMap:data() do
+		local data = store.data
+		if not data then
+			continue
+		end
+
+		store:set(store.data, "CFrame", CFrame.new(math.huge, math.huge, math.huge))
+	end
+end
+
 ---Update removal.
 local function updateRemoval()
 	local localPlayer = players.LocalPlayer
@@ -160,6 +173,12 @@ local function updateRemoval()
 		updateNoLightBarrier()
 	else
 		lightBarrierMap:restore()
+	end
+
+	if Configuration.expectToggleValue("NoYunShulBarrier") then
+		updateNoYunShulBarrier()
+	else
+		yunShulBarrierMap:restore()
 	end
 
 	if Configuration.expectToggleValue("NoFog") then
@@ -267,6 +286,12 @@ local function onWorkspaceDescendantAdded(descendant)
 
 	if killInstance or killChasm or superWall then
 		killBricksMap:mark(descendant, "CFrame")
+	end
+
+	local yunShulBarrierInstance = descendant.Name == "ResonanceDoor" or descendant.Name == "DeepPassage_Yun"
+
+	if yunShulBarrierInstance then
+		yunShulBarrierMap:mark(descendant, "CFrame")
 	end
 end
 
