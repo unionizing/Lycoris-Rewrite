@@ -270,13 +270,11 @@ end
 ---On workspace descendant added.
 ---@param descendant Instance
 local function onWorkspaceDescendantAdded(descendant)
-	if not descendant:IsA("BasePart") then
+	if not descendant:IsA("BasePart") and not descendant:IsA("Model") then
 		return
 	end
 
-	local lightBarrierInstance = descendant.Name == "LifeField"
-
-	if lightBarrierInstance then
+	if descendant.Name == "LifeField" then
 		lightBarrierMap:mark(descendant, "CFrame")
 	end
 
@@ -288,9 +286,7 @@ local function onWorkspaceDescendantAdded(descendant)
 		killBricksMap:mark(descendant, "CFrame")
 	end
 
-	local yunShulBarrierInstance = descendant.Name == "ResonanceDoor" or descendant.Name == "DeepPassage_Yun"
-
-	if yunShulBarrierInstance then
+	if descendant.Name == "ResonanceDoor" or descendant.Name == "DeepPassage_Yun" then
 		yunShulBarrierMap:mark(descendant, "CFrame")
 	end
 end
