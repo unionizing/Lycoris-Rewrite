@@ -43,9 +43,13 @@
         "delfile",
         "iscclosure",
         "setidentity",
-        "setthreadidentity"
+        "setthreadidentity",
+        "create_comm_channel",
+        "getactors",
+        "run_on_actor",
+        "get_comm_channel"
     ],
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": false,
     "robloxLsp.suggestedImports.importIgnore": [
         "**/_Index/**",
         "Output/"
