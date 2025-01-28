@@ -1,19 +1,16 @@
----@module Game.Timings.ActionContainer
-local ActionContainer = require("Game/Timings/ActionContainer")
-
 ---@module Game.Timings.Action
 local Action = require("Game/Timings/Action")
 
 ---@module Utility.Logger
 local Logger = require("Utility/Logger")
 
----@note: We assume that all elements will exist in callbacks. This is why they are not explicitly set in the constructor.
+---@module Game.Timings.Timing
+local Timing = require("Game/Timings/Timing")
 
 ---@class BuilderSection
+---@note: We assume that all elements will exist in callbacks. This is why they are not explicitly set in the constructor.
 ---@field tabbox table
 ---@field pair TimingContainerPair
----@field timing Timing Dummy timing object of the correct type. Cloned to create new timings.
----@field container ActionContainer
 ---@field name string
 ---@field timingList table
 ---@field timingName table
@@ -21,6 +18,9 @@ local Logger = require("Utility/Logger")
 ---@field hitboxLength table
 ---@field hitboxWidth table
 ---@field hitboxHeight table
+---@field timingType table
+---@field punishableWindow table
+---@field afterWindow table
 ---@field delayUntilInHitbox table
 ---@field initialMinimumDistance table
 ---@field initialMaximumDistance table
@@ -31,99 +31,152 @@ local Logger = require("Utility/Logger")
 local BuilderSection = {}
 BuilderSection.__index = BuilderSection
 
----Check before writing timing to list. Override me.
----@return boolean
-function BuilderSection:check()
-	return true
-end
+-- Services.
+local stats = game:GetService("Stats")
 
----Add extra elements to the builder tab. Override me.
+---Create timing ID element. Override me.
+---@param tab table
+function BuilderSection:tide(tab) end
+
+---Create extra elements. Override me.
 ---@param tab table
 function BuilderSection:extra(tab) end
 
----Initialize action tab. Override me.
+---Load the extra elements. Override me.
+---@param timing Timing
+function BuilderSection:exload(timing) end
+
+---Reset elements. Extend me.
+function BuilderSection:reset()
+	-- Reset timing elements.
+	self.timingName:SetRawValue("")
+	self.timingType:SetRawValue("Config")
+	self.timingTag:SetRawValue("Undefined")
+	self.initialMaximumDistance:SetRawValue(0)
+	self.punishableWindow:SetRawValue(0)
+	self.afterWindow:SetRawValue(0)
+	self.initialMinimumDistance:SetRawValue(0)
+	self.delayUntilInHitbox:SetRawValue(false)
+
+	-- Reset action list.
+	self:arefresh(nil)
+
+	-- Reset action elements.
+	self:raction()
+end
+
+---Check before creating new timing. Override me.
+---@return boolean
+function BuilderSection:check()
+	if not self.timingName.Value or #self.timingName.Value <= 0 then
+		return Logger.longNotify("Please enter a valid timing name.")
+	end
+
+	if self.pair:find(self.timingName.Value) then
+		return Logger.longNotify("The timing '%s' already exists in the list.", self.timingName.Value)
+	end
+
+	return true
+end
+
+---Create new timing. Override me.
+---@return Timing
+function BuilderSection:create()
+	local timing = Timing.new()
+	timing.name = self.timingName.Value
+	return timing
+end
+
+---Initialize action tab. Extend me.
 function BuilderSection:action()
 	self:baction(self.tabbox:AddTab("Action"))
 end
 
----Load the timing. Extend me.
----@param timing Timing
-function BuilderSection:load(timing)
-	-- Clone correct action container data.
-	self.container = timing.actions:clone()
-
-	-- Then, set the elements correctly.
-	self.timingName:SetValue(timing.name)
-	self.timingTag:SetValue(timing.tag)
-	self.initialMaximumDistance:SetValue(timing.imxd)
-	self.initialMinimumDistance:SetValue(timing.imdd)
-	self.delayUntilInHitbox:SetValue(timing.duih)
-	self.actionName:SetValue("")
-	self.actionDelay:SetValue(0)
-	self.actionType:SetValue("Parry")
-	self.hitboxHeight:SetValue(0)
-	self.hitboxLength:SetValue(0)
-	self.hitboxWidth:SetValue(0)
-
-	-- Refresh the action list.
-	self:crefresh()
-end
-
----Write to the current timing. Extend me.
-function BuilderSection:write()
-	self.timing.name = self.timingName.Value
-	self.timing.tag = self.timingTag.Value
-	self.timing.imdd = self.initialMinimumDistance.Value
-	self.timing.imxd = self.initialMaximumDistance.Value
-	self.timing.duih = self.delayUntilInHitbox.Value
-	self.timing.actions = self.container:clone()
-end
-
----Push the timing to the list.
-function BuilderSection:push()
-	local config = self.pair:config()
-
-	config:push(self.timing:clone())
-
-	self:refresh()
-end
-
----Remove the timing.
-function BuilderSection:remove()
-	local name = self.timingList.Value
-	if not name then
-		return Logger.longNotify("Please select a timing to remove.")
-	end
-
-	local default = self.pair:default()
-	local config = self.pair:config()
-
-	if default:find(name) then
-		return Logger.longNotify("You cannot remove default timings.")
-	end
-
-	local found = config:find(name)
-	if not found then
-		return Logger.longNotify("The selected timing '%s' does not exist in the list.", name)
-	end
-
-	config:remove(found)
-
-	self:refresh()
+---Reset action elements.
+function BuilderSection:raction()
+	self.actionName:SetRawValue("")
+	self.actionDelay:SetRawValue(0)
+	self.actionType:SetRawValue("Parry")
+	self.hitboxHeight:SetRawValue(0)
+	self.hitboxLength:SetRawValue(0)
+	self.hitboxWidth:SetRawValue(0)
 end
 
 ---Refresh timing list.
 function BuilderSection:refresh()
-	self.timingList:SetValues(self.pair:names())
+	local values = self.timingType.Value == "Internal" and self.pair.internal:names() or self.pair.config:names()
+	self.timingList:SetValues(values)
 	self.timingList:SetValue(nil)
 	self.timingList:Display()
 end
 
 ---Refresh action list.
-function BuilderSection:crefresh()
-	self.actionList:SetValues(self.container:names())
+---@param timing Timing?
+function BuilderSection:arefresh(timing)
+	self.actionList:SetValues(timing and timing.actions:names() or {})
 	self.actionList:SetValue(nil)
 	self.actionList:Display()
+end
+
+---Wrap a callback that needs a timing. This will check for internal timings.
+---@param callback function(Timing, ...)
+function BuilderSection:tnc(callback)
+	return function(...)
+		-- If no value, return.
+		if not self.timingList.Value then
+			return Logger.warn("No timing selected.")
+		end
+
+		-- Find timing.
+		local timing = self.pair:find(self.timingList.Value)
+		if not timing then
+			return Logger.longNotify("You must select a valid timing to perform this action.")
+		end
+
+		-- Check timing type.
+		if self.timingType.Value == "Internal" then
+			return Logger.longNotify("Internal timing. Changes not replicated. You must clone it to the config first.")
+		end
+
+		-- Fire callback.
+		callback(timing, ...)
+	end
+end
+
+---Wrap a callback that needs a action. This will check for internal timings.
+---@param callback function(Action, ...)
+function BuilderSection:anc(callback)
+	return function(...)
+		-- If no value, return.
+		if not self.timingList.Value then
+			return Logger.warn("No timing selected.")
+		end
+
+		-- Find timing.
+		local timing = self.pair:find(self.timingList.Value)
+		if not timing then
+			return Logger.longNotify("You must select a valid timing to perform this action.")
+		end
+
+		-- If no value, return.
+		if not self.actionList.Value then
+			return Logger.warn("No action selected.")
+		end
+
+		-- Find action.
+		local action = timing.actions:find(self.actionList.Value)
+		if not action then
+			return Logger.longNotify("You must select a valid action to perform this action.")
+		end
+
+		-- Check timing type.
+		if self.timingType.Value == "Internal" then
+			return Logger.longNotify("Internal timing. Changes not replicated. You must clone it to the config first.")
+		end
+
+		-- Fire callback.
+		callback(action, ...)
+	end
 end
 
 ---Initialize action base.
@@ -131,40 +184,51 @@ end
 function BuilderSection:baction(base)
 	self.actionList = base:AddDropdown(nil, {
 		Text = "Action List",
-		Values = self.container:names(),
+		Values = {},
 		AllowNull = true,
-		Callback = function(value)
+		Callback = self:tnc(function(timing, value)
+			-- Reset action elements.
+			self:raction()
+
+			-- Check if value exists.
 			if not value then
-				return
+				return Logger.warn("No action value.")
 			end
 
-			local action = self.container:find(value)
+			-- Find action.
+			local action = timing.actions:find(value)
 			if not action then
 				return Logger.longNotify("The selected action '%s' does not exist in the list.", value)
 			end
 
-			self.actionName:SetValue(action.name)
-			self.actionDelay:SetValue(action.when)
-			self.actionType:SetValue(action._type)
-			self.hitboxWidth:SetValue(action.hitbox.X)
-			self.hitboxHeight:SetValue(action.hitbox.Y)
-			self.hitboxLength:SetValue(action.hitbox.Z)
-		end,
-	})
-
-	self.actionName = base:AddInput(nil, {
-		Text = "Action Name",
-	})
-
-	self.actionDelay = base:AddInput(nil, {
-		Text = "Action Delay",
-		Numeric = true,
+			-- Set action elements.
+			self.actionName:SetRawValue(action.name)
+			self.actionDelay:SetRawValue(action._when or 0)
+			self.actionType:SetRawValue(action._type)
+			self.hitboxWidth:SetRawValue(action.hitbox.X)
+			self.hitboxHeight:SetRawValue(action.hitbox.Y)
+			self.hitboxLength:SetRawValue(action.hitbox.Z)
+		end),
 	})
 
 	self.actionType = base:AddDropdown(nil, {
 		Text = "Action Type",
 		Values = { "Parry", "Dodge", "Start Block", "End Block" },
 		Default = 1,
+		Callback = self:anc(function(action, value)
+			action._type = value
+		end),
+	})
+
+	-- The user can accidently click this input through the dropdown and override the delay.
+	-- It has been moved and set to "Finished" to prevent this.
+	self.actionDelay = base:AddInput(nil, {
+		Text = "Action Delay",
+		Numeric = true,
+		Finished = true,
+		Callback = self:anc(function(action, value)
+			action._when = tonumber(value)
+		end),
 	})
 
 	self.hitboxLength = base:AddSlider(nil, {
@@ -174,6 +238,9 @@ function BuilderSection:baction(base)
 		Suffix = "s",
 		Default = 0,
 		Rounding = 0,
+		Callback = self:anc(function(action, value)
+			action.hitbox = Vector3.new(action.hitbox.X, action.hitbox.Y, value)
+		end),
 	})
 
 	self.hitboxWidth = base:AddSlider(nil, {
@@ -183,6 +250,9 @@ function BuilderSection:baction(base)
 		Suffix = "s",
 		Default = 0,
 		Rounding = 0,
+		Callback = self:anc(function(action, value)
+			action.hitbox = Vector3.new(value, action.hitbox.Y, action.hitbox.Z)
+		end),
 	})
 
 	self.hitboxHeight = base:AddSlider(nil, {
@@ -192,79 +262,231 @@ function BuilderSection:baction(base)
 		Suffix = "s",
 		Default = 0,
 		Rounding = 0,
+		Callback = self:anc(function(action, value)
+			action.hitbox = Vector3.new(action.hitbox.X, value, action.hitbox.Z)
+		end),
 	})
 
-	base:AddButton("Add Action To List", function()
-		if #self.actionName.Value <= 0 then
-			return Logger.longNotify("Please enter a valid action name.")
+	base:AddDivider()
+
+	self.actionName = base:AddInput(nil, {
+		Text = "Action Name",
+	})
+
+	base:AddButton(
+		"Create New Action",
+		self:tnc(function(timing)
+			-- Fetch actions.
+			local actions = timing.actions
+
+			-- Create new action.
+			local action = Action.new()
+			action.name = self.actionName.Value
+
+			-- Record ping for telemetry.
+			local network = stats:FindFirstChild("Network")
+			local serverStatsItem = network and network:FindFirstChild("ServerStatsItem")
+			local dataPingItem = serverStatsItem and serverStatsItem:FindFirstChild("Data Ping")
+
+			if dataPingItem then
+				action.ping = dataPingItem:GetValue()
+			end
+
+			-- Push action.
+			actions:push(action)
+
+			-- Refresh action list.
+			self:arefresh(timing)
+		end)
+	)
+
+	base:AddButton(
+		"Remove Selected Action",
+		self:tnc(function(timing)
+			-- Get selected value.
+			local selected = self.actionList.Value
+			if not selected then
+				return Logger.longNotify("Please select an action to remove.")
+			end
+
+			-- Fetch actions.
+			local actions = timing.actions
+
+			-- Find action.
+			local action = actions:find(selected)
+			if not action then
+				return Logger.longNotify("The selected action '%s' does not exist in the list.", selected)
+			end
+
+			-- Remove action.
+			actions:remove(action)
+
+			-- Refresh action list.
+			self:arefresh(timing)
+		end)
+	)
+end
+
+---Initialize timing tab.
+function BuilderSection:timing()
+	local tab = self.tabbox:AddTab("Timings")
+
+	self.timingType = tab:AddDropdown(nil, {
+		Text = "Timing Type",
+		Values = { "Config", "Internal" },
+		Default = 1,
+		Callback = function()
+			-- Refresh timing list.
+			self:refresh()
+
+			-- Reset elements.
+			self:reset()
+		end,
+	})
+
+	self.timingList = tab:AddDropdown(nil, {
+		Text = "Timing List",
+		Values = self.timingType.Value == "Internal" and self.pair.internal:names() or self.pair.config:names(),
+		AllowNull = true,
+		Callback = function(value)
+			-- Reset elements.
+			self:reset()
+
+			-- Check if value exists.
+			if not value then
+				return Logger.warn("No timing value.")
+			end
+
+			-- Fetch timing.
+			local found = self.pair:find(value)
+			if not found then
+				return Logger.longNotify("The selected timing '%s' does not exist in the list.", value)
+			end
+
+			-- Set timing elements.
+			self.timingName:SetRawValue(found.name)
+			self.timingTag:SetRawValue(found.tag)
+			self.initialMaximumDistance:SetRawValue(found.imxd)
+			self.initialMinimumDistance:SetRawValue(found.imdd)
+			self.delayUntilInHitbox:SetRawValue(found.duih)
+
+			-- Load extra elements.
+			self:exload(found)
+
+			-- Refresh action list.
+			self:arefresh(found)
+		end,
+	})
+
+	self.timingName = tab:AddInput(nil, {
+		Text = "Timing Name",
+		Finished = true,
+	})
+
+	self:tide(tab)
+
+	local configDepBox = tab:AddDependencyBox()
+
+	configDepBox:AddButton("Create New Timing", function()
+		-- Fetch config.
+		local config = self.pair.config
+
+		-- Check if we can successfully create a timing from the given data.
+		if not self:check() then
+			return
 		end
 
-		local actionDelay = self.actionDelay.Value and tonumber(self.actionDelay.Value) or 0
+		-- Push new timing.
+		config:push(self:create())
 
-		if not actionDelay or actionDelay < 0 then
-			return Logger.longNotify("Please enter a valid action delay.")
-		end
-
-		if self.container:find(self.actionName.Value) then
-			return Logger.longNotify("The action '%s' already exists in the list.", self.actionName.Value)
-		end
-
-		local action = Action.new()
-		action._type = self.actionType.Value
-		action.name = self.actionName.Value
-		action.when = actionDelay
-		action.hitbox = Vector3.new(self.hitboxWidth.Value, self.hitboxHeight.Value, self.hitboxLength.Value)
-
-		self.container:push(action)
-		self:crefresh()
+		-- Refresh timing list.
+		self:refresh()
 	end)
 
-	base:AddButton("Remove Action From List", function()
-		local selectedActionName = self.actionList.Value
-		if not selectedActionName then
-			return Logger.longNotify("Please select an action to remove.")
+	local internalDepBox = tab:AddDependencyBox()
+
+	internalDepBox:AddButton("Clone To Config", function()
+		-- Fetch name.
+		local name = self.timingList.Value
+		if not name then
+			return Logger.longNotify("Please select a timing to clone.")
 		end
 
-		local action = self.container:find(selectedActionName)
-		if not action then
-			return Logger.longNotify("The selected action '%s' does not exist in the list.", selectedActionName)
+		-- Fetch data.
+		local internal = self.pair.internal
+		local config = self.pair.config
+
+		-- Fetch the currently selected timing.
+		local found = internal:find(name)
+		if not found then
+			return Logger.longNotify("The selected timing '%s' does not exist in the list.", name)
 		end
 
-		self.container:remove(action)
-		self:crefresh()
+		-- Check for existing ID.
+		if config.timings[found:id()] then
+			return Logger.longNotify("The timing ID '%s' already exists in the config.", found:id())
+		end
+
+		-- Check for existing timing.
+		if config:find(found.name) then
+			return Logger.longNotify("The timing name '%s' already exists in the config.", found.name)
+		end
+
+		-- Clone timing.
+		---@note: No need to refresh after this. It's in the other timing list!
+		config:push(internal:clone(found))
 	end)
+
+	tab:AddButton("Remove Selected Timing", function()
+		-- Fetch name.
+		local name = self.timingList.Value
+		if not name then
+			return Logger.longNotify("Please select a timing to remove.")
+		end
+
+		-- Fetch data.
+		local internal = self.pair.internal
+		local config = self.pair.config
+		local found = config:find(name)
+
+		-- Check if internal.
+		---@todo: Implement functionality to remove internal timings.
+		if internal:find(name) then
+			return Logger.longNotify("You cannot remove internal timings yet.")
+		end
+
+		-- Check if found.
+		if not found then
+			return Logger.longNotify("The selected timing '%s' does not exist in the list.", name)
+		end
+
+		-- Remove timing.
+		config:remove(found)
+
+		-- Refresh timing list.
+		self:refresh()
+	end)
+
+	configDepBox:SetupDependencies({
+		{ self.timingType, "Config" },
+	})
+
+	internalDepBox:SetupDependencies({
+		{ self.timingType, "Internal" },
+	})
 end
 
 ---Initialize builder tab.
 function BuilderSection:builder()
 	local tab = self.tabbox:AddTab(string.format("%s", self.name))
 
-	self.timingList = tab:AddDropdown(nil, {
-		Text = "Timing List",
-		Values = self.pair:names(),
-		AllowNull = true,
-		Callback = function(value)
-			if not value then
-				return
-			end
-
-			local found = self.pair:find(value)
-			if not found then
-				return Logger.longNotify("The selected timing '%s' does not exist in the list.", value)
-			end
-
-			self:load(found)
-		end,
-	})
-
-	self.timingName = tab:AddInput(nil, {
-		Text = "Timing Name",
-	})
-
 	self.timingTag = tab:AddDropdown(nil, {
 		Text = "Timing Tag",
 		Values = { "Undefined", "Critical", "Mantra", "M1" },
 		Default = 1,
+		Callback = self:tnc(function(timing, value)
+			timing.tag = value
+		end),
 	})
 
 	self.initialMinimumDistance = tab:AddSlider(nil, {
@@ -274,6 +496,9 @@ function BuilderSection:builder()
 		Suffix = "s",
 		Default = 0,
 		Rounding = 0,
+		Callback = self:tnc(function(timing, value)
+			timing.imdd = value
+		end),
 	})
 
 	self.initialMaximumDistance = tab:AddSlider(nil, {
@@ -283,40 +508,49 @@ function BuilderSection:builder()
 		Suffix = "s",
 		Default = 1000,
 		Rounding = 0,
+		Callback = self:tnc(function(timing, value)
+			timing.imxd = value
+		end),
+	})
+
+	self.punishableWindow = tab:AddSlider(nil, {
+		Text = "Punishable Window",
+		Min = 0,
+		Max = 2,
+		Default = 0.6,
+		Suffix = "s",
+		Rounding = 1,
+		Callback = self:tnc(function(timing, value)
+			timing.punishable = value
+		end),
+	})
+
+	self.afterWindow = tab:AddSlider(nil, {
+		Text = "After Window",
+		Min = 0,
+		Max = 1,
+		Default = 0.1,
+		Suffix = "s",
+		Rounding = 2,
+		Callback = self:tnc(function(timing, value)
+			timing.after = value
+		end),
 	})
 
 	self.delayUntilInHitbox = tab:AddToggle(nil, {
 		Text = "Delay Until In Hitbox",
 		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing.duih = value
+		end),
 	})
 
 	self:extra(tab)
-
-	tab:AddButton("Add Timing To List", function()
-		if #self.timingName.Value <= 0 then
-			return Logger.longNotify("Please enter a valid timing name.")
-		end
-
-		if not self:check() then
-			return
-		end
-
-		if self.pair:config():find(self.timingName.Value) then
-			return Logger.longNotify("The timing name '%s' already exists in the list.", self.timingName.Value)
-		end
-
-		self:write()
-
-		self:push()
-	end)
-
-	tab:AddButton("Remove Timing From List", function()
-		self:remove()
-	end)
 end
 
 ---Initialize BuilderSection object.
 function BuilderSection:init()
+	self:timing()
 	self:builder()
 	self:action()
 end
@@ -332,8 +566,6 @@ function BuilderSection.new(name, tabbox, pair, timing)
 	self.name = name
 	self.tabbox = tabbox
 	self.pair = pair
-	self.timing = timing
-	self.container = ActionContainer.new()
 	return self
 end
 

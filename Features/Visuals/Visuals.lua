@@ -73,6 +73,13 @@ local function updateShowRobloxChat()
 		return
 	end
 
+	local chatWindowConfiguration = textChatService:FindFirstChild("ChatWindowConfiguration")
+	if not chatWindowConfiguration then
+		return
+	end
+
+	showRobloxChatMap:add(chatWindowConfiguration, "Enabled", true)
+
 	local chatGui = playerGui:FindFirstChild("Chat")
 	local chatFrame = chatGui and chatGui:FindFirstChild("Frame")
 
@@ -83,12 +90,6 @@ local function updateShowRobloxChat()
 		return
 	end
 
-	local chatWindowConfiguration = textChatService:FindFirstChild("ChatWindowConfiguration")
-	if not chatWindowConfiguration then
-		return
-	end
-
-	showRobloxChatMap:add(chatWindowConfiguration, "Enabled", true)
 	showRobloxChatMap:add(chatBarFrame, "Position", UDim2.new(0, 0, 0, 195))
 	showRobloxChatMap:add(chatChannelFrame, "Visible", true)
 end

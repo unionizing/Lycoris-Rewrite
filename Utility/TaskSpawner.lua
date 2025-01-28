@@ -24,7 +24,6 @@ function TaskSpawner.delay(label, delay, callback, ...)
 		return xpcall(callback, onTaskFunctionError, ...)
 	end)
 
-	-- Spawn delayed task.
 	return task.delay(delay, taskFunction, ...)
 end
 
@@ -33,6 +32,7 @@ end
 ---@param callback function
 ---@vararg any
 function TaskSpawner.spawn(label, callback, ...)
+	---Log task errors.
 	---@param error string
 	local function onTaskFunctionError(error)
 		Logger.trace("onTaskFunctionError - (%s) - %s", label, error)
@@ -43,7 +43,7 @@ function TaskSpawner.spawn(label, callback, ...)
 		return xpcall(callback, onTaskFunctionError, ...)
 	end)
 
-	-- Spawn task.
+	-- Return reference.
 	return task.spawn(taskFunction, ...)
 end
 

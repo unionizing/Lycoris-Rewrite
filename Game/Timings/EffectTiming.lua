@@ -15,13 +15,13 @@ function EffectTiming:id()
 	return self.ename
 end
 
--- Getter for repeat start delay in seconds.
+---Getter for repeat start delay in seconds.
 ---@return number
 function EffectTiming:rsd()
 	return self._rsd / 1000
 end
 
--- Getter for repeat start delay in seconds.
+---Getter for repeat start delay in seconds.
 ---@return number
 function EffectTiming:rpd()
 	return self._rpd / 1000

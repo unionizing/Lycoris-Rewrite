@@ -49,7 +49,7 @@ local function getLeaderboardData()
 		end
 
 		local info = debug.getinfo(func)
-		if info.name ~= nil then
+		if info.name ~= nil and info.name ~= "" then
 			continue
 		end
 
@@ -113,6 +113,7 @@ local function updateSpectating()
 		if Configuration.expectToggleValue("ShowHiddenPlayers") then
 			showHiddenMap:add(frame, "Visible", true)
 		else
+			---@todo: STOP! STOP! Restoring will fuck up the leaderboard here. We need proper restore functions instead of defaulting to map.
 			showHiddenMap:restore()
 		end
 
@@ -173,7 +174,7 @@ local function updatePlayerProximity()
 			local beepSound = Instance.new("Sound", game:GetService("CoreGui"))
 			beepSound.SoundId = "rbxassetid://100849623977896"
 			beepSound.PlaybackSpeed = 1
-			beepSound.Volume = 0.1
+			beepSound.Volume = Configuration.expectOptionValue("PlayerProximityBeepVolume") or 0.1
 			beepSound.PlayOnRemove = true
 			beepSound:Destroy()
 		end

@@ -52,6 +52,20 @@ local function inAir(humanoid, effectReplicatorModule)
 	return effectReplicatorModule:HasEffect("AirBorne") ~= nil
 end
 
+---Manual table find. Stupid Wave hotfix. Way slower to use this.
+---@param tbl table
+---@param value any
+---@return boolean
+local function manualTableFind(tbl, value)
+	for _, v in next, tbl do
+		if v ~= value then
+			continue
+		end
+
+		return true
+	end
+end
+
 ---Check if table has non-boolean values.
 ---@param tbl table
 ---@return boolean
@@ -95,7 +109,7 @@ function InputClient.getInputData()
 		end
 
 		local consts = debug.getconstants(func)
-		if consts[249] ~= ".lastHBCheck" then
+		if not table.find(consts, ".lastHBCheck") and not manualTableFind(consts, ".lastHBCheck") then
 			continue
 		end
 
@@ -123,14 +137,14 @@ end
 function InputClient.bend()
 	local unblockRemote = KeyHandling.getRemote("Unblock")
 	if not unblockRemote then
-		return
+		return Logger.warn("Cannot end block without unblock remote.")
 	end
 
 	local sprintFunction = InputClient.sprintFunctionCache
 	local inputData = InputClient.getInputData()
 
 	if not sprintFunction or not inputData then
-		return
+		return Logger.warn("Cannot end block without sprint function or input data.")
 	end
 
 	unblockRemote:FireServer()
@@ -144,34 +158,32 @@ end
 function InputClient.bstart()
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then
-		return
+		return Logger.warn("Cannot start block without effect replicator.")
 	end
 
 	local effectReplicatorModule = require(effectReplicator)
 	if not effectReplicatorModule then
-		return
+		return Logger.warn("Cannot start block without effect replicator module.")
 	end
 
 	local blockRemote = KeyHandling.getRemote("Block")
 	if not blockRemote then
-		return
+		return Logger.warn("Cannot start block without block remote.")
 	end
 
 	local sprintFunction = InputClient.sprintFunctionCache
 	local inputData = InputClient.getInputData()
-
 	if not sprintFunction or not inputData then
-		return
+		return Logger.warn("Cannot start block without sprint function or input data.")
 	end
 
 	local bufferEffect = effectReplicatorModule:FindEffect("M1Buffering")
-
 	if bufferEffect then
 		bufferEffect:Remove()
 	end
 
 	if effectReplicatorModule:HasEffect("CastingSpell") then
-		return
+		return Logger.warn("Cannot start block while casting spell.")
 	end
 
 	blockRemote:FireServer()
@@ -215,22 +227,35 @@ function InputClient.parry()
 end
 
 ---Dodge function.
----@param hrp Model
----@param humanoid Model
-function InputClient.dodge(hrp, humanoid)
+function InputClient.dodge()
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then
-		return
+		return Logger.warn("Cannot dodge without effect replicator.")
 	end
 
 	local effectReplicatorModule = require(effectReplicator)
 	if not effectReplicatorModule then
-		return
+		return Logger.warn("Cannot dodge without effect replicator module.")
 	end
 
 	local lastRollMoveDirection = InputClient.getLastRollMoveDirection()
 	if not lastRollMoveDirection then
-		return
+		return Logger.warn("Cannot dodge without last roll move direction.")
+	end
+
+	local character = players.LocalPlayer.Character
+	if not character then
+		return Logger.warn("Cannot dodge without character.")
+	end
+
+	local root = character:FindFirstChild("HumanoidRootPart")
+	if not root then
+		return Logger.warn("Cannot dodge without root.")
+	end
+
+	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+	if not humanoid then
+		return Logger.warn("Cannot dodge without humanoid.")
 	end
 
 	effectReplicatorModule:CreateEffect("DodgeInputted"):Debris(0.35)
@@ -243,7 +268,7 @@ function InputClient.dodge(hrp, humanoid)
 	local pivotVelocity = effectReplicatorModule:FindEffect("PivotVelocity")
 	local usePivotVelocityRoll = false
 
-	local lookVector = hrp.CFrame.LookVector
+	local lookVector = root.CFrame.LookVector
 	local moveDirection = humanoid.MoveDirection
 
 	if moveDirection.Magnitude < 0.1 then
@@ -264,14 +289,63 @@ function InputClient.dodge(hrp, humanoid)
 		usePivotVelocityRoll = true
 	end
 
-	return InputClient.roll(hrp, humanoid, usePivotVelocityRoll and true or nil)
+	---@note: Run this in a seperate task because the roll movement must still continue even when detached and destroyed. Else, it will behave wrong.
+	--- This is OK. Before any yields occur, we fetch the remotes beforehand. Also, the clean up is done at the very end of the function.
+	task.spawn(InputClient.roll, usePivotVelocityRoll and true or nil)
+end
+
+---Re-created feint function.
+function InputClient.feint()
+	local rightClickRemote = KeyHandling.getRemote("RightClick")
+	if not rightClickRemote then
+		return Logger.warn("Cannot feint without right click remote.")
+	end
+
+	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
+	if not effectReplicator then
+		return Logger.warn("Cannot feint without effect replicator.")
+	end
+
+	local effectReplicatorModule = require(effectReplicator)
+	if not effectReplicatorModule then
+		return Logger.warn("Cannot feint without effect replicator module.")
+	end
+
+	local inputDataTable = InputClient.getInputData()
+	if not inputDataTable then
+		return Logger.warn("Cannot feint without input data.")
+	end
+
+	local character = players.LocalPlayer.Character
+	if not character then
+		return Logger.warn("Cannot feint without character.")
+	end
+
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	if not hrp then
+		return Logger.warn("Cannot feint without root.")
+	end
+
+	inputDataTable.Right = true
+
+	if effectReplicatorModule:HasEffect("ClientDodge") then
+		effectReplicatorModule:CreateEffect("ClientFeint"):Debris(0.4)
+	end
+
+	if hrp:FindFirstChild("ClientRemove") then
+		hrp.ClientRemove:Destroy()
+	end
+
+	if effectReplicatorModule:HasEffect("Feint") then
+		return
+	end
+
+	rightClickRemote:FireServer(inputDataTable)
 end
 
 ---Re-created roll function for safety.
----@param hrp Model
----@param humanoid Model
 ---@param pivotStep boolean
-function InputClient.roll(hrp, humanoid, pivotStep)
+function InputClient.roll(pivotStep)
 	local unblockRemote = KeyHandling.getRemote("Unblock")
 	local dodgeRemote = KeyHandling.getRemote("Dodge")
 	local stopDodge = KeyHandling.getRemote("StopDodge")
@@ -288,8 +362,17 @@ function InputClient.roll(hrp, humanoid, pivotStep)
 	local character = players.LocalPlayer.Character
 	local characterHandler = character and character:FindFirstChild("CharacterHandler")
 	local inputClient = characterHandler and characterHandler:FindFirstChild("InputClient")
-
 	if not inputClient then
+		return
+	end
+
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	if not hrp then
+		return
+	end
+
+	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+	if not humanoid then
 		return
 	end
 
@@ -810,7 +893,6 @@ function InputClient.roll(hrp, humanoid, pivotStep)
 
 		if tick() - rollTimestamp < rollTimeSeconds then
 			---@note: Again, exempt crouch boolean flag.
-
 			humanoid:LoadAnimation(landingAnim):Play()
 
 			local airDashBodyVelocity = Instance.new("BodyVelocity")

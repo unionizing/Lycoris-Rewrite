@@ -4,11 +4,23 @@ local TimingSave = require("Game/Timings/TimingSave")
 ---@module Game.Timings.TimingContainerPair
 local TimingContainerPair = require("Game/Timings/TimingContainerPair")
 
+---@module Game.Timings.TimingContainer
+local TimingContainer = require("Game/Timings/TimingContainer")
+
+---@module Game.Timings.AnimationTiming
+local AnimationTiming = require("Game/Timings/AnimationTiming")
+
+---@module Game.Timings.EffectTiming
+local EffectTiming = require("Game/Timings/EffectTiming")
+
+---@module Game.Timings.PartTiming
+local PartTiming = require("Game/Timings/PartTiming")
+
+---@module Game.Timings.SoundTiming
+local SoundTiming = require("Game/Timings/SoundTiming")
+
 -- SaveManager module.
-local SaveManager = {
-	default = TimingSave.new(),
-	config = TimingSave.new(),
-}
+local SaveManager = {}
 
 ---@module Utility.Filesystem
 local Filesystem = require("Utility/Filesystem")
@@ -24,6 +36,9 @@ local Serializer = require("Utility/Serializer")
 
 -- Manager filesystem.
 local fs = Filesystem.new("Lycoris-Rewrite-Timings")
+
+-- Current timing save.
+local config = TimingSave.new()
 
 -- Generate mapping.
 local charByteMap = {}
@@ -111,7 +126,7 @@ function SaveManager.merge(name, type)
 		return Logger.warn("Timing manager failed to load config %s with result %s.", name, tostring(result))
 	end
 
-	SaveManager.config:merge(TimingSave.new(result), type)
+	config:merge(TimingSave.new(result), type)
 
 	Logger.notify("Config file %s has merged with the loaded one.", name)
 end
@@ -179,7 +194,7 @@ function SaveManager.write(name)
 		return Logger.longNotify("Config name cannot be empty.")
 	end
 
-	local success, result = pcall(Serializer.marshal, SaveManager.config:serialize())
+	local success, result = pcall(Serializer.marshal, config:serialize())
 
 	if not success then
 		Logger.longNotify("Failed to serialize config file %s.", name)
@@ -237,9 +252,9 @@ function SaveManager.load(name)
 		return Logger.warn("Timing manager failed to process config %s with result %s.", name, tostring(result))
 	end
 
-	SaveManager.config:clear()
+	config:clear()
 
-	success, result = pcall(SaveManager.config.load, SaveManager.config, result)
+	success, result = pcall(config.load, config, result)
 
 	if not success then
 		Logger.longNotify("Failed to load config file %s.", name)
@@ -250,7 +265,7 @@ function SaveManager.load(name)
 	Logger.notify(
 		"Config file %s has loaded with %i timings in %.2f seconds.",
 		name,
-		SaveManager.config:count(),
+		config:count(),
 		os.clock() - timestamp
 	)
 end
@@ -259,12 +274,27 @@ end
 function SaveManager.init()
 	local timestamp = os.clock()
 
-	---@todo: Load default timings from server.
-	SaveManager.default:load({})
+	-- Create internal timing containers.
+	local internalAnimationContainer = TimingContainer.new(AnimationTiming.new())
+	local internalEffectContainer = TimingContainer.new(EffectTiming.new())
+	local internalPartContainer = TimingContainer.new(PartTiming.new())
+	local internalSoundContainer = TimingContainer.new(SoundTiming.new())
+
+	---@todo: Load internal timings from server.
+	internalAnimationContainer:load({})
+	internalEffectContainer:load({})
+	internalPartContainer:load({})
+	internalSoundContainer:load({})
+
+	-- Count up internal timings.
+	local internalCount = internalAnimationContainer:count()
+		+ internalEffectContainer:count()
+		+ internalPartContainer:count()
+		+ internalSoundContainer:count()
 
 	Logger.notify(
-		"Default timings have loaded with %i timings in %.2f seconds.",
-		SaveManager.default:count(),
+		"Internal timings have loaded with %i timings in %.2f seconds.",
+		internalCount,
 		os.clock() - timestamp
 	)
 
@@ -277,16 +307,16 @@ function SaveManager.init()
 	end
 
 	-- Animation stack.
-	SaveManager.as = TimingContainerPair.new(SaveManager.default:get().animation, SaveManager.config:get().animation)
+	SaveManager.as = TimingContainerPair.new(internalAnimationContainer, config:get().animation)
 
 	-- Effect stack.
-	SaveManager.es = TimingContainerPair.new(SaveManager.default:get().effect, SaveManager.config:get().effect)
+	SaveManager.es = TimingContainerPair.new(internalEffectContainer, config:get().effect)
 
 	-- Part stack.
-	SaveManager.ps = TimingContainerPair.new(SaveManager.default:get().part, SaveManager.config:get().part)
+	SaveManager.ps = TimingContainerPair.new(internalPartContainer, config:get().part)
 
 	-- Sound stack.
-	SaveManager.ss = TimingContainerPair.new(SaveManager.default:get().sound, SaveManager.config:get().sound)
+	SaveManager.ss = TimingContainerPair.new(internalSoundContainer, config:get().sound)
 end
 
 -- Return SaveManager module.

@@ -4,6 +4,10 @@ local CombatTab = {}
 ---@module Utility.Logger
 local Logger = require("Utility/Logger")
 
+-- Services.
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local players = game:GetService("Players")
+
 -- Initialize combat targeting section.
 ---@param tab table
 function CombatTab.initCombatTargetingSection(tab)
@@ -18,7 +22,7 @@ function CombatTab.initCombatTargetingSection(tab)
 	})
 
 	tab:AddSlider("FOVLimit", {
-		Text = "FOV Limit",
+		Text = "Player FOV Limit",
 		Min = 0,
 		Max = 180,
 		Default = 180,
@@ -46,12 +50,12 @@ function CombatTab.initCombatTargetingSection(tab)
 	tab:AddToggle("CheckTargetingValue", {
 		Text = "Check Targeting Value",
 		Default = false,
-		Tooltip = "If found in a valid target, the script will check if we're currently being targeted.",
+		Tooltip = "If found with a valid target, the script will check if we're currently being targeted.",
 	})
 
 	tab:AddToggle("IgnoreMobs", {
 		Text = "Ignore Mobs",
-		Default = true,
+		Default = false,
 	})
 
 	tab:AddToggle("IgnoreAllies", {
@@ -117,7 +121,62 @@ end
 
 -- Initialize auto defense section.
 ---@param groupbox table
-function CombatTab.initAutoDefenseSection(groupbox) end
+function CombatTab.initAutoDefenseSection(groupbox)
+	groupbox:AddToggle("EnableAutoDefense", {
+		Text = "Enable Auto Defense",
+		Default = false,
+		Callback = function(value)
+			if not value then
+				return
+			end
+
+			-- Get local player.
+			local localPlayer = players.LocalPlayer
+			if not localPlayer then
+				return
+			end
+
+			-- Check if ping compensation is enabled. We want it off.
+			if not localPlayer:GetAttribute("EnablePingCompensation") then
+				return
+			end
+
+			-- Get requests module.
+			local requests = replicatedStorage:FindFirstChild("Requests")
+			if not requests then
+				return
+			end
+
+			-- Find update UX settings.
+			local updateUxSettings = requests:FindFirstChild("UpdateUXSettings")
+			if not updateUxSettings then
+				return
+			end
+
+			-- Disable ping compensation.
+			---@note: Doesn't update the UI.
+			updateUxSettings:FireServer("EnablePingCompensation", false)
+
+			-- Notify to the user.
+			Logger.longNotify("Auto Defense assumes ping compensation is disabled. It has been disabled for you.")
+		end,
+	})
+
+	groupbox:AddToggle("EnableNotifications", {
+		Text = "Enable Notifications",
+		Default = false,
+	})
+
+	groupbox:AddToggle("EnableVisualizations", {
+		Text = "Enable Visualizations",
+		Default = false,
+	})
+
+	groupbox:AddToggle("RollOnParryCooldown", {
+		Text = "Roll On Parry Cooldown",
+		Default = false,
+	})
+end
 
 -- Initialize feint detection section.
 ---@param groupbox table
@@ -125,7 +184,32 @@ function CombatTab.initFeintDetectionSection(groupbox) end
 
 -- Initialize attack assistance section.
 ---@param groupbox table
-function CombatTab.initAttackAssistanceSection(groupbox) end
+function CombatTab.initAttackAssistanceSection(groupbox)
+	groupbox:AddToggle("FeintM1WhileDefending", {
+		Text = "Feint M1 While Defending",
+		Default = false,
+	})
+
+	groupbox:AddToggle("FeintMantrasWhileDefending", {
+		Text = "Feint Mantras While Defending",
+		Default = false,
+	})
+
+	groupbox:AddToggle("BlockPunishableM1s", {
+		Text = "Block Punishable M1s",
+		Default = false,
+	})
+
+	groupbox:AddToggle("BlockPunishableCriticals", {
+		Text = "Block Punishable Criticals",
+		Default = false,
+	})
+
+	groupbox:AddToggle("BlockPunishableMantras", {
+		Text = "Block Punishable Mantras",
+		Default = false,
+	})
+end
 
 -- Initialize input assistance section.
 ---@param groupbox table

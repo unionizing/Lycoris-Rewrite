@@ -19,16 +19,16 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
             - Username Input Box ✅
             - Add Username To Whitelist ✅
             - Remove Selected Username ✅
-        - FOV Limit ✅
+        - Player FOV Limit ✅
         - Distance Limit ✅
         - Ignore Mobs ✅
         - Ignore Friends ✅
         - Max Targets ✅
     - Auto Defense ✅
-        - Enable Auto Defense ❌
-        - Auto Defense Configuration ❌
-        - Auto Defense Notifications ❌
-        - Auto Defense Visualizations ❌
+        - Enable Auto Defense ✅
+        - Enable Notifications ✅
+        - Enable Visualizations ✅
+        - Roll On Parry Cooldown ✅
     - Feint Detection ✅
         - Detect M1 Feints ❌
         - Detect Mantra Feints ❌
@@ -38,20 +38,21 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
                 - Parry ❌
             - Feint Reaction Chance ❌
     - Attack Assistance ✅
-        - Feint M1 While Defending ❌
-        - Feint Mantras While Defending ❌
-        - Block Punishable M1s ❌
-        - Block Punishable Criticals❌
-        - Block Punishable Mantras ❌
+        - Feint M1 While Defending ✅
+        - Feint Mantras While Defending ✅
+        - Block Punishable M1s ✅
+        - Block Punishable Criticals ✅
+        - Block Punishable Mantras ✅
+        - Punishable Window (0s to 0.6s to 2s) ✅
+        - After Window (0s to 0.1s to 0.5s) ✅
     - Combat Assistance ✅
         - Silent Aim ❌
+        - Perfect Mantra Cast ❌
         - Allow Flourish Feints ❌
         - Allow Attacks While Rolling ❌
         - Attack Animation Speed ❌
             - Animation Speed Slider (0.5x - 1x - 2x) ❌ 
             - Side note: Current animation speed is multiplied instead of being incremental. Solves any pausing and is more consistent.
-        - Maximum Momentum ❌
-        - Perfect Mantra Cast ❌
 
     Use Counter Mantras When Avaliable
 
@@ -78,6 +79,9 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Show Animation Visualizer ❌
         - Animation Visualizer ID ❌
     - Animation ✅
+        - Builder Type ✅
+            - Internal ✅
+            - Config ✅
         - Timing List ✅
         - Timing Name ✅
         - Timing Tag ✅
@@ -101,11 +105,17 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
                 - Dodge ✅
                 - Start Block ✅
                 - End Block ✅
-            - Add Action To List ✅
+            - Create New Action ✅
             - Remove Action From List ✅
-        - Write Timing To List ✅
+        - If Builder Type Is Config ✅
+            - Create New Timing ✅
+        - Else If Builder Type Is Internal ✅
+            - Clone To Config ✅
         - Remove Selected Timing ✅
     - Part ✅
+        - Builder Type ✅
+            - Internal ✅
+            - Config ✅
         - Timing List ✅
         - Timing Name ✅
         - Timing Tag ✅
@@ -134,11 +144,17 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
             - Dodge ✅
             - Start Block ✅
             - End Block ✅
-        - Add Action To List ✅
+        - Create New Action ✅
         - Remove Action From List ✅
-        - Write Timing To List ✅
+        - If Builder Type Is Config ✅
+            - Create New Timing ✅
+        - Else If Builder Type Is Internal ✅
+            - Clone To Config ✅
         - Remove Selected Timing ✅
     - Sound ✅
+        - Builder Type ✅
+            - Internal ✅
+            - Config ✅
         - Timing List ✅
         - Timing Name ✅
         - Timing Tag ✅
@@ -162,11 +178,17 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
                 - Dodge ✅
                 - Start Block ✅
                 - End Block ✅
-            - Add Action To List ✅
+            - Create New Action ✅
             - Remove Action From List ✅
-        - Write Timing To List ✅
+        - If Builder Type Is Config ✅
+            - Create New Timing ✅
+        - Else If Builder Type Is Internal ✅
+            - Clone To Config ✅
         - Remove Selected Timing ✅
     - Effect ✅
+        - Builder Type ✅
+            - Internal ✅
+            - Config ✅
         - Timing List ✅
         - Timing Name ✅
         - Timing Tag ✅
@@ -190,9 +212,12 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
                 - Dodge ✅
                 - Start Block ✅
                 - End Block ✅
-            - Add Action To List ✅
+            - Create New Action ✅
             - Remove Action From List ✅
-        - Write Timing To List ✅
+        - If Builder Type Is Config ✅
+            - Create New Timing ✅
+        - Else If Builder Type Is Internal ✅
+            - Clone To Config ✅
         - Remove Selected Timing ✅
 
 - Game ✅
@@ -206,6 +231,7 @@ Tabs have a marker to desiginate whether or not the menu elements are finished.
         - Infinite Jump ✅
             - Infinite Jump Speed ✅
         - Auto Sprint ✅
+        - Always Sprint ❌
         - Agility Spoofer ✅
             - Agility Value ✅
         - Tween To Objective ✅

@@ -36,18 +36,22 @@ local BuilderTab = {
 ---Refresh builder lists.
 function BuilderTab.refresh()
 	if BuilderTab.abs then
+		BuilderTab.abs:reset()
 		BuilderTab.abs:refresh()
 	end
 
 	if BuilderTab.ebs then
+		BuilderTab.ebs:reset()
 		BuilderTab.ebs:refresh()
 	end
 
 	if BuilderTab.pbs then
+		BuilderTab.pbs:reset()
 		BuilderTab.pbs:refresh()
 	end
 
 	if BuilderTab.sbs then
+		BuilderTab.sbs:reset()
 		BuilderTab.sbs:refresh()
 	end
 end
@@ -89,6 +93,7 @@ function BuilderTab.initSaveManagerSection(groupbox)
 
 	groupbox:AddButton("Refresh List", function()
 		SaveManager.refresh(configList)
+		BuilderTab.refresh()
 	end)
 
 	groupbox:AddButton("Set To Auto Load", function()
@@ -141,11 +146,11 @@ function BuilderTab.init(window)
 	BuilderTab.initLoggerSection(tab:AddDynamicGroupbox("Logger"))
 
 	-- Create builder sections.
-	BuilderTab.ebs = EffectBuilderSection.new("Effect", tab:AddDynamicTabbox(), SaveManager.es, EffectTiming.new())
-	BuilderTab.pbs = PartBuilderSection.new("Part", tab:AddDynamicTabbox(), SaveManager.ps, PartTiming.new())
-	BuilderTab.sbs = SoundBuilderSection.new("Sound", tab:AddDynamicTabbox(), SaveManager.ss, SoundTiming.new())
 	BuilderTab.abs =
 		AnimationBuilderSection.new("Animation", tab:AddDynamicTabbox(), SaveManager.as, AnimationTiming.new())
+	BuilderTab.pbs = PartBuilderSection.new("Part", tab:AddDynamicTabbox(), SaveManager.ps, PartTiming.new())
+	BuilderTab.ebs = EffectBuilderSection.new("Effect", tab:AddDynamicTabbox(), SaveManager.es, EffectTiming.new())
+	BuilderTab.sbs = SoundBuilderSection.new("Sound", tab:AddDynamicTabbox(), SaveManager.ss, SoundTiming.new())
 
 	-- Initialize builder sections.
 	BuilderTab.abs:init()

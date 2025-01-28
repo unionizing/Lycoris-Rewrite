@@ -1,91 +1,33 @@
 ---@class TimingContainerPair
----@field _data TimingContainer[]
+---@note The configs are always prioritized over the internal timings.
+---@field internal TimingContainer
+---@field config TimingContainer
 local TimingContainerPair = {}
 TimingContainerPair.__index = TimingContainerPair
 
 ---Create new TimingContainerPair object.
----@param default TimingContainer
+---@param internal TimingContainer
 ---@param config TimingContainer
 ---@return TimingContainerPair
-function TimingContainerPair.new(default, config)
+function TimingContainerPair.new(internal, config)
 	local self = setmetatable({}, TimingContainerPair)
-
-	self._data = {
-		default = default,
-		config = config,
-	}
-
+	self.internal = internal
+	self.config = config
 	return self
-end
-
----Get default.
----@return TimingContainer
-function TimingContainerPair:default()
-	return self._data.default
-end
-
----Get config.
----@return TimingContainer
-function TimingContainerPair:config()
-	return self._data.config
 end
 
 ---Index timing container.
 ---@param key any?
 ---@return Timing?
 function TimingContainerPair:index(key)
-	for _, container in next, self._data do
-		local timing = container.timings[key]
-		if not timing then
-			continue
-		end
-
-		return timing
-	end
+	return self.config.timings[key] or self.internal.timings[key]
 end
 
 ---Find timing from name.
 ---@param name string
 ---@return Timing?
 function TimingContainerPair:find(name)
-	for _, container in next, self._data do
-		local timing = container:find(name)
-		if not timing then
-			continue
-		end
-
-		return timing
-	end
-end
-
----List all timing names.
----@return string[]
-function TimingContainerPair:names()
-	local names = {}
-
-	for _, container in next, self._data do
-		for _, timing in next, container.timings do
-			table.insert(names, timing.name)
-		end
-	end
-
-	table.sort(names)
-
-	return names
-end
-
----Get timing from stack.
----@param idx any
----@return Timing?
-function TimingContainerPair:get(idx)
-	for _, container in next, self._data do
-		local timing = container.timings[idx]
-		if not timing then
-			continue
-		end
-
-		return timing
-	end
+	return self.config:find(name) or self.internal:find(name)
 end
 
 -- Return TimingContainerStack module.

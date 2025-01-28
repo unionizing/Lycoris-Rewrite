@@ -23,10 +23,6 @@ end
 ---@param model Model
 ---@param label string
 function MobESP.new(identifier, model, label)
-	if model and model:IsA("Model") then
-		model.ModelStreamingMode = Enum.ModelStreamingMode.Persistent
-	end
-	
 	return setmetatable(ModelESP.new(identifier, model, label), MobESP)
 end
 

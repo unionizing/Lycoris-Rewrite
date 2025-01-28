@@ -10,9 +10,6 @@ local Signal = require("Utility/Signal")
 ---@module Game.Timings.SaveManager
 local SaveManager = require("Game/Timings/SaveManager")
 
----@module Utility.TaskSpawner
-local TaskSpawner = require("Utility/TaskSpawner")
-
 ---@module Features.Combat.Targeting
 local Targeting = require("Features/Combat/Targeting")
 
@@ -25,98 +22,79 @@ local Configuration = require("Utility/Configuration")
 ---@module Utility.InstanceWrapper
 local InstanceWrapper = require("Utility/InstanceWrapper")
 
+---@module Game.InputClient
+local InputClient = require("Game/InputClient")
+
+---@module Features.Combat.Objects.Task
+local Task = require("Features/Combat/Objects/Task")
+
 ---@class AnimatorDefender: Defender
 ---@field animator Animator
 ---@field entity Model
 ---@field heffects Instance[]
----@field track AnimationTrack?
----@field tasks Maid
+---@field manimations table<number, Animation>
+---@field track AnimationTrack? Don't be confused. This is the **valid && last** animation track played.
 ---@field maid Maid
 local AnimatorDefender = setmetatable({}, { __index = Defender })
 AnimatorDefender.__index = AnimatorDefender
+AnimatorDefender.__type = "AnimatorDefender"
 
 -- Services.
 local players = game:GetService("Players")
-local stats = game:GetService("Stats")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
----Logger notify.
----@param timing AnimationTiming
----@param str string
-function AnimatorDefender:log(timing, str, ...)
-	Logger.notify("[%s] %s", timing.name, string.format(str, ...))
-end
-
 ---Check if we're in a valid state to proceed with the action.
+---@param timing AnimationTiming
 ---@param action Action
 ---@return boolean
-function AnimatorDefender:valid(action)
+function AnimatorDefender:valid(timing, action)
 	if not self.track then
-		return Logger.notify("No current track.")
+		return self:notify(timing, "No current track.")
 	end
 
 	if not self.entity then
-		return Logger.notify("No entity found.")
+		return self:notify(timing, "No entity found.")
 	end
 
 	local target = Targeting.find(self.entity)
 	if not target then
-		return Logger.notify("Not a viable target.")
+		return self:notify(timing, "Not a viable target.")
 	end
 
 	local character = players.LocalPlayer.Character
 	if not character then
-		return Logger.notify("No character found.")
+		return self:notify(timing, "No character found.")
 	end
 
-	local hbStartPosition = target.root.CFrame * CFrame.new(0, 0, -(action.hitbox.Z / 2))
-
-	local overlapParams = OverlapParams.new()
-	overlapParams.FilterDescendantsInstances = { character }
-	overlapParams.FilterType = Enum.RaycastFilterType.Include
-
-	local visualizationPart = InstanceWrapper.create(self.maid, "VisualizationPart", "Part")
-	visualizationPart.Size = action.hitbox
-	visualizationPart.CFrame = hbStartPosition
-	visualizationPart.Transparency = 0.85
-	visualizationPart.Color = Color3.fromRGB(255, 0, 0)
-	visualizationPart.Parent = workspace
-	visualizationPart.Anchored = true
-	visualizationPart.CanCollide = false
-	visualizationPart.Material = Enum.Material.SmoothPlastic
-
-	if #workspace:GetPartBoundsInBox(hbStartPosition, action.hitbox, overlapParams) <= 0 then
-		return Logger.notify("Not inside of the hitbox.")
+	if not self:hitbox(target.root.CFrame * CFrame.new(0, 0, -(action.hitbox.Z / 2)), action.hitbox, { character }) then
+		return self:notify(timing, "Not inside of the hitbox.")
 	end
 
 	local targetInstance = self.entity:FindFirstChild("Target")
-	if targetInstance and targetInstance.Value ~= self.entity and Configuration.toggleValue("CheckTargetingValue") then
-		return Logger.notify("Not being targeted.")
+	if targetInstance and targetInstance.Value ~= character and Configuration.toggleValue("CheckTargetingValue") then
+		return self:notify(timing, "Not being targeted.")
 	end
 
 	if not self.track.IsPlaying then
-		return Logger.notify("Animation stopped playing.")
+		return self:notify(timing, "Animation stopped playing.")
 	end
 
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then
-		return Logger.notify("No effect replicator found.")
+		return self:notify(timing, "No effect replicator found.")
 	end
 
 	local effectReplicatorModule = require(effectReplicator)
 	if not effectReplicatorModule then
-		return Logger.notify("No effect replicator module found.")
-	end
-
-	if effectReplicatorModule:FindEffect("Parry") or effectReplicatorModule:FindEffect("Dodge") then
-		return Logger.notify("Effect list has 'Parry' or 'Dodge' effect.")
+		return self:notify(timing, "No effect replicator module found.")
 	end
 
 	if
-		#self.heffects >= 1
+		not timing.ha
+		and #self.heffects >= 1
 		and (players:GetPlayerFromCharacter(self.entity) or self.entity:FindFirstChild("HumanController"))
 	then
-		return Logger.notify("Entity got attack cancelled.")
+		return self:notify(timing, "Entity got attack cancelled.")
 	end
 
 	return true
@@ -159,10 +137,70 @@ function AnimatorDefender:initial(timing)
 	return true
 end
 
+---Repeat until parry end.
+---@param track AnimationTrack
+---@param timing AnimationTiming
+---@param index number
+function AnimatorDefender:rpue(track, timing, index)
+	if not self.track.IsPlaying then
+		return
+	end
+
+	self:mark(
+		Task.new(
+			string.format("RPUE_%s_%i", timing.name, index),
+			timing:rpd() - self:ping(),
+			timing.punishable,
+			timing.after,
+			self.rpue,
+			self,
+			track,
+			timing,
+			index + 1
+		)
+	)
+
+	if not self:initial(timing) then
+		return
+	end
+
+	self:notify(timing, "(%i) Action 'RPUE Parry' is being executed.", index)
+
+	InputClient.parry()
+end
+
 ---Process animation track.
+---@todo: Logger module.
 ---@param track AnimationTrack
 function AnimatorDefender:process(track)
+	if not Configuration.expectToggleValue("EnableAutoDefense") then
+		return
+	end
+
 	if track.Priority == Enum.AnimationPriority.Core then
+		return
+	end
+
+	if track.WeightTarget <= 0.05 then
+		return Logger.warn(
+			"Animation %s is being skipped from entity %s with speed %.2f and weight-target %.2f. It is hidden.",
+			track.Animation.AnimationId,
+			self.entity.Name,
+			track.WeightTarget,
+			track.Speed
+		)
+	end
+
+	if players:GetPlayerFromCharacter(self.entity) and self.manimations[track.Animation.AnimationId] ~= nil then
+		return Logger.warn(
+			"Animation %s is being skipped from player %s because they're likely AP breaking.",
+			track.Animation.AnimationId,
+			self.entity.Name
+		)
+	end
+
+	local localCharacter = players.LocalPlayer.Character
+	if localCharacter and self.entity == localCharacter then
 		return
 	end
 
@@ -176,58 +214,88 @@ function AnimatorDefender:process(track)
 		return
 	end
 
-	local network = stats:FindFirstChild("Network")
-	if not network then
+	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
+	if not effectReplicator then
 		return
 	end
 
-	local serverStatsItem = network:FindFirstChild("ServerStatsItem")
-	if not serverStatsItem then
+	local effectReplicatorModule = require(effectReplicator)
+	if not effectReplicatorModule then
 		return
 	end
 
-	local dataPingItem = serverStatsItem:FindFirstChild("Data Ping")
-	if not dataPingItem then
+	local humanoidRootPart = self.entity:FindFirstChild("HumanoidRootPart")
+	if not humanoidRootPart then
 		return
 	end
 
-	self.tasks:clean()
+	local midAttackEffect = effectReplicatorModule:FindEffect("MidAttack")
+	local midAttackData = midAttackEffect and midAttackEffect.index
+	local midAttackExpiry = midAttackData and midAttackData.Expiration
+	local midAttackCanFeint = midAttackExpiry and (os.clock() - midAttackExpiry) <= 0.45
+
+	-- Stop! We need to feint if we're currently attacking. Input block will handle the rest.
+	-- Assume, we cannot react in time. Example: we attacked just right before this process call.
+	local shouldFeintAttack = midAttackCanFeint and Configuration.expectToggleValue("FeintM1WhileDefending")
+	local shouldFeintMantra = effectReplicatorModule:FindEffect("CastingSpell")
+		and Configuration.expectToggleValue("FeintMantrasWhileDefending")
+
+	Logger.warn(
+		"FeintAttack(%s) and FeintMantra(%s) - Animation %s is being processed from entity %s.",
+		tostring(shouldFeintAttack),
+		tostring(shouldFeintMantra),
+		track.Animation.AnimationId,
+		self.entity.Name
+	)
+
+	if not effectReplicatorModule:FindEffect("FeintCool") and (shouldFeintAttack or shouldFeintMantra) then
+		-- Log.
+		self:notify(timing, "Automatically feinting attack.")
+
+		-- Feint.
+		InputClient.feint()
+	end
+
+	---@note: Clean up previous tasks that are still waiting or suspended because they're in a different track.
+	self:clean()
+
+	-- Set current data.
 	self.track = track
 	self.heffects = {}
 
-	for _, action in next, timing.actions:get() do
-		local dataPingInSeconds = dataPingItem:GetValue() / 1000
-		local actionTask = TaskSpawner.delay(
-			string.format("Action_%s", action._type),
-			action:when() - dataPingInSeconds,
-			self.handle,
-			self,
-			action
-		)
-
-		self:log(
-			timing,
-			"Added action '%s' (%.2fs) with ping '%.2f' subtracted.",
-			action.name,
-			action:when(),
-			dataPingInSeconds
-		)
-
-		self.tasks:mark(actionTask)
+	---@note: Start processing the timing. Add the actions if we're not RPUE.
+	if not timing.rpue then
+		return self:actions(timing)
 	end
-end
 
----Detach AnimatorDefender object.
-function AnimatorDefender:detach()
-	self.maid:clean()
-	self.tasks:clean()
-	self = nil
+	self:mark(
+		Task.new(
+			string.format("RPUE_%s", timing.name),
+			timing:rsd() - self:ping(),
+			timing.punishable,
+			timing.after,
+			self.rpue,
+			self,
+			track,
+			timing,
+			0
+		)
+	)
+
+	self:notify(
+		timing,
+		"Added RPUE '%s' (%.2fs, then every %.2fs) with relevant ping subtracted.",
+		timing.name,
+		timing:rsd(),
+		timing:rpd()
+	)
 end
 
 ---Create new AnimatorDefender object.
 ---@param animator Animator
+---@param manimations table<number, Animation>
 ---@return AnimatorDefender
-function AnimatorDefender.new(animator)
+function AnimatorDefender.new(animator, manimations)
 	local entity = animator:FindFirstAncestorWhichIsA("Model")
 	if not entity then
 		return error(string.format("AnimatorDefender.new(%s) - no entity.", animator:GetFullName()))
@@ -237,13 +305,12 @@ function AnimatorDefender.new(animator)
 	local animationPlayed = Signal.new(animator.AnimationPlayed)
 	local entityDescendantAdded = Signal.new(entity.DescendantAdded)
 
-	self.track = nil
 	self.animator = animator
+	self.manimations = manimations
 	self.entity = entity
 
+	self.track = nil
 	self.heffects = {}
-	self.maid = Maid.new()
-	self.tasks = Maid.new()
 
 	self.maid:mark(entityDescendantAdded:connect("AnimatorDefender_OnDescendantAdded", function(descendant)
 		if

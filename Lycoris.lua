@@ -142,11 +142,11 @@ function Lycoris.init()
 
 	Hooking.init()
 
-	SaveManager.init()
-
 	InputClient.cache()
 
 	ControlModule.init()
+
+	SaveManager.init()
 
 	Features.init()
 
@@ -156,9 +156,9 @@ function Lycoris.init()
 		handleStartMenu()
 	end
 
-	Logger.notify("Script has been initialized in %ims.", (os.clock() - startTimestamp) * 1000)
-
 	PlayerScanning.init()
+
+	Logger.notify("Script has been initialized in %ims.", (os.clock() - startTimestamp) * 1000)
 
 	local modules = replicatedStorage:FindFirstChild("Modules")
 	local bloxstrapRPC = modules and modules:FindFirstChild("BloxstrapRPC")
@@ -193,9 +193,9 @@ function Lycoris.detach()
 
 	Hooking.detach()
 
-	Logger.warn("Script has been detached.")
-
 	PlayerScanning.detach()
+
+	Logger.warn("Script has been detached.")
 
 	local modules = replicatedStorage:FindFirstChild("Modules")
 	local bloxstrapRPC = modules and modules:FindFirstChild("BloxstrapRPC")

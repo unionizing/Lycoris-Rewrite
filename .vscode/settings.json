@@ -57,4 +57,8 @@
     "robloxLsp.diagnostics.disable": [
         "duplicate-doc-class"
     ],
+    "robloxLsp.hint.setType": true,
+    "robloxLsp.hint.enable": true,
+    "robloxLsp.hint.paramName": true,
+    "robloxLsp.hint.returnType": true,
 }

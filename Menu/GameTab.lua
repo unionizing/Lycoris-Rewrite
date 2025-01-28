@@ -10,7 +10,7 @@ function GameTab.initLocalCharacterSection(groupbox)
 		Default = false,
 	})
 
-	speedHackToggle:AddKeyPicker("SpeedhackKeybind", { Default = "None", SyncToggleState = true, Text = "Speedhack" })
+	speedHackToggle:AddKeyPicker("SpeedhackKeybind", { Default = "N/A", SyncToggleState = true, Text = "Speedhack" })
 
 	local speedDepBox = groupbox:AddDependencyBox()
 
@@ -29,7 +29,7 @@ function GameTab.initLocalCharacterSection(groupbox)
 		Default = false,
 	})
 
-	flyToggle:AddKeyPicker("FlyKeybind", { Default = "None", SyncToggleState = true, Text = "Fly" })
+	flyToggle:AddKeyPicker("FlyKeybind", { Default = "N/A", SyncToggleState = true, Text = "Fly" })
 
 	local flyDepBox = groupbox:AddDependencyBox()
 
@@ -57,7 +57,7 @@ function GameTab.initLocalCharacterSection(groupbox)
 		Default = false,
 	})
 
-	noclipToggle:AddKeyPicker("NoClipKeybind", { Default = "None", SyncToggleState = true, Text = "NoClip" })
+	noclipToggle:AddKeyPicker("NoClipKeybind", { Default = "N/A", SyncToggleState = true, Text = "NoClip" })
 
 	local noclipDepBox = groupbox:AddDependencyBox()
 
@@ -73,7 +73,7 @@ function GameTab.initLocalCharacterSection(groupbox)
 		Default = false,
 	})
 
-	atbToggle:AddKeyPicker("AttachToBackKeybind", { Default = "None", SyncToggleState = true, Text = "Attach To Back" })
+	atbToggle:AddKeyPicker("AttachToBackKeybind", { Default = "N/A", SyncToggleState = true, Text = "Attach To Back" })
 
 	local atbDepBox = groupbox:AddDependencyBox()
 
@@ -103,7 +103,7 @@ function GameTab.initLocalCharacterSection(groupbox)
 
 	infJumpToggle:AddKeyPicker(
 		"InfiniteJumpKeybind",
-		{ Default = "None", SyncToggleState = true, Text = "Infinite Jump" }
+		{ Default = "N/A", SyncToggleState = true, Text = "Infinite Jump" }
 	)
 
 	local infiniteJumpDepBox = groupbox:AddDependencyBox()
@@ -142,7 +142,7 @@ function GameTab.initLocalCharacterSection(groupbox)
 		})
 		:AddKeyPicker(
 			"TweenToObjectivesKeybind",
-			{ Default = "None", SyncToggleState = true, Text = "Tween To Objectives" }
+			{ Default = "N/A", SyncToggleState = true, Text = "Tween To Objectives" }
 		)
 
 	groupbox:AddToggle("AutoSprint", {
@@ -283,6 +283,21 @@ function GameTab.initPlayerMonitoringSection(groupbox)
 		Default = false,
 	})
 
+	local ppbDepBox = ppDepBox:AddDependencyBox()
+
+	ppbDepBox:AddSlider("PlayerProximityBeepVolume", {
+		Text = "Beep Sound Volume",
+		Default = 0.1,
+		Min = 0,
+		Max = 10,
+		Suffix = "v",
+		Rounding = 2,
+	})
+
+	ppbDepBox:SetupDependencies({
+		{ Toggles.PlayerProximityBeep, true },
+	})
+
 	ppDepBox:SetupDependencies({
 		{ Toggles.PlayerProximity, true },
 	})
@@ -340,6 +355,12 @@ function GameTab.initInstanceRemovalsSection(groupbox)
 	groupbox:AddToggle("NoCastleLightBarrier", {
 		Text = "No Castle Light Barrier",
 		Tooltip = "Remove any 'Castle Light Barrier' parts on the client.",
+		Default = false,
+	})
+
+	groupbox:AddToggle("NoYunShulBarrier", {
+		Text = "No Yun Shul Barrier",
+		Tooltip = "Remove any 'Yun Shul Barrier' parts on the client.",
 		Default = false,
 	})
 end

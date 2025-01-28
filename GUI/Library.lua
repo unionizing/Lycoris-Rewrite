@@ -21,6 +21,9 @@ ScreenGui.Parent = CoreGui
 local Toggles = {}
 local Options = {}
 local ColorPickers = {}
+local ContextMenus = {}
+local Tooltips = {}
+local ModeSelectFrames = {}
 
 getgenv().Toggles = Toggles
 getgenv().Options = Options
@@ -39,7 +42,7 @@ local Library = {
 	RiskColor = Color3.fromRGB(255, 50, 50),
 
 	Black = Color3.new(0, 0, 0),
-	Font = Enum.Font.Code,
+	Font = Font.fromEnum(Enum.Font.RobotoMono),
 
 	OpenedFrames = {},
 	DependencyBoxes = {},
@@ -110,12 +113,10 @@ function Library:SafeCallback(label, f, ...)
 		return
 	end
 
-	local success, event = pcall(Profiler.wrap(label, f), ...)
-
-	if not success then
-		warn(string.format("Library:SafeCallback - failed on label %s - %s", label, event))
+	xpcall(Profiler.wrap(label, f), function(err)
+		warn(string.format("Library:SafeCallback - failed on label %s - %s", label, err))
 		warn(debug.traceback())
-	end
+	end, ...)
 end
 
 function Library:AttemptSave()
@@ -141,18 +142,21 @@ end
 function Library:ApplyTextStroke(Inst)
 	Inst.TextStrokeTransparency = 1
 
+	--[[
 	Library:Create("UIStroke", {
 		Color = Color3.new(0, 0, 0),
 		Thickness = 1,
 		LineJoinMode = Enum.LineJoinMode.Miter,
 		Parent = Inst,
 	})
+	]]
+	--
 end
 
 function Library:CreateLabel(Properties, IsHud)
 	local _Instance = Library:Create("TextLabel", {
 		BackgroundTransparency = 1,
-		Font = Library.Font,
+		FontFace = Library.Font,
 		TextColor3 = Library.FontColor,
 		TextSize = 16,
 		TextStrokeTransparency = 0,
@@ -163,6 +167,10 @@ function Library:CreateLabel(Properties, IsHud)
 	Library:AddToRegistry(_Instance, {
 		TextColor3 = "FontColor",
 	}, IsHud)
+
+	if Properties.TextSize then
+		Properties.TextSize = Properties.TextSize + 1
+	end
 
 	return Library:Create(_Instance, Properties)
 end
@@ -225,6 +233,8 @@ function Library:AddToolTip(InfoStr, HoverInstance)
 	Library:AddToRegistry(Label, {
 		TextColor3 = "FontColor",
 	})
+
+	Tooltips[#Tooltips + 1] = Tooltip
 
 	local IsHovering = false
 
@@ -315,7 +325,7 @@ function Library:MapValue(Value, MinA, MaxA, MinB, MaxB)
 end
 
 function Library:GetTextBounds(Text, Font, Size, Resolution)
-	local Bounds = TextService:GetTextSize(Text, Size, Font, Resolution or Vector2.new(1920, 1080))
+	local Bounds = TextService:GetTextSize(Text, Size, "RobotoMono", Resolution or Vector2.new(1920, 1080))
 	return Bounds.X, Bounds.Y
 end
 
@@ -468,7 +478,6 @@ do
 		-- Thus the color picker would never show
 
 		local PickerFrameOuter = Library:Create("Frame", {
-			Name = "Color",
 			BackgroundColor3 = Color3.new(1, 1, 1),
 			BorderColor3 = Color3.new(0, 0, 0),
 			Position = UDim2.fromOffset(DisplayFrame.AbsolutePosition.X, DisplayFrame.AbsolutePosition.Y + 18),
@@ -599,7 +608,7 @@ do
 			BackgroundTransparency = 1,
 			Position = UDim2.new(0, 5, 0, 0),
 			Size = UDim2.new(1, -5, 1, 0),
-			Font = Library.Font,
+			FontFace = Library.Font,
 			PlaceholderColor3 = Color3.fromRGB(190, 190, 190),
 			PlaceholderText = "Hex color",
 			Text = "#FFFFFF",
@@ -682,7 +691,6 @@ do
 			ContextMenu.Container = Library:Create("Frame", {
 				BorderColor3 = Color3.new(),
 				ZIndex = 14,
-
 				Visible = false,
 				Parent = ScreenGui,
 			})
@@ -695,6 +703,8 @@ do
 				ZIndex = 15,
 				Parent = ContextMenu.Container,
 			})
+
+			ContextMenus[#ContextMenus + 1] = ContextMenu
 
 			Library:Create("UIListLayout", {
 				Name = "Layout",
@@ -1096,6 +1106,8 @@ do
 			Parent = ScreenGui,
 		})
 
+		ModeSelectFrames[#ModeSelectFrames + 1] = ModeSelectOuter
+
 		ToggleLabel:GetPropertyChangedSignal("AbsolutePosition"):Connect(function()
 			ModeSelectOuter.Position = UDim2.fromOffset(
 				ToggleLabel.AbsolutePosition.X + ToggleLabel.AbsoluteSize.X + 4,
@@ -1302,6 +1314,14 @@ do
 						Key = "MB1"
 					elseif Input.UserInputType == Enum.UserInputType.MouseButton2 then
 						Key = "MB2"
+					end
+
+					if
+						Input.KeyCode == Enum.KeyCode.Escape
+						or Input.KeyCode == Enum.KeyCode.Backspace
+						or Input.KeyCode == Enum.KeyCode.Delete
+					then
+						Key = "N/A"
 					end
 
 					Break = true
@@ -1787,7 +1807,7 @@ do
 			Position = UDim2.fromOffset(0, 0),
 			Size = UDim2.fromScale(5, 1),
 
-			Font = Library.Font,
+			FontFace = Library.Font,
 			PlaceholderColor3 = Color3.fromRGB(190, 190, 190),
 			PlaceholderText = Info.Placeholder or "",
 
@@ -1802,6 +1822,46 @@ do
 		})
 
 		Library:ApplyTextStroke(Box)
+
+		local Connection = nil
+
+		function Textbox:SetRawValue(Text)
+			if Info.MaxLength and #Text > Info.MaxLength then
+				Text = Text:sub(1, Info.MaxLength)
+			end
+
+			if Textbox.Numeric then
+				if (not tonumber(Text)) and Text:len() > 0 then
+					Text = Textbox.Value
+				end
+			end
+
+			Textbox.Value = Text
+
+			if Connection then
+				Connection:Disconnect()
+			end
+
+			Box.Text = Text
+
+			if Connection then
+				if Textbox.Finished then
+					Connection = Box.FocusLost:Connect(function(enter)
+						if not enter then
+							return
+						end
+
+						Textbox:SetValue(Box.Text)
+						Library:AttemptSave()
+					end)
+				else
+					Connection = Box:GetPropertyChangedSignal("Text"):Connect(function()
+						Textbox:SetValue(Box.Text)
+						Library:AttemptSave()
+					end)
+				end
+			end
+		end
 
 		function Textbox:SetValue(Text)
 			if Info.MaxLength and #Text > Info.MaxLength then
@@ -1822,7 +1882,7 @@ do
 		end
 
 		if Textbox.Finished then
-			Box.FocusLost:Connect(function(enter)
+			Connection = Box.FocusLost:Connect(function(enter)
 				if not enter then
 					return
 				end
@@ -1831,7 +1891,7 @@ do
 				Library:AttemptSave()
 			end)
 		else
-			Box:GetPropertyChangedSignal("Text"):Connect(function()
+			Connection = Box:GetPropertyChangedSignal("Text"):Connect(function()
 				Textbox:SetValue(Box.Text)
 				Library:AttemptSave()
 			end)
@@ -1983,6 +2043,22 @@ do
 		function Toggle:OnChanged(Func)
 			Toggle.Changed = Func
 			Func(Toggle.Value)
+		end
+
+		function Toggle:SetRawValue(Bool)
+			Bool = not not Bool
+
+			Toggle.Value = Bool
+			Toggle:Display()
+
+			for _, Addon in next, Toggle.Addons do
+				if Addon.Type == "KeyPicker" and Addon.SyncToggleState then
+					Addon.Toggled = Bool
+					Addon:Update()
+				end
+			end
+
+			Library:UpdateDependencyBoxes()
 		end
 
 		function Toggle:SetValue(Bool)
@@ -2172,6 +2248,19 @@ do
 			return Round(Library:MapValue(X, 0, Slider.MaxSize, Slider.Min, Slider.Max))
 		end
 
+		function Slider:SetRawValue(Value)
+			local Num = tonumber(Value)
+
+			if not Num then
+				return
+			end
+
+			Num = math.clamp(Num, Slider.Min, Slider.Max)
+
+			Slider.Value = Num
+			Slider:Display()
+		end
+
 		function Slider:SetValue(Str)
 			local Num = tonumber(Str)
 
@@ -2350,6 +2439,7 @@ do
 			BorderColor3 = Color3.new(0, 0, 0),
 			ZIndex = 20,
 			Visible = false,
+			Name = "ListOuter",
 			Parent = ScreenGui,
 		})
 
@@ -2538,6 +2628,8 @@ do
 								for _, OtherButton in next, Buttons do
 									OtherButton:UpdateButton()
 								end
+
+								Library:UpdateDependencyBoxes()
 							end
 
 							Table:UpdateButton()
@@ -2594,6 +2686,28 @@ do
 		function Dropdown:OnChanged(Func)
 			Dropdown.Changed = Func
 			Func(Dropdown.Value)
+		end
+
+		function Dropdown:SetRawValue(Val)
+			if Dropdown.Multi then
+				local nTable = {}
+
+				for Value, Bool in next, Val do
+					if table.find(Dropdown.Values, Value) then
+						nTable[Value] = true
+					end
+				end
+
+				Dropdown.Value = nTable
+			else
+				if not Val then
+					Dropdown.Value = nil
+				elseif table.find(Dropdown.Values, Val) then
+					Dropdown.Value = Val
+				end
+			end
+
+			Dropdown:BuildDropdownList()
 		end
 
 		function Dropdown:SetValue(Val)
@@ -2746,6 +2860,12 @@ do
 					Depbox:Resize()
 					return
 				end
+
+				if Elem.Type == "Dropdown" and Elem.Value ~= Value then
+					Holder.Visible = false
+					Depbox:Resize()
+					return
+				end
 			end
 
 			Holder.Visible = true
@@ -2806,7 +2926,7 @@ do
 
 	local WatermarkInner = Library:Create("Frame", {
 		BackgroundColor3 = Library.MainColor,
-		BorderColor3 = Library.AccentColor,
+		BorderColor3 = Library.OutlineColor,
 		BorderMode = Enum.BorderMode.Inset,
 		Size = UDim2.new(1, 0, 1, 0),
 		ZIndex = 201,
@@ -2814,8 +2934,20 @@ do
 	})
 
 	Library:AddToRegistry(WatermarkInner, {
-		BorderColor3 = "AccentColor",
+		BorderColor3 = "OutlineColor",
 	})
+
+	local ColorFrame = Library:Create("Frame", {
+		BackgroundColor3 = Library.AccentColor,
+		BorderSizePixel = 0,
+		Size = UDim2.new(1, 0, 0, 2),
+		ZIndex = 204,
+		Parent = WatermarkInner,
+	})
+
+	Library:AddToRegistry(ColorFrame, {
+		BackgroundColor3 = "AccentColor",
+	}, true)
 
 	local InnerFrame = Library:Create("Frame", {
 		BackgroundColor3 = Color3.new(1, 1, 1),
@@ -2845,13 +2977,18 @@ do
 	})
 
 	local WatermarkLabel = Library:CreateLabel({
-		Position = UDim2.new(0, 5, 0, 0),
+		Position = UDim2.new(0, 5, 0, 1),
 		Size = UDim2.new(1, -4, 1, 0),
+		TextColor3 = Library.AccentColor,
 		TextSize = 14,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		ZIndex = 203,
 		Parent = InnerFrame,
 	})
+
+	Library:AddToRegistry(WatermarkLabel, {
+		TextColor3 = "AccentColor",
+	}, true)
 
 	Library.Watermark = WatermarkOuter
 	Library.WatermarkText = WatermarkLabel
@@ -2897,11 +3034,16 @@ do
 		Size = UDim2.new(1, 0, 0, 20),
 		Position = UDim2.fromOffset(5, 2),
 		TextXAlignment = Enum.TextXAlignment.Left,
-
-		Text = "Keybinds",
+		TextSize = 14,
+		TextColor3 = Library.AccentColor,
+		Text = "Keybind List",
 		ZIndex = 104,
 		Parent = KeybindInner,
 	})
+
+	Library:AddToRegistry(KeybindLabel, {
+		TextColor3 = "AccentColor",
+	}, true)
 
 	local KeybindContainer = Library:Create("Frame", {
 		BackgroundTransparency = 1,
@@ -2934,7 +3076,6 @@ end
 function Library:SetWatermark(Text)
 	local X, Y = Library:GetTextBounds(Text, Library.Font, 14)
 	Library.Watermark.Size = UDim2.new(0, X + 15, 0, (Y * 1.5) + 3)
-	Library:SetWatermarkVisibility(true)
 	Library.WatermarkText.Text = Text
 end
 
@@ -3111,9 +3252,14 @@ function Library:CreateWindow(...)
 		Position = UDim2.new(0, 7, 0, 0),
 		Size = UDim2.new(0, 0, 0, 25),
 		Text = Config.Title or "",
+		TextColor3 = Library.AccentColor,
 		TextXAlignment = Enum.TextXAlignment.Left,
 		ZIndex = 1,
 		Parent = Inner,
+	})
+
+	Library:AddToRegistry(WindowLabel, {
+		TextColor3 = "AccentColor",
 	})
 
 	local MainSectionOuter = Library:Create("Frame", {
@@ -3663,6 +3809,24 @@ function Library:CreateWindow(...)
 
 		if Toggled then
 			Outer.Visible = true
+		end
+
+		if not Toggled then
+			for _, ColorPicker in next, ColorPickers do
+				ColorPicker:Hide()
+			end
+
+			for _, ContextMenu in next, ContextMenus do
+				ContextMenu:Hide()
+			end
+
+			for _, Tooltip in next, Tooltips do
+				Tooltip.Visible = false
+			end
+
+			for _, ModeSelectFrame in next, ModeSelectFrames do
+				ModeSelectFrame.Visible = false
+			end
 		end
 
 		for _, Desc in next, Outer:GetDescendants() do
