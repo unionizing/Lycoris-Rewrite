@@ -260,6 +260,11 @@ function GameTab.initPlayerMonitoringSection(groupbox)
 		Default = true,
 	})
 	
+	groupbox:AddToggle("ShowOwnership", {
+		Text = "Show Network Ownership",
+		Default = false,
+	})
+	
 	local bestiaryToggle = groupbox:AddToggle("ShowBestiary", {
 		Text = "Show Bestiary",
 		Default = false,

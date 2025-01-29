@@ -8,6 +8,8 @@ local players = game:GetService("Players")
 local debris = game:GetService("Debris")
 local runService = game:GetService("RunService")
 
+local DATASCOPE = "BestiaryData_final"
+
 ---@module Utility.Maid
 local Maid = require("Utility/Maid")
 
@@ -95,6 +97,7 @@ function Bestiary.init()
 			--Stat_ElementIce = 'ICE',
 			--Stat_ElementIron = 'IRN',
 			--Stat_ElementBlood = 'BLD',
+			Level = 'LVL',
 			Trait_Ether = 'ERU',
 			Trait_MantraDamage = 'SONG',
 			Trait_Health = 'VIT',
@@ -104,6 +107,7 @@ function Bestiary.init()
 			Humanoid = 'Health',
 			BreakMeter = 'Posture',
 			Armor = 'Stagger',
+			ExpMP = 'EXP',
 			Ether = 'Ether',
 			Sanity = 'Sanity',
 			Stomach = 'Stomach',
@@ -133,8 +137,10 @@ function Bestiary.init()
 		local statResult = ''
 		
 		if isPlayer then
-			charName = isPlayer.Name .. "("..isPlayer:GetAttribute('CharacterName') or 'N/A'..")"
+			charName = isPlayer.Name .. "(".. (isPlayer:GetAttribute('CharacterName') or 'N/A') ..")"
 		end
+
+		if not charName then return end
 	
 		if isPlayer then
 			local humanoidData = {}
@@ -151,13 +157,9 @@ function Bestiary.init()
 	
 		local humanoidData = {}
 		for i,v in pairs(mobDataList.Attributes) do
-			local value = character:GetAttribute(i) or character:FindFirstChild(i)
+			local value = character:GetAttribute(i)
 			if not value then
 				continue
-			end
-
-			if typeof(value) == 'Instance' then
-				value = value.Value
 			end
 			
 			humanoidData[v] = tostring(value) or 'N/A'
@@ -174,7 +176,7 @@ function Bestiary.init()
 				Value = v.MaxHealth
 			elseif v:IsA('IntConstrainedValue') or v:IsA('DoubleConstrainedValue') then
 				Value = v.MaxValue
-			elseif v:IsA('IntValue') or v:IsA('StringValue') then
+			elseif v:IsA('IntValue') or v:IsA('StringValue') or v:IsA('NumberValue') then
 				Value = v.Value
 			end
 			
@@ -188,7 +190,7 @@ function Bestiary.init()
 			stat = statResult
 		}
 	
-		memStorageService:SetItem("BestiaryData", httpService:JSONEncode(savedData))
+		memStorageService:SetItem(DATASCOPE, httpService:JSONEncode(savedData))
 	end
 	
 	local function loadBestiary(name, bestiaryData)
@@ -258,6 +260,7 @@ function Bestiary.init()
 				tweenService:Create(button.Button, TweenInfo.new(0.1), {TextTransparency = 0.3}):Play()
 			end)
 		end
+
 	end
 	
 	local selectedColor = Color3.fromRGB(89, 121, 119);
@@ -271,11 +274,13 @@ function Bestiary.init()
 			TitleFrame.Players.AutoButtonColor = true;
 			TitleFrame.Players.BackgroundColor3 = inactiveColor;
 			playerScroll.Visible = false;
+			tab.CanvasSize = UDim2.new(0, 0, 0, mobList.AbsoluteContentSize.Y);
 		elseif tab == playerScroll then
 			TitleFrame.Players.AutoButtonColor = false;
 			TitleFrame.Players.BackgroundColor3 = selectedColor;
 			TitleFrame.Mobs.AutoButtonColor = true;
 			TitleFrame.Mobs.BackgroundColor3 = inactiveColor;
+			tab.CanvasSize = UDim2.new(0, 0, 0, playerList.AbsoluteContentSize.Y);
 			mobScroll.Visible = false;
 		end
 	
@@ -293,7 +298,7 @@ function Bestiary.init()
 		changeTab(playerScroll)
 	end))
 
-	local memData = httpService:JSONDecode(memStorageService:GetItem("BestiaryData", "[]"))
+	local memData = httpService:JSONDecode(memStorageService:GetItem(DATASCOPE, "[]"))
 	for i,v in next, memData do
 		savedData[i] = v
 	end
@@ -305,11 +310,12 @@ function Bestiary.init()
 	
 	task.spawn(function()
 		for i,v in workspace.Live:GetChildren() do
-			addToBestiary(v)
+			task.spawn(addToBestiary, v)
 		end
 	end)
 	
 	refreshBestiary()
+	
 	BestiaryMaid:add(renderStepped:connect("Monitoring_OnRenderStepped", updateBestiary))
 end
 
