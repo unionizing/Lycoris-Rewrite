@@ -98,9 +98,9 @@ local pipe = Instance.new("ImageLabel")
 local bestiarySheet = Instance.new("Frame")
 local uiPadding_2 = Instance.new("UIPadding")
 local playerScroll = Instance.new("ScrollingFrame")
-local uiListLayout_2 = Instance.new("UIListLayout")
+local playerList = Instance.new("UIListLayout")
 local mobScroll = Instance.new("ScrollingFrame")
-local uiListLayout_3 = Instance.new("UIListLayout")
+local mobList = Instance.new("UIListLayout")
 local uiAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
 local uiSizeConstraint = Instance.new("UISizeConstraint")
 local titleFrame = Instance.new("Frame")
@@ -196,7 +196,7 @@ title.AnchorPoint = Vector2.new(0.5, 0.5)
 title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 title.BackgroundTransparency = 1.000
 title.BorderColor3 = Color3.fromRGB(27, 42, 53)
-title.Position = UDim2.new(0.48659873, 0, 0.0877500623, 0)
+title.Position = UDim2.new(0.505, 0, 0.0877500623, 0)
 title.Size = UDim2.new(0.48659873, 0, -0.0244997963, 40)
 title.Font = Enum.Font.Garamond
 title.Text = "Ministry Necormancer"
@@ -343,8 +343,8 @@ playerScroll.ScrollBarThickness = 8
 playerScroll.TopImage = "http://www.roblox.com/asset/?id=4292727598"
 playerScroll.VerticalScrollBarInset = Enum.ScrollBarInset.Always
 
-uiListLayout_2.Parent = playerScroll
-uiListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
+playerList.Parent = playerScroll
+playerList.SortOrder = Enum.SortOrder.LayoutOrder
 
 mobScroll.Name = "mobScroll"
 mobScroll.Parent = bestiarySheet
@@ -360,8 +360,8 @@ mobScroll.ScrollBarThickness = 8
 mobScroll.TopImage = "http://www.roblox.com/asset/?id=4292727598"
 mobScroll.VerticalScrollBarInset = Enum.ScrollBarInset.Always
 
-uiListLayout_3.Parent = mobScroll
-uiListLayout_3.SortOrder = Enum.SortOrder.LayoutOrder
+mobList.Parent = mobScroll
+mobList.SortOrder = Enum.SortOrder.LayoutOrder
 
 uiAspectRatioConstraint.Parent = bestiaryFrame
 uiAspectRatioConstraint.AspectRatio = 1.500
@@ -674,9 +674,9 @@ local function refreshInterface()
 				end
 
 				local selection = tabButton.Name == name
-				button.Button.TextColor3 = selection and Color3.new(1, 0.97, 0.86) or Color3.fromRGB(247, 254, 255)
-				button.Button.TextTransparency = selection and 0 or 0.3
-				button.Pointer.Visible = selection
+				tabButton.Button.TextColor3 = selection and Color3.new(1, 0.97, 0.86) or Color3.fromRGB(247, 254, 255)
+				tabButton.Button.TextTransparency = selection and 0 or 0.3
+				tabButton.Pointer.Visible = selection
 			end
 
 			-- Set the viewing bestiary.
@@ -718,7 +718,11 @@ end
 ---@param character Model
 local function onAddEntity(character)
 	local player = players:FindFirstChild(character.Name)
-	local name = player and player.Name .. "(" .. player:GetAttribute("CharacterName") or "N/A" .. ")" or character:GetAttribute("MOB_rich_name")
+	local name = player and string.format("%s (%s)", player.Name, player:GetAttribute("CharacterName")) or character:GetAttribute("MOB_rich_name")
+
+	if not name then
+		name = character.Name
+	end
 
 	local humanoidData = {}
 	local humanoidStats = {}
@@ -810,6 +814,7 @@ function Bestiary.init()
 		mobs.BackgroundColor3 = BUTTON_SELECTED_COLOR
 		playersButton.AutoButtonColor = true
 		playersButton.BackgroundColor3 = BUTTON_INACTIVE_COLOR
+		mobScroll.CanvasSize = UDim2.new(0, 0, 0, playerList.AbsoluteContentSize.Y);
 
 		-- Set the selected tab.
 		selectedTab = mobScroll
@@ -834,9 +839,10 @@ function Bestiary.init()
 		mobs.BackgroundColor3 = BUTTON_INACTIVE_COLOR
 		playersButton.AutoButtonColor = true
 		playersButton.BackgroundColor3 = BUTTON_SELECTED_COLOR
+		playerScroll.CanvasSize = UDim2.new(0, 0, 0, mobList.AbsoluteContentSize.Y);
 
 		-- Set the selected tab.
-		selectedTab = mobScroll
+		selectedTab = playerScroll
 
 		-- Set other scroll visibility off.
 		mobScroll.Visible = false

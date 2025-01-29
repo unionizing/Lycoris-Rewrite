@@ -73,7 +73,7 @@ end
 local function updateOwnership()
     ---@optimization: Stop updating when we don't need it.
     if not Configuration.expectToggleValue("ShowOwnership") and not Configuration.expectToggleValue("VoidMobs") then
-        return
+        return partMaid:clean()
     end
 
     for model, _ in next, OwnershipWatcher.modelsToScan do
@@ -123,6 +123,7 @@ end
 ---Detach OwnershipWatcher module.
 function OwnershipWatcher.detach()
     ownershipMaid:clean()
+    partMaid:clean()
 end
 
 -- Return OwnershipWatcher module.
