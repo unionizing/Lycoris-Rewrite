@@ -88,7 +88,7 @@ local function updateOwnership()
         netVisual.CanCollide = false
         netVisual.Size = Vector3.new(5, 5, 2)
         netVisual.Transparency = Configuration.expectToggleValue("ShowOwnership") and 0.8 or 1.0
-        netVisual.Color = isNetworkOwner and  Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255 0, 0)
+        netVisual.Color = isNetworkOwner and  Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
 
         -- Weld.
         local netWeld = InstanceWrapper.create(ownershipMaid, "NetworkVisualWeld", "Weld", netVisual)
