@@ -45,6 +45,7 @@ local MOB_SCRAPER_LIST = {
 		Trait_MantraDamage = "SONG",
 		Trait_Health = "VIT",
 		Trait_WeaponDamage = "PROF",
+		Level = 'LVL',
 		--Stat_Agility = 'AGL',
 		--Stat_Charisma = 'CHA',
 		--Stat_Fortitude = 'FTD',
@@ -62,6 +63,7 @@ local MOB_SCRAPER_LIST = {
 		Humanoid = "Health",
 		BreakMeter = "Posture",
 		Armor = "Stagger",
+		ExpMP = 'EXP',
 		Ether = "Ether",
 		Sanity = "Sanity",
 		Stomach = "Stomach",
@@ -722,7 +724,7 @@ local function onAddEntity(character)
 	local humanoidStats = {}
 
 	for index, value in next, MOB_SCRAPER_LIST.Attributes do
-		local attribute = character:GetAttribute(index) or character:FindFirstChild(index)
+		local attribute = character:GetAttribute(index)
 		if not attribute then
 			continue
 		end
@@ -746,7 +748,7 @@ local function onAddEntity(character)
 			instanceValue = instance.MaxHealth
 		elseif instance:IsA("IntConstrainedValue") or instance:IsA("DoubleConstrainedValue") then
 			instanceValue = instance.MaxValue
-		elseif instance:IsA("IntValue") or instance:IsA("StringValue") then
+		elseif instance:IsA("IntValue") or instance:IsA("StringValue") or instance:IsA("NumberValue") then
 			instanceValue = instance.Value
 		end
 
