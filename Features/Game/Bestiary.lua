@@ -786,6 +786,12 @@ end
 
 ---Initialize the Bestiary module.
 function Bestiary.init()
+	-- Load the initial memory data.
+	local memoryData = httpService:JSONDecode(memStorageService:GetItem("BestiaryData", "[]"))
+	for index, value in next, memoryData do
+		savedData[index] = value
+	end
+
 	-- Fetch instances.
 	local live = workspace:WaitForChild("Live")
 	local playerGui = players.LocalPlayer:WaitForChild("PlayerGui")
@@ -861,12 +867,6 @@ function Bestiary.init()
 	-- Add initial entities.
 	for _, entity in next, live:GetChildren() do
 		onAddEntity(entity)
-	end
-
-	-- Load the initial memory data.
-	local memoryData = httpService:JSONDecode(memStorageService:GetItem("BestiaryData", "[]"))
-	for index, value in next, memoryData do
-		savedData[index] = value
 	end
 
 	-- Refresh the interface.
