@@ -21,7 +21,6 @@ local renderStepped = Signal.new(runService.RenderStepped)
 
 -- Maids.
 local ownershipMaid = Maid.new()
-local partMaid = Maid.new()
 
 -- Ownership data.
 local clientPart = Instance.new('Part', workspace)
@@ -41,6 +40,13 @@ local function hasNetworkOwnership(part)
     end
 
     return partPeerId == clientPeerId
+end
+
+---Clean up parts. Every model to scan has a maid linked to it.
+local function cleanParts()
+    for _, maid in next, OwnershipWatcher.modelsToScan do
+        maid:clean()
+    end
 end
 
 ---Add live characters to ownership watcher.
@@ -72,7 +78,7 @@ end
 local function updateOwnership()
     ---@optimization: Stop updating when we don't need it.
     if not Configuration.expectToggleValue("ShowOwnership") and not Configuration.expectToggleValue("VoidMobs") then
-        return partMaid:clean()
+        return cleanParts()
     end
 
     for model, maid in next, OwnershipWatcher.modelsToScan do
@@ -124,10 +130,8 @@ function OwnershipWatcher.detach()
     -- Clean up ownership maids.
     ownershipMaid:clean()
 
-    -- Clean up maids. Every model to scan has a maid linked to it.
-    for _, maid in next, OwnershipWatcher.modelsToScan do
-        maid:clean()
-    end
+    -- Clean up parts.
+    cleanParts()
 end
 
 -- Return OwnershipWatcher module.
