@@ -262,7 +262,12 @@ function GameTab.initPlayerMonitoringSection(groupbox)
 		Text = "Show Roblox Chat",
 		Default = true,
 	})
-
+	
+	groupbox:AddToggle("ShowOwnership", {
+		Text = "Show Network Ownership",
+		Default = false,
+	})
+	
 	local bestiaryToggle = groupbox:AddToggle("ShowBestiary", {
 		Text = "Show Bestiary UI",
 		Default = false,

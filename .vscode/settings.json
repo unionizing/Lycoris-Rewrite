@@ -48,7 +48,8 @@
         "getactors",
         "run_on_actor",
         "get_comm_channel",
-        "firetouchinterest"
+        "firetouchinterest",
+        "gethiddenproperty"
     ],
     "robloxLsp.suggestedImports.importIgnore": [
         "**/_Index/**",
