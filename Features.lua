@@ -28,6 +28,9 @@ local Spoofing = require("Features/Game/Spoofing")
 ---@module Features.Game.Bestiary
 local Bestiary = require("Features/Game/Bestiary")
 
+---@module Features.Game.OwnershipWatcher
+local OwnershipWatcher = require("Features/Game/OwnershipWatcher")
+
 ---@module Utility.Logger
 local Logger = require("Utility/Logger")
 
@@ -44,6 +47,7 @@ function Features.init()
 	Exploits.init()
 	Spoofing.init()
 	Bestiary.init()
+	OwnershipWatcher.init()
 	CharismaFarm.init()
 	IntelligenceFarm.init()
 	Logger.warn("Features initialized.")
@@ -56,6 +60,7 @@ function Features.detach()
 	IntelligenceFarm.detach()
 	Spoofing.detach()
 	Bestiary.detach()
+	OwnershipWatcher.detach()
 	Movement.detach()
 	Removal.detach()
 	Monitoring.detach()
