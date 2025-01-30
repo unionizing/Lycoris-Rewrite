@@ -97,32 +97,32 @@ local function addPartDefender(part)
 	defenderObjects[part] = PartDefender.new(part, timing)
 end
 
----On live descendant added.
----@param child Instance
-local function onLiveDescendantAdded(child)
-	if child:IsA("Animator") then
-		return addAnimatorDefender(child)
+---On game descendant added.
+---@param descendant Instance
+local function onGameDescendantAdded(descendant)
+	if descendant:IsA("Animator") then
+		return addAnimatorDefender(descendant)
 	end
 
-	if child:IsA("Sound") then
-		return addSoundDefender(child)
+	if descendant:IsA("Sound") then
+		return addSoundDefender(descendant)
 	end
 
-	if child:IsA("BasePart") then
-		return addPartDefender(child)
+	if descendant:IsA("BasePart") then
+		return addPartDefender(descendant)
 	end
 end
 
----On live descendant removed.
----@param child Instance
-local function onLiveDescendantRemoved(child)
-	local object = defenderObjects[child]
+---On game descendant removed.
+---@param descendant Instance
+local function onGameDescendantRemoved(descendant)
+	local object = defenderObjects[descendant]
 	if not object then
 		return
 	end
 
 	object:detach()
-	object[child] = nil
+	object[descendant] = nil
 end
 
 ---Check if objects have blocking tasks.
@@ -172,20 +172,17 @@ function Defense.init()
 		mobAnimations[animation.AnimationId] = animation
 	end
 
-	-- Live folder.
-	local live = workspace:WaitForChild("Live")
-
 	-- Signals.
-	local liveDescendantAdded = Signal.new(live.DescendantAdded)
-	local liveDescendantRemoved = Signal.new(live.DescendantRemoving)
+	local gameDescendantAdded = Signal.new(game.DescendantAdded)
+	local gameDescendantRemoved = Signal.new(game.DescendantRemoving)
 	local postSimulation = Signal.new(runService.PostSimulation)
 
-	defenseMaid:add(liveDescendantAdded:connect("Defense_LiveDescendantAdded", onLiveDescendantAdded))
-	defenseMaid:add(liveDescendantRemoved:connect("Defense_LiveDescendantRemoved", onLiveDescendantRemoved))
+	defenseMaid:add(gameDescendantAdded:connect("Defense_OnDescendantAdded", onGameDescendantAdded))
+	defenseMaid:add(gameDescendantRemoved:connect("Defense_OnDescendantRemoved", onGameDescendantRemoved))
 	defenseMaid:add(postSimulation:connect("Defense_PostSimulation", Defense.update))
 
-	for _, descendant in next, live:GetDescendants() do
-		onLiveDescendantAdded(descendant)
+	for _, descendant in next, game:GetDescendants() do
+		onGameDescendantAdded(descendant)
 	end
 end
 
