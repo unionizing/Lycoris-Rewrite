@@ -27,6 +27,13 @@ SoundDefender.__type = "SoundDefender"
 -- Services.
 local players = game:GetService("Players")
 
+---Override notify to include type.
+---@param timing Timing
+---@param str string
+function SoundDefender:notify(timing, str, ...)
+	Defender.notify(self, timing, string.format("[Sound] %s", str), ...)
+end
+
 ---Check if we're in a valid state to proceed with the action.
 ---@param timing PartTiming
 ---@param action Action

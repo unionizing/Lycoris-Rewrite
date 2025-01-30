@@ -43,6 +43,13 @@ AnimatorDefender.__type = "AnimatorDefender"
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
+---Override notify to include type.
+---@param timing Timing
+---@param str string
+function AnimatorDefender:notify(timing, str, ...)
+	Defender.notify(self, timing, string.format("[Animation] %s", str), ...)
+end
+
 ---Check if we're in a valid state to proceed with the action.
 ---@param timing AnimationTiming
 ---@param action Action
