@@ -39,7 +39,7 @@ local Defense = require("Features/Combat/Defense")
 
 ---Initialize features.
 function Features.init()
-	Defense.init() -- use getgenv, it errors on non literal require.
+	Defense.init()
 	Visuals.init()
 	Movement.init()
 	Monitoring.init()

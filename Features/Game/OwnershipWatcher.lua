@@ -1,3 +1,6 @@
+-- Ownership watcher module.
+local OwnershipWatcher = { modelsToScan = {}, parts = {} }
+
 -- Services
 local playersService = game:GetService("Players")
 local runService = game:GetService("RunService")
@@ -24,77 +27,61 @@ local voidMaid = Maid.new()
 -- Void Mobs
 local YForce = workspace.StreamingEnabled and Vector3.new(0, -8000, 0) or Vector3.new(0, -100, 0)
 
---- Replication Part & PeerId
+-- Ownership data.
 local clientPart = Instance.new('Part', workspace)
-local PeerId = gethiddenproperty(clientPart, "NetworkOwnerV3")
+local clientPeerId = gethiddenproperty(clientPart, "NetworkOwnerV3")
 clientPart:Destroy()
 
---- NetworkWatcher
-local NetworkVisual = Instance.new('Part')
-NetworkVisual.Anchored = false
-NetworkVisual.CanCollide = false
-NetworkVisual.Size = Vector3.new(5, 5, 2)
-NetworkVisual.Transparency = 0.8
-NetworkVisual.Color = Color3.fromRGB(0, 0, 255)
-NetworkVisual.Name = "NetworkVisual"
-Instance.new('Weld', NetworkVisual).Part1 = NetworkVisual
-
--- Ownership holder
-local ownershipHolder = {}
-
----Check for network ownership (legacy)
----@param part BasePart
----@return boolean
-local function legacyNetworkOwnership(part)
-    return not part.Anchored and part.ReceiveAge == 0 and part.Velocity.Magnitude > 0
-end
-
----Check for network ownership
+---Check for network ownership. Fallback to legacy check if NetworkOwnerV3 is not available.
 ---@param part BasePart
 ---@return boolean
 local function hasNetworkOwnership(part)
-    local success, ID = pcall(function()
+    local success, partPeerId = pcall(function()
         return gethiddenproperty(part, "NetworkOwnerV3")
     end)
 
     if not success then
-        return legacyNetworkOwnership(part)
+        return not part.Anchored and part.ReceiveAge == 0 and part.AssemblyLinearVelocity.Magnitude > 0
     end
-    
-    return ID == PeerId
+
+    return partPeerId == clientPeerId
 end
 
----Add live Characters to ownership watcher
+---Clean up parts. Every model to scan has a maid linked to it.
+local function cleanParts()
+    for _, maid in next, OwnershipWatcher.modelsToScan do
+        maid:clean()
+    end
+end
+
+---Add live characters to ownership watcher.
 ---@param character Model
 local function onLiveAdded(character)
-    if table.find(ownershipHolder, character) or not character:IsA('Model') then
+    if not character:IsA('Model') then
         return
     end
-    table.insert(ownershipHolder, character)
+
+    if OwnershipWatcher.modelsToScan[character] then
+        return
+    end
+
+    OwnershipWatcher.modelsToScan[character] = Maid.new()
 end
 
----Remove live Characters from ownership watcher
+---Remove live characters from ownership watcher.
 ---@param character Model
 local function onLiveRemoved(character)
-    if not table.find(ownershipHolder, character) then
+    if not OwnershipWatcher.modelsToScan[character] then
         return
     end
-    table.remove(ownershipHolder, table.find(ownershipHolder, character))
+
+    OwnershipWatcher.modelsToScan[character]:clean()
+    OwnershipWatcher.modelsToScan[character] = nil
 end
 
---- Updates ownership of every character
 local function updateOwnership()
     local ShowOwnership = Configuration.expectToggleValue("ShowOwnership")
-    if not Configuration.expectToggleValue("VoidMobs") and not ShowOwnership then
-        voidMaid:clean()
-        return
-    end
-    
     for _,v in next, ownershipHolder do
-        if v == playersService.LocalPlayer.Character then
-            continue
-        end
-
         local HumanoidRootPart = v:FindFirstChild("HumanoidRootPart")
         if not HumanoidRootPart then
             continue
@@ -118,35 +105,46 @@ local function updateOwnership()
             if NetVisual then
                 NetVisual.Color = Color3.fromRGB(0, 0, 255)
             end
+            v:RemoveTag('NetworkOwner')
             continue
         end
 
         if NetVisual then
             NetVisual.Color = Color3.fromRGB(0, 255, 0)
         end
-
         v:AddTag('NetworkOwner')
     end
 end
 
-local ownershipWatcher = {}
+---Get table of watched parts along with a mapping to extra data.
+---@return table<BasePart, table>
+function OwnershipWatcher.get()
+    return OwnershipWatcher.parts
+end
 
-function ownershipWatcher.init()
+---Iniitalize OwnershipWatcher module.
+function OwnershipWatcher.init()
 	local live = workspace:WaitForChild("Live")
 	local liveChildAdded = Signal.new(live.ChildAdded)
 	local liveChildRemoved = Signal.new(live.ChildRemoved)
 
-    ownershipMaid:add(liveChildAdded:connect("onLiveAdded_ChildAdded", onLiveAdded))
-    ownershipMaid:add(liveChildRemoved:connect("onLiveAdded_ChildRemoved", onLiveRemoved))
-    ownershipMaid:add(renderStepped:connect("updateOwnership_RenderStepped", updateOwnership))
+    ownershipMaid:add(liveChildAdded:connect("OwnershipWatcher_OnLiveChildAdded", onLiveAdded))
+    ownershipMaid:add(liveChildRemoved:connect("OwnershipWatcher_OnLiveChildRemoved", onLiveRemoved))
+    ownershipMaid:add(renderStepped:connect("OwnershipWatcher_RenderStepped", updateOwnership))
 
-    for _,v in next, live:GetChildren() do
-        onLiveAdded(v)
+    for _, entity in next, live:GetChildren() do
+        onLiveAdded(entity)
     end
 end
 
-function ownershipWatcher.detach()
+---Detach OwnershipWatcher module.
+function OwnershipWatcher.detach()
+    -- Clean up ownership maids.
     ownershipMaid:clean()
+
+    -- Clean up parts.
+    cleanParts()
 end
 
-return ownershipWatcher
+-- Return OwnershipWatcher module.
+return OwnershipWatcher

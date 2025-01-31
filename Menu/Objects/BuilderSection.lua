@@ -378,6 +378,8 @@ function BuilderSection:timing()
 		end,
 	})
 
+	tab:AddDivider()
+
 	self.timingName = tab:AddInput(nil, {
 		Text = "Timing Name",
 		Finished = true,

@@ -1,12 +1,6 @@
 -- KeyHandler related stuff is handled here.
 local KeyHandling = {}
 
--- Fetch environment.
-local environment = getgenv and getgenv() or _G
-if not environment then
-	return
-end
-
 -- Services.
 local replicatedStorage = game:GetService("ReplicatedStorage")
 

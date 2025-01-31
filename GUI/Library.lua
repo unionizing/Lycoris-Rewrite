@@ -25,8 +25,10 @@ local ContextMenus = {}
 local Tooltips = {}
 local ModeSelectFrames = {}
 
-getgenv().Toggles = Toggles
-getgenv().Options = Options
+pcall(function()
+	getgenv().Toggles = Toggles
+	getgenv().Options = Options
+end)
 
 local Library = {
 	Registry = {},

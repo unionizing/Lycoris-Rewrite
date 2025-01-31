@@ -49,6 +49,13 @@ local function guessOwnerFromPartTiming(timing)
 	end
 end
 
+---Override notify to include type.
+---@param timing Timing
+---@param str string
+function PartDefender:notify(timing, str, ...)
+	Defender.notify(self, timing, string.format("[Part] %s", str), ...)
+end
+
 ---Check if we're in a valid state to proceed with the action.
 ---@param timing PartTiming
 ---@param action Action

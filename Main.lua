@@ -1,7 +1,6 @@
--- Fetch environment.
-local environment = getgenv and getgenv() or _G
-if not environment then
-	return
+-- Check for table that is shared between executions.
+if not shared then
+	return warn("No shared, no script.")
 end
 
 ---@todo: Chinese Tracker Unit V2
@@ -27,13 +26,13 @@ local Lycoris = require("Lycoris")
 ---@todo: Virtualize parts of the source.
 local function initializeScript()
 	-- Check if there's already another instance.
-	if environment.Lycoris then
-		environment.Lycoris.detach()
+	if shared.Lycoris then
+		shared.Lycoris.detach()
 	end
 
 	-- Re-initialize under the new state.
-	environment.Lycoris = Lycoris
-	environment.Lycoris.init()
+	shared.Lycoris = Lycoris
+	shared.Lycoris.init()
 end
 
 ---This is called when the initalization errors.

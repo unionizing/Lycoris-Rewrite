@@ -25,6 +25,9 @@ local PlayerScanning = require("Game/PlayerScanning")
 ---@module Game.Timings.SaveManager
 local SaveManager = require("Game/Timings/SaveManager")
 
+---@module Features.Visuals.Visuals
+local Visuals = require("Features/Visuals/Visuals")
+
 -- Services.
 local memStorageService = game:GetService("MemStorageService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -130,14 +133,6 @@ function Lycoris.init()
 			"Script has failed to queue on teleport because no key was provided or the function does not exist."
 		)
 	end
-	
-	-- Move this wherever u want as long as its in init
-	getgenv().request_body = function(Url)
-		return request({
-			Url = Url,
-			Method = "GET"
-		}).Body
-	end
 
 	Logger.warn("Script has been queued for next teleport.")
 
@@ -159,6 +154,8 @@ function Lycoris.init()
 	Features.init()
 
 	Menu.init()
+
+	Visuals.start()
 
 	if memStorageService:HasItem("HandleStartMenu") then
 		handleStartMenu()

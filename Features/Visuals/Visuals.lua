@@ -301,6 +301,12 @@ local function createChildrenListener(instance, identifier, addedCallback, remov
 	end)
 end
 
+---Initialize update loop.
+---@note: Read about optimization above for more information.
+function Visuals.start()
+	visualsMaid:add(renderStepped:connect("Visuals_RenderStepped", updateVisuals))
+end
+
 ---Initialize Visuals.
 function Visuals.init()
 	local live = workspace:WaitForChild("Live")
@@ -324,8 +330,6 @@ function Visuals.init()
 		local areaMarkerName = descendant.Parent.Name or "Unidentified Area Marker"
 		emplaceObject(descendant, FilteredESP.new(PartESP.new("AreaMarker", descendant, areaMarkerName)))
 	end
-
-	visualsMaid:add(renderStepped:connect("Visuals_RenderStepped", updateVisuals))
 end
 
 -- Detach Visuals.

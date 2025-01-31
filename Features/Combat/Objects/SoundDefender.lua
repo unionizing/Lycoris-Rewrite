@@ -4,12 +4,6 @@ local Defender = require("Features/Combat/Objects/Defender")
 ---@module Game.Timings.SaveManager
 local SaveManager = require("Game/Timings/SaveManager")
 
----@module Utility.InstanceWrapper
-local InstanceWrapper = require("Utility/InstanceWrapper")
-
----@module Utility.Configuration
-local Configuration = require("Utility/Configuration")
-
 ---@module Features.Combat.Targeting
 local Targeting = require("Features/Combat/Targeting")
 
@@ -26,6 +20,13 @@ SoundDefender.__type = "SoundDefender"
 
 -- Services.
 local players = game:GetService("Players")
+
+---Override notify to include type.
+---@param timing Timing
+---@param str string
+function SoundDefender:notify(timing, str, ...)
+	Defender.notify(self, timing, string.format("[Sound] %s", str), ...)
+end
 
 ---Check if we're in a valid state to proceed with the action.
 ---@param timing PartTiming
@@ -82,8 +83,7 @@ end
 
 ---Process sound playing
 function SoundDefender:process()
-	---@type AnimationTiming
-	local timing = SaveManager.ss:index(self.sound.Name)
+	local timing = SaveManager.ss:index(self.sound.SoundId)
 	if not timing then
 		return
 	end
@@ -101,13 +101,15 @@ end
 
 ---Create new SoundDefender object.
 ---@param sound Sound
+---@param timing SoundTiming
 ---@param part BasePart
 ---@return SoundDefender
-function SoundDefender.new(sound, part)
+function SoundDefender.new(sound, timing, part)
 	local self = setmetatable(Defender.new(), SoundDefender)
 	local soundPlayed = Signal.new(sound.Played)
 
 	self.sound = sound
+	self.timing = timing
 	self.part = part
 	self.owner = sound:FindFirstAncestorWhichIsA("Model")
 	self.maid:mark(soundPlayed:connect("SoundDefender_OnSoundPlayed", function()

@@ -1,9 +1,6 @@
 ---@module Features.Combat.Objects.Defender
 local Defender = require("Features/Combat/Objects/Defender")
 
----@module Utility.Maid
-local Maid = require("Utility/Maid")
-
 ---@module Utility.Signal
 local Signal = require("Utility/Signal")
 
@@ -42,6 +39,14 @@ AnimatorDefender.__type = "AnimatorDefender"
 -- Services.
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
+local userInputService = game:GetService("UserInputService")
+
+---Override notify to include type.
+---@param timing Timing
+---@param str string
+function AnimatorDefender:notify(timing, str, ...)
+	Defender.notify(self, timing, string.format("[Animation] %s", str), ...)
+end
 
 ---Check if we're in a valid state to proceed with the action.
 ---@param timing AnimationTiming
@@ -95,6 +100,24 @@ function AnimatorDefender:valid(timing, action)
 		and (players:GetPlayerFromCharacter(self.entity) or self.entity:FindFirstChild("HumanController"))
 	then
 		return self:notify(timing, "Entity got attack cancelled.")
+	end
+
+	local keybinds = replicatedStorage:FindFirstChild("KeyBinds")
+	if not keybinds then
+		return self:notify(timing, "No keybinds instance found.")
+	end
+
+	local keybindsModule = require(keybinds)
+	if not keybindsModule or not keybindsModule.Current then
+		return self:notify(timing, "No keybinds module found.")
+	end
+
+	for _, keybind in next, keybindsModule.Current["Block"] or {} do
+		if not userInputService:IsKeyDown(Enum.KeyCode[tostring(keybind)]) then
+			continue
+		end
+
+		return self:notify(timing, "User is pressing down on a key binded to Block.")
 	end
 
 	return true
@@ -214,6 +237,11 @@ function AnimatorDefender:process(track)
 		return
 	end
 
+	local humanoidRootPart = self.entity:FindFirstChild("HumanoidRootPart")
+	if not humanoidRootPart then
+		return
+	end
+
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then
 		return
@@ -221,11 +249,6 @@ function AnimatorDefender:process(track)
 
 	local effectReplicatorModule = require(effectReplicator)
 	if not effectReplicatorModule then
-		return
-	end
-
-	local humanoidRootPart = self.entity:FindFirstChild("HumanoidRootPart")
-	if not humanoidRootPart then
 		return
 	end
 
@@ -239,14 +262,6 @@ function AnimatorDefender:process(track)
 	local shouldFeintAttack = midAttackCanFeint and Configuration.expectToggleValue("FeintM1WhileDefending")
 	local shouldFeintMantra = effectReplicatorModule:FindEffect("CastingSpell")
 		and Configuration.expectToggleValue("FeintMantrasWhileDefending")
-
-	Logger.warn(
-		"FeintAttack(%s) and FeintMantra(%s) - Animation %s is being processed from entity %s.",
-		tostring(shouldFeintAttack),
-		tostring(shouldFeintMantra),
-		track.Animation.AnimationId,
-		self.entity.Name
-	)
 
 	if not effectReplicatorModule:FindEffect("FeintCool") and (shouldFeintAttack or shouldFeintMantra) then
 		-- Log.

@@ -44,7 +44,7 @@ local showHiddenMap = spectateMaid:mark(OriginalStoreManager.new())
 local function getLeaderboardData()
 	for _, con in next, getconnections(players.PlayerRemoving) do
 		local func = con.Function
-		if not func then
+		if not func or not islclosure(func) then
 			continue
 		end
 
