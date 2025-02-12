@@ -69,10 +69,11 @@ end
 ---Run hitbox check. Returns wheter if the hitbox is being touched.
 ---@note: This check can fail when players suddenly look...
 ---@param position Vector3
+---@param depth number
 ---@param size Vector3
 ---@param filter Instance[]
 ---@return boolean
-function Defender:hitbox(position, size, filter)
+function Defender:hitbox(position, depth, size, filter)
 	local overlapParams = OverlapParams.new()
 	overlapParams.FilterDescendantsInstances = filter
 	overlapParams.FilterType = Enum.RaycastFilterType.Include
@@ -89,6 +90,11 @@ function Defender:hitbox(position, size, filter)
 
 	---@todo: Bad fix. The issue is that the player's current look vector will not be the same as when they attack due to a parry timing being seperate from the attack.
 	local realCFrame = CFrame.lookAt(position, root.Position)
+
+	-- Add depth.
+	if depth > 0 then
+		realCFrame = realCFrame * CFrame.new(0, 0, -depth)
+	end
 
 	-- Check in bounds.
 	local inBounds = #workspace:GetPartBoundsInBox(realCFrame, size, overlapParams) > 0

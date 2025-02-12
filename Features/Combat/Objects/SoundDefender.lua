@@ -42,7 +42,7 @@ function SoundDefender:valid(timing, action)
 		return self:notify(timing, "No character found.")
 	end
 
-	if not self:hitbox(self.part.Position, action.hitbox, { character }) then
+	if not self:hitbox(self.part.Position, 0, action.hitbox, { character }) then
 		return self:notify(timing, "Not inside of the hitbox.")
 	end
 

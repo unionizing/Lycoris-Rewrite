@@ -95,7 +95,7 @@ function PartDefender:update()
 	end
 
 	-- Get current hitbox state.
-	local touching = self:hitbox(self.part.Position, self.timing.hitbox, { character })
+	local touching = self:hitbox(self.part.Position, 0, self.timing.hitbox, { character })
 
 	-- Deny updates if the we were touching the part last and we are touching it now.
 	if self.touched and touching then
