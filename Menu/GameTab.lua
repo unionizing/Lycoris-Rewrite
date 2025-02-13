@@ -4,6 +4,9 @@ local GameTab = {}
 ---@module Features.Game.Bestiary
 local Bestiary = require("Features/Game/Bestiary")
 
+-- Services.
+local players = game:GetService("Players")
+
 ---Initialize local character section.
 ---@param groupbox table
 function GameTab.initLocalCharacterSection(groupbox)
@@ -196,15 +199,22 @@ function GameTab.initLocalCharacterSection(groupbox)
 		Tooltip = "Unlock all emotes and use them without owning them.",
 		Default = false,
 	})
-	
+
 	groupbox:AddButton({
 		Text = "Respawn Character",
 		DoubleClick = true,
 		Func = function()
-			local character = game:GetService("Players").LocalPlayer.Character
-			if character then
-				character:PivotTo(character.HumanoidRootPart.CFrame * CFrame.new(0,1000000,0))
+			local character = players.LocalPlayer.Character
+			if not character then
+				return
 			end
+
+			local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+			if not humanoidRootPart then
+				return
+			end
+
+			character:PivotTo(humanoidRootPart.CFrame * CFrame.new(0, 10000000, 0))
 		end,
 	})
 
