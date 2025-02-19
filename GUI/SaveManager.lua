@@ -131,8 +131,8 @@ do
 			keybindFramePosition = uDIm2Export(self.Library.KeybindFrame.Position),
 			watermarkFramePosition = uDIm2Export(self.Library.Watermark.Position),
 			infoLoggerFramePosition = uDIm2Export(self.Library.InfoLoggerFrame.Position),
-			infoLoggerBlacklistHistory = self.Library.InfoLoggerBlacklistHistory,
-			infoLoggerBlacklist = self.Library.InfoLoggerBlacklist,
+			infoLoggerBlacklistHistory = self.Library.KeyBlacklistHistory,
+			infoLoggerBlacklist = self.Library.KeyBlacklistList,
 			infoLoggerCycle = self.Library.InfoLoggerCycle,
 		}
 
@@ -196,7 +196,7 @@ do
 		end
 
 		if decoded.infoLoggerBlacklist then
-			self.Library.InfoLoggerBlacklist = decoded.infoLoggerBlacklist
+			self.Library.KeyBlacklistList = decoded.infoLoggerBlacklist
 			self.Library:RefreshInfoLogger()
 		end
 
