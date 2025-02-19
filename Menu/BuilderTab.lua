@@ -25,6 +25,9 @@ local PartTiming = require("Game/Timings/PartTiming")
 ---@module Game.Timings.SoundTiming
 local SoundTiming = require("Game/Timings/SoundTiming")
 
+---@module GUI.Library
+local Library = require("GUI/Library")
+
 -- BuilderTab module.
 local BuilderTab = {
 	abs = nil,
@@ -128,10 +131,48 @@ end
 ---Initialize logger section.
 ---@param groupbox table
 function BuilderTab.initLoggerSection(groupbox)
-	groupbox:AddToggle("Show Logger Window", {
+	groupbox:AddToggle("ShowLoggerWindow", {
 		Text = "Show Logger Window",
 		Default = false,
+		Callback = function(value)
+			Library.InfoLoggerFrame.Visible = value
+		end,
 	})
+
+	groupbox:AddSlider("MinimumLoggerDistance", {
+		Text = "Minimum Logger Distance",
+		Min = 0,
+		Max = 100,
+		Rounding = 0,
+		Suffix = "m",
+		Default = 0,
+	})
+
+	groupbox:AddSlider("MaximumLoggerDistance", {
+		Text = "Maximum Logger Distance",
+		Min = 0,
+		Max = 10000,
+		Rounding = 0,
+		Suffix = "m",
+		Default = 100,
+	})
+
+	local blacklistedKeys = groupbox:AddDropdown("BlacklistedKeys", {
+		Text = "Blacklisted Keys",
+		Default = {},
+		Values = Library:KeyBlacklists(),
+		Multi = true,
+	})
+
+	groupbox:AddButton("Remove Selected Keys", function()
+		for selected, _ in next, blacklistedKeys.Value do
+			Library.InfoLoggerData.KeyBlacklistList[selected] = nil
+		end
+
+		blacklistedKeys:SetValues(Library:KeyBlacklists())
+		blacklistedKeys:SetValue({})
+		blacklistedKeys:Display()
+	end)
 end
 
 ---Initialize tab.

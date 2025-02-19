@@ -141,6 +141,142 @@ function Library:Create(Class, Properties)
 	return _Instance
 end
 
+function Library:KeyBlacklists()
+	local tbl = {}
+
+	for key, val in next, Library.InfoLoggerData.KeyBlacklistList do
+		if not val then
+			continue
+		end
+
+		tbl[#tbl + 1] = key
+	end
+
+	return tbl
+end
+
+function Library:RefreshInfoLogger()
+	if Options and Options.BlacklistedKeys then
+		Options.BlacklistedKeys:SetValues(Library:KeyBlacklists())
+	end
+
+	local CurrentTypeCycle = Library.InfoLoggerCycles[Library.InfoLoggerCycle]
+	local Blacklist = Library.InfoLoggerData.KeyBlacklistList
+
+	for Idx, Entry in next, Library.InfoLoggerData.MissingDataEntries do
+		if Blacklist[Entry.Key] then
+			table.remove(Library.InfoLoggerData.MissingDataEntries, Idx)
+
+			pcall(Entry.Label.Destroy, Entry.Label)
+
+			continue
+		end
+
+		Entry.Label.Parent = Entry.Type == CurrentTypeCycle and Library.InfoLoggerContainer or nil
+		Entry.Label.LayoutOrder = Idx
+	end
+
+	Library.InfoLoggerLabel.Text = string.format("Info Logger (%s)", CurrentTypeCycle)
+
+	local YSize = 0
+	local XSize = 0
+
+	for _, Entry in next, Library.InfoLoggerData.MissingDataEntries do
+		if not Entry.Label.Parent then
+			continue
+		end
+
+		YSize = YSize + Entry.Label.TextBounds.Y + 2
+
+		if Entry.Label.TextBounds.X <= XSize then
+			continue
+		end
+
+		XSize = Entry.Label.TextBounds.X
+	end
+
+	XSize = XSize + 20
+	YSize = YSize + 22
+
+	Library.InfoLoggerFrame.Size = UDim2.new(0, math.clamp(XSize, 210, 640), 0, math.clamp(YSize, 24, 180))
+end
+
+function Library:AddMissEntry(type, key, name, distance)
+	local ifd = Library.InfoLoggerData
+	local mde = ifd.MissingDataEntries
+	local bl = ifd.KeyBlacklistList
+
+	if bl[key] then
+		return
+	end
+
+	local function getEntriesForThisType()
+		local entries = {}
+
+		for Idx, Entry in next, mde do
+			if Entry.Type == type then
+				table.insert(entries, { [1] = Entry, [2] = Idx })
+			end
+		end
+
+		return entries
+	end
+
+	-- Pop the last element if we're under 30 entries for this type.
+	-- Max of 30 entries per type; in total - 120 for all types.
+
+	local entries = getEntriesForThisType()
+	local last = entries[#entries]
+
+	if #entries > 30 and last then
+		last[1].Label:Destroy()
+
+		table.remove(mde, last[2])
+	end
+
+	-- Create a new label.
+	---@type TextLabel
+	local label = Library:CreateLabel({
+		Text = name and string.format("(%.2fm away) Key '%s' from '%s' is missing.", distance, key, name)
+			or string.format("(%.2fm away) Key '%s' is missing.", distance, key),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		Size = UDim2.new(1, 0, 0, 14),
+		LayoutOrder = 1,
+		TextSize = 12,
+		Visible = true,
+		ZIndex = 306,
+		Parent = nil,
+	}, true)
+
+	Library:AddToRegistry(label, {
+		TextColor3 = "FontColor",
+	}, true)
+
+	-- entry
+	local entry = { Label = label, Key = key, Type = type }
+
+	-- Copy & blacklist.
+	label.InputBegan:Connect(function(Input)
+		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+			setclipboard(key)
+			Library:Notify(string.format("Copied key '%s' to clipboard.", key))
+		end
+
+		if Input.UserInputType == Enum.UserInputType.MouseButton2 then
+			ifd.KeyBlacklistList[key] = true
+			ifd.KeyBlacklistHistory[#ifd.KeyBlacklistHistory + 1] = key
+			Library:RefreshInfoLogger()
+			Library:Notify(string.format("Blacklisted key '%s' from list.", key))
+		end
+	end)
+
+	-- Create a new entry for later destroying.
+	table.insert(mde, 1, entry)
+
+	-- Refresh.
+	Library:RefreshInfoLogger()
+end
+
 function Library:ApplyTextStroke(Inst)
 	Inst.TextStrokeTransparency = 1
 
@@ -2996,6 +3132,139 @@ do
 	Library.WatermarkText = WatermarkLabel
 	Library:MakeDraggable(Library.Watermark)
 
+	local InfoLoggerOuter = Library:Create("Frame", {
+		AnchorPoint = Vector2.new(0, 0.5),
+		BorderColor3 = Color3.new(0, 0, 0),
+		Position = UDim2.new(0, 15, 0.5, 0),
+		Size = UDim2.new(0, 210, 0, 20),
+		Visible = false,
+		ZIndex = 287,
+		Parent = ScreenGui,
+	})
+
+	local InfoLoggerInner = Library:Create("Frame", {
+		BackgroundColor3 = Library.MainColor,
+		BorderColor3 = Library.OutlineColor,
+		BorderMode = Enum.BorderMode.Inset,
+		Size = UDim2.new(1, 0, 1, 0),
+		ZIndex = 288,
+		Parent = InfoLoggerOuter,
+	})
+
+	Library:AddToRegistry(InfoLoggerInner, {
+		BackgroundColor3 = "MainColor",
+		BorderColor3 = "OutlineColor",
+	}, true)
+
+	local InfoColorFrame = Library:Create("Frame", {
+		BackgroundColor3 = Library.AccentColor,
+		BorderSizePixel = 0,
+		Size = UDim2.new(1, 0, 0, 2),
+		ZIndex = 299,
+		Parent = InfoLoggerInner,
+	})
+
+	Library:AddToRegistry(InfoColorFrame, {
+		BackgroundColor3 = "AccentColor",
+	}, true)
+
+	local InfoLoggerLabel = Library:CreateLabel({
+		Size = UDim2.new(1, 0, 0, 20),
+		Position = UDim2.fromOffset(5, 2),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		TextColor3 = Library.AccentColor,
+		Text = "Info Logger",
+		TextSize = 14,
+		ZIndex = 300,
+		Parent = InfoLoggerInner,
+	})
+
+	Library:AddToRegistry(InfoLoggerLabel, {
+		TextColor3 = "AccentColor",
+	}, true)
+
+	local InfoLoggerContainer = Library:Create("ScrollingFrame", {
+		BackgroundTransparency = 1,
+		Size = UDim2.new(1, 0, 1, -20),
+		Position = UDim2.new(0, 0, 0, 20),
+		ZIndex = 1,
+		ScrollBarThickness = 0,
+		Parent = InfoLoggerInner,
+	})
+
+	local InfoUIListLayout = Library:Create("UIListLayout", {
+		FillDirection = Enum.FillDirection.Vertical,
+		SortOrder = Enum.SortOrder.LayoutOrder,
+		Parent = InfoLoggerContainer,
+	})
+
+	InfoUIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+		InfoLoggerContainer.CanvasSize = UDim2.fromOffset(0, InfoUIListLayout.AbsoluteContentSize.Y)
+	end)
+
+	Library:Create("UIPadding", {
+		PaddingLeft = UDim.new(0, 5),
+		Parent = InfoLoggerContainer,
+	})
+
+	---@param InputObject InputObject
+	Library:GiveSignal(InfoLoggerOuter.InputBegan:Connect(function(InputObject)
+		if InputObject.UserInputType ~= Enum.UserInputType.Keyboard then
+			return
+		end
+
+		if
+
+			InputObject.KeyCode == Enum.KeyCode.Z
+			and game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl)
+		then
+			local kbh = Library.InfoLoggerData.KeyBlacklistHistory
+			local kbl = Library.InfoLoggerData.KeyBlacklistList
+			local front = kbh[1]
+			if not front then
+				return
+			end
+
+			kbl[front] = nil
+
+			table.remove(kbh, 1)
+
+			Library:RefreshInfoLogger()
+
+			Library:Notify(string.format("Re-whitelisted key '%s' into list.", front))
+		end
+
+		if InputObject.KeyCode == Enum.KeyCode.Q then
+			Library.InfoLoggerCycle = math.max(Library.InfoLoggerCycle - 1, 1)
+			Library:RefreshInfoLogger()
+		end
+
+		if InputObject.KeyCode == Enum.KeyCode.E then
+			Library.InfoLoggerCycle = math.min(Library.InfoLoggerCycle + 1, 4)
+			Library:RefreshInfoLogger()
+		end
+	end))
+
+	-- default cycle is animation.
+	Library.InfoLoggerLabel = InfoLoggerLabel
+	Library.InfoLoggerFrame = InfoLoggerOuter
+	Library.InfoLoggerContainer = InfoLoggerContainer
+	Library.InfoLoggerCycle = 1
+	Library.InfoLoggerCycles = {
+		"Animation",
+		"Part",
+		"Sound",
+		"Effect",
+	}
+	Library.InfoLoggerData = {
+		MissingDataEntries = {},
+		KeyBlacklistHistory = {},
+		KeyBlacklistList = {},
+	}
+
+	Library:MakeDraggable(InfoLoggerOuter)
+	Library:RefreshInfoLogger()
+
 	local KeybindOuter = Library:Create("Frame", {
 		AnchorPoint = Vector2.new(0, 0.5),
 		BorderColor3 = Color3.new(0, 0, 0),
@@ -3798,6 +4067,7 @@ function Library:CreateWindow(...)
 	local TransparencyCache = {}
 	local Toggled = false
 	local Fading = false
+	local FirstTime = false
 
 	function Library:Toggle()
 		if Fading then
@@ -3805,7 +4075,12 @@ function Library:CreateWindow(...)
 		end
 
 		local FadeTime = Config.MenuFadeTime
-		Fading = true
+		local ShouldFade = FadeTime > 0.01
+
+		if ShouldFade then
+			Fading = true
+		end
+
 		Toggled = not Toggled
 		ModalElement.Modal = Toggled
 
@@ -3831,45 +4106,49 @@ function Library:CreateWindow(...)
 			end
 		end
 
-		for _, Desc in next, Outer:GetDescendants() do
-			local Properties = {}
+		if ShouldFade or not FirstTime then
+			for _, Desc in next, Outer:GetDescendants() do
+				local Properties = {}
 
-			if Desc:IsA("ImageLabel") then
-				table.insert(Properties, "ImageTransparency")
-				table.insert(Properties, "BackgroundTransparency")
-			elseif Desc:IsA("TextLabel") or Desc:IsA("TextBox") then
-				table.insert(Properties, "TextTransparency")
-			elseif Desc:IsA("Frame") or Desc:IsA("ScrollingFrame") then
-				table.insert(Properties, "BackgroundTransparency")
-			elseif Desc:IsA("UIStroke") then
-				table.insert(Properties, "Transparency")
-			end
-
-			local Cache = TransparencyCache[Desc]
-
-			if not Cache then
-				Cache = {}
-				TransparencyCache[Desc] = Cache
-			end
-
-			for _, Prop in next, Properties do
-				if not Cache[Prop] then
-					Cache[Prop] = Desc[Prop]
+				if Desc:IsA("ImageLabel") then
+					table.insert(Properties, "ImageTransparency")
+					table.insert(Properties, "BackgroundTransparency")
+				elseif Desc:IsA("TextLabel") or Desc:IsA("TextBox") then
+					table.insert(Properties, "TextTransparency")
+				elseif Desc:IsA("Frame") or Desc:IsA("ScrollingFrame") then
+					table.insert(Properties, "BackgroundTransparency")
+				elseif Desc:IsA("UIStroke") then
+					table.insert(Properties, "Transparency")
 				end
 
-				if Cache[Prop] == 1 then
-					continue
+				local Cache = TransparencyCache[Desc]
+
+				if not Cache then
+					Cache = {}
+					TransparencyCache[Desc] = Cache
 				end
 
-				TweenService:Create(
-					Desc,
-					TweenInfo.new(FadeTime, Enum.EasingStyle.Linear),
-					{ [Prop] = Toggled and Cache[Prop] or 1 }
-				):Play()
+				for _, Prop in next, Properties do
+					if not Cache[Prop] then
+						Cache[Prop] = Desc[Prop]
+					end
+
+					if Cache[Prop] == 1 then
+						continue
+					end
+
+					TweenService:Create(
+						Desc,
+						TweenInfo.new(FadeTime, Enum.EasingStyle.Linear),
+						{ [Prop] = Toggled and Cache[Prop] or 1 }
+					):Play()
+				end
 			end
+
+			task.wait(FadeTime)
+
+			FirstTime = true
 		end
-
-		task.wait(FadeTime)
 
 		Outer.Visible = Toggled
 

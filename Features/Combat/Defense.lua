@@ -19,6 +19,9 @@ local EffectDefender = require("Features/Combat/Objects/EffectDefender")
 ---@module Game.Timings.SaveManager
 local SaveManager = require("Game/Timings/SaveManager")
 
+---@module Features.Combat.Objects.Defender
+local Defender = require("Features/Combat/Objects/Defender")
+
 ---@module Utility.Table
 local Table = require("Utility/Table")
 
@@ -27,6 +30,9 @@ local Configuration = require("Utility/Configuration")
 
 -- Handle all defense related functions.
 local Defense = {}
+
+-- Constants.
+local PROJECTILE_TIMEOUT = 10.0
 
 -- Services.
 local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -91,28 +97,14 @@ end
 ---Add part defender.
 ---@param part BasePart
 local function addPartDefender(part)
-	local timing = SaveManager.ps:index(part.Name)
+	---@note: Create a junk defender object to do an initial check. Usually, we'd do this in the defender itself. But we don't have that option!
+	--- I don't want to return an optional object through a... constructor.
+	local mimic = Defender.new()
+	mimic.__type = "Part"
+
+	-- Get timing.
+	local timing = mimic:initial(part, SaveManager.ps, nil, part.Name)
 	if not timing then
-		return
-	end
-
-	local localPlayer = players.LocalPlayer
-	if not localPlayer then
-		return
-	end
-
-	local character = localPlayer.Character
-	if not character then
-		return
-	end
-
-	local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-	if not humanoidRootPart then
-		return
-	end
-
-	local distance = (part.Position - humanoidRootPart.Position).Magnitude
-	if distance < timing.imdd or distance > timing.imxd then
 		return
 	end
 
@@ -177,12 +169,24 @@ local function updatePartDefenders()
 		return
 	end
 
-	for _, object in next, defenderObjects do
-		if object.__type ~= "PartDefender" then
+	for idx, object in next, defenderObjects do
+		if object.__type ~= "Part" then
 			continue
 		end
 
 		if not object.update then
+			continue
+		end
+
+		---@note: Force object timeout. Some part(s) just never get removed? I've seen it with the hitboxes sometimes.
+		if os.clock() > object.start + PROJECTILE_TIMEOUT then
+			-- Detach object.
+			object:detach()
+
+			-- Remove from list.
+			defenderObjects[idx] = nil
+
+			-- Continue.
 			continue
 		end
 

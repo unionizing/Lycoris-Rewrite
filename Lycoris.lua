@@ -7,14 +7,14 @@ local Logger = require("Utility/Logger")
 ---@module Game.Hooking
 local Hooking = require("Game/Hooking")
 
----@module Utility.ControlModule
-local ControlModule = require("Utility/ControlModule")
-
 ---@module Menu
 local Menu = require("Menu")
 
 ---@module Features
 local Features = require("Features")
+
+---@module Utility.ControlModule
+local ControlModule = require("Utility/ControlModule")
 
 ---@module Game.InputClient
 local InputClient = require("Game/InputClient")
@@ -147,9 +147,9 @@ function Lycoris.init()
 
 	InputClient.cache()
 
-	ControlModule.init()
-
 	SaveManager.init()
+
+	ControlModule.init()
 
 	Features.init()
 
@@ -192,37 +192,35 @@ end
 function Lycoris.detach()
 	Menu.detach()
 
-	Features.detach()
-
 	ControlModule.detach()
 
-	Hooking.detach()
+	Features.detach()
 
 	PlayerScanning.detach()
-
-	Logger.warn("Script has been detached.")
 
 	local modules = replicatedStorage:FindFirstChild("Modules")
 	local bloxstrapRPC = modules and modules:FindFirstChild("BloxstrapRPC")
 	local bloxstrapRPCModule = bloxstrapRPC and require(bloxstrapRPC)
 
-	if not bloxstrapRPCModule then
-		return
+	if bloxstrapRPCModule then
+		bloxstrapRPCModule.SetRichPresence({
+			details = "Linoria V2 (Detached)",
+			state = "Yes, I'm too lazy to make it properly reset.",
+			timeStart = os.time(),
+			largeImage = {
+				assetId = 17278722162,
+				hoverText = "[REDACTED]",
+			},
+			smallImage = {
+				assetId = 17278571027,
+				hoverText = "Deepwoken",
+			},
+		})
 	end
 
-	bloxstrapRPCModule.SetRichPresence({
-		details = "Linoria V2 (Detached)",
-		state = "Yes, I'm too lazy to make it properly reset.",
-		timeStart = os.time(),
-		largeImage = {
-			assetId = 17278722162,
-			hoverText = "[REDACTED]",
-		},
-		smallImage = {
-			assetId = 17278571027,
-			hoverText = "Deepwoken",
-		},
-	})
+	Hooking.detach()
+
+	Logger.warn("Script has been detached.")
 end
 
 -- Return Lycoris module.

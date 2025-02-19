@@ -16,6 +16,9 @@ local Maid = require("Utility/Maid")
 ---@module Utility.InstanceWrapper
 local InstanceWrapper = require("Utility/InstanceWrapper")
 
+---@module GUI.Library
+local Library = require("GUI/Library")
+
 ---@class Defender
 ---@field tasks Task[]
 local Defender = {}
@@ -27,6 +30,53 @@ local stats = game:GetService("Stats")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local userInputService = game:GetService("UserInputService")
 local players = game:GetService("Players")
+
+---Log a miss to the UI library with distance check.
+---@param type string
+---@param key string
+---@param name string?
+---@param distance number
+function Defender:miss(type, key, name, distance)
+	if
+		distance < (Configuration.expectOptionValue("MinimumLoggerDistance") or 0)
+		or distance > (Configuration.expectOptionValue("MaximumLoggerDistance") or 0)
+	then
+		return
+	end
+
+	return Library:AddMissEntry(type, key, name, distance)
+end
+
+---Fetch distance.
+---@param from Model? | BasePart?
+---@return number?
+function Defender:distance(from)
+	if not from then
+		return
+	end
+
+	local entRootPart = from
+
+	if from:IsA("Model") then
+		entRootPart = from:FindFirstChild("HumanoidRootPart")
+	end
+
+	if not entRootPart then
+		return
+	end
+
+	local localCharacter = players.LocalPlayer.Character
+	if not localCharacter then
+		return
+	end
+
+	local localRootPart = localCharacter:FindFirstChild("HumanoidRootPart")
+	if not localRootPart then
+		return
+	end
+
+	return (entRootPart.Position - localRootPart.Position).Magnitude
+end
 
 ---Check if we're in a valid state to proceed with action handling. Extend me.
 ---@param timing Timing
@@ -128,6 +178,36 @@ function Defender:hitbox(position, depth, size, filter)
 	return inBounds
 end
 
+---Check initial state.
+---@param from Model? | BasePart?
+---@param pair TimingContainerPair
+---@param name string
+---@param key string
+---@return Timing?
+function Defender:initial(from, pair, name, key)
+	-- Find timing.
+	local timing = pair:index(key)
+
+	-- Fetch distance.
+	local distance = self:distance(from)
+	if not distance then
+		return
+	end
+
+	-- Check for distance; if we have a timing.
+	if timing and (distance < timing.imdd or distance > timing.imxd) then
+		return
+	end
+
+	-- Check for no timing. If so, let's log a miss.
+	if not timing then
+		return self:miss(self.__type, key, name, distance)
+	end
+
+	-- Return timing.
+	return timing
+end
+
 ---Logger notify.
 ---@param timing Timing
 ---@param str string
@@ -136,7 +216,7 @@ function Defender:notify(timing, str, ...)
 		return
 	end
 
-	Logger.notify("[%s] %s", timing.name, string.format(str, ...))
+	Logger.notify("[%s] (%s) %s", timing.name, self.__type, string.format(str, ...))
 end
 
 ---Get ping.

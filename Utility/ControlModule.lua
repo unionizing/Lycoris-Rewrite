@@ -1,4 +1,4 @@
--- This module is used for getting input values in a Vector3.
+-- This module is used for getting the proper input fly values - 1:1 with Aztup.
 local ControlModule = {
 	forwardValue = 0,
 	backwardValue = 0,

@@ -108,6 +108,10 @@ function InputClient.getInputData()
 			continue
 		end
 
+		if iscclosure(func) then
+			continue
+		end
+
 		local consts = debug.getconstants(func)
 		if not table.find(consts, ".lastHBCheck") and not manualTableFind(consts, ".lastHBCheck") then
 			continue

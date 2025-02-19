@@ -1,5 +1,6 @@
 -- Logger module.
 local Logger = {}
+Logger.__index = Logger
 
 ---@module GUI.Library
 local Library = require("GUI/Library")
@@ -8,7 +9,7 @@ local Library = require("GUI/Library")
 ---@param str string
 ---@return string
 local function buildPrefixString(str)
-	return string.format("[%s %s] [lycoris recode]: %s", os.date("%x"), os.date("%X"), str)
+	return string.format("[%s %s] [Lycoris Recode]: %s", os.date("%x"), os.date("%X"), str)
 end
 
 ---Notify message with a default short cooldown to create consistent cooldowns between files.

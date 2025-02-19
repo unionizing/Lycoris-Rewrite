@@ -15,9 +15,10 @@ local Targeting = require("Features/Combat/Targeting")
 ---@field part BasePart
 ---@field timing PartTiming
 ---@field touched boolean Determines whether if we touched the timing in the past.
+---@field start number The start time of the part.
 local PartDefender = setmetatable({}, { __index = Defender })
 PartDefender.__index = PartDefender
-PartDefender.__type = "PartDefender"
+PartDefender.__type = "Part"
 
 -- Services.
 local players = game:GetService("Players")
@@ -49,13 +50,6 @@ local function guessOwnerFromPartTiming(timing)
 	end
 end
 
----Override notify to include type.
----@param timing Timing
----@param str string
-function PartDefender:notify(timing, str, ...)
-	Defender.notify(self, timing, string.format("[Part] %s", str), ...)
-end
-
 ---Check if we're in a valid state to proceed with the action.
 ---@param timing PartTiming
 ---@param action Action
@@ -70,7 +64,7 @@ function PartDefender:valid(timing, action)
 		return self:notify(timing, "No character found.")
 	end
 
-	if not self:hitbox(self.part.Position, action.hitbox, { character }) then
+	if not self:hitbox(self.part.Position, 0, action.hitbox, { character }) then
 		return self:notify(timing, "Not inside of the hitbox.")
 	end
 
@@ -122,6 +116,7 @@ function PartDefender.new(part, timing)
 	self.timing = timing
 	self.owner = guessOwnerFromPartTiming(timing)
 	self.touched = false
+	self.start = os.clock()
 	return self
 end
 

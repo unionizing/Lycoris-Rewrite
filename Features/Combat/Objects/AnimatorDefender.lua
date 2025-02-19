@@ -31,21 +31,14 @@ local Task = require("Features/Combat/Objects/Task")
 ---@field heffects Instance[]
 ---@field manimations table<number, Animation>
 ---@field track AnimationTrack? Don't be confused. This is the **valid && last** animation track played.
----@field maid Maid
+---@field maid Maid This maid is cleaned up after every new animation track. Safe to use for on-animation-track setup.
 local AnimatorDefender = setmetatable({}, { __index = Defender })
 AnimatorDefender.__index = AnimatorDefender
-AnimatorDefender.__type = "AnimatorDefender"
+AnimatorDefender.__type = "Animation"
 
 -- Services.
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
-
----Override notify to include type.
----@param timing Timing
----@param str string
-function AnimatorDefender:notify(timing, str, ...)
-	Defender.notify(self, timing, string.format("[Animation] %s", str), ...)
-end
 
 ---Check if we're in a valid state to proceed with the action.
 ---@param timing AnimationTiming
@@ -104,43 +97,6 @@ function AnimatorDefender:valid(timing, action)
 	return true
 end
 
----Check if the initial state is valid.
----@param timing AnimationTiming
----@return boolean
-function AnimatorDefender:initial(timing)
-	local entity = self.animator:FindFirstAncestorWhichIsA("Model")
-	if not entity then
-		return false
-	end
-
-	local entRootPart = entity:FindFirstChild("HumanoidRootPart")
-	if not entRootPart then
-		return false
-	end
-
-	local localCharacter = players.LocalPlayer.Character
-	if not localCharacter then
-		return false
-	end
-
-	local localRootPart = localCharacter:FindFirstChild("HumanoidRootPart")
-	if not localRootPart then
-		return false
-	end
-
-	local distance = (entRootPart.Position - localRootPart.Position).Magnitude
-
-	if distance < timing.imdd then
-		return false
-	end
-
-	if distance > timing.imxd then
-		return false
-	end
-
-	return true
-end
-
 ---Repeat until parry end.
 ---@param track AnimationTrack
 ---@param timing AnimationTiming
@@ -164,7 +120,14 @@ function AnimatorDefender:rpue(track, timing, index)
 		)
 	)
 
-	if not self:initial(timing) then
+	if
+		not self:initial(
+			self.animator:FindFirstAncestorWhichIsA("Model"),
+			SaveManager.as,
+			self.entity.Name,
+			tostring(track.Animation.AnimationId)
+		)
+	then
 		return
 	end
 
@@ -208,13 +171,15 @@ function AnimatorDefender:process(track)
 		return
 	end
 
-	---@type AnimationTiming
-	local timing = SaveManager.as:index(tostring(track.Animation.AnimationId))
-	if not timing then
-		return
-	end
+	---@type AnimationTiming?
+	local timing = self:initial(
+		self.animator:FindFirstAncestorWhichIsA("Model"),
+		SaveManager.as,
+		self.entity.Name,
+		tostring(track.Animation.AnimationId)
+	)
 
-	if not self:initial(timing) then
+	if not timing then
 		return
 	end
 

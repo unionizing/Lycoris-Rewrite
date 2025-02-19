@@ -129,7 +129,7 @@ local hover = Instance.new("Sound")
 local click = Instance.new("Sound")
 
 -- Properties.
-bestiaryClient.Name = "bestiaryClient"
+bestiaryClient.Name = "BestiaryClient"
 bestiaryClient.Parent = bestiaryGui
 
 click.SoundId = "rbxassetid://4729609016"
@@ -802,7 +802,7 @@ function Bestiary.init()
 	selectedTab = mobScroll
 
 	-- Initialize GUI.
-	bestiaryGui.Name = "bestiaryGui"
+	bestiaryGui.Name = "BestiaryGui"
 	bestiaryGui.Parent = gethui() or game:GetService("CoreGui")
 	bestiaryGui.Enabled = false
 	bestiaryGui.DisplayOrder = 1

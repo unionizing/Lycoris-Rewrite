@@ -12,17 +12,10 @@ local Targeting = require("Features/Combat/Targeting")
 ---@field name string The name of the effect.
 local EffectDefender = setmetatable({}, { __index = Defender })
 EffectDefender.__index = EffectDefender
-EffectDefender.__type = "EffectDefender"
+EffectDefender.__type = "Effect"
 
 -- Services.
 local players = game:GetService("Players")
-
----Override notify to include type.
----@param timing Timing
----@param str string
-function EffectDefender:notify(timing, str, ...)
-	Defender.notify(self, timing, string.format("[Effect] %s", str), ...)
-end
 
 ---Check if we're in a valid state to proceed with the action.
 ---@param timing PartTiming
@@ -45,46 +38,15 @@ function EffectDefender:valid(timing, action)
 	return true
 end
 
----Check if the initial state is valid.
----@param timing SoundTiming
----@return boolean
-function EffectDefender:initial(timing)
-	local entRootPart = self.owner:FindFirstChild("HumanoidRootPart")
-	if not entRootPart then
-		return false
-	end
-
-	local localCharacter = players.LocalPlayer.Character
-	if not localCharacter then
-		return false
-	end
-
-	local localRootPart = localCharacter:FindFirstChild("HumanoidRootPart")
-	if not localRootPart then
-		return false
-	end
-
-	local distance = (entRootPart.Position - localRootPart.Position).Magnitude
-
-	if distance < timing.imdd then
-		return false
-	end
-
-	if distance > timing.imxd then
-		return false
-	end
-
-	return true
-end
-
 ---Process sound playing
 function EffectDefender:process()
-	local timing = SaveManager.es:index(self.name)
-	if not timing then
+	if players.LocalPlayer.Character and self.owner == players.LocalPlayer.Character then
 		return
 	end
 
-	if not self:initial(timing) then
+	---@type EffectTiming?
+	local timing = self:initial(self.owner, SaveManager.es, self.owner.Name, self.name)
+	if not timing then
 		return
 	end
 

@@ -11,9 +11,6 @@ local Maid = require("Utility/Maid")
 ---@module Utility.InstanceWrapper
 local InstanceWrapper = require("Utility/InstanceWrapper")
 
----@module Utility.ControlModule
-local ControlModule = require("Utility/ControlModule")
-
 ---@module Utility.Configuration
 local Configuration = require("Utility/Configuration")
 
@@ -23,8 +20,8 @@ local OriginalStore = require("Utility/OriginalStore")
 ---@module Utility.OriginalStoreManager
 local OriginalStoreManager = require("Utility/OriginalStoreManager")
 
----@module Utility.Logger
-local Logger = require("Utility/Logger")
+---@module Utility.ControlModule
+local ControlModule = require("Utility/ControlModule")
 
 ---@module Utility.Entitites
 local Entitites = require("Utility/Entitites")
@@ -89,13 +86,15 @@ local function updateNoClip(character, rootPart)
 		if not instance:IsA("BasePart") then
 			continue
 		end
-		
-		local bone = instance:FindFirstChild('Bone')
+
 		noClipMap:add(instance, "CanCollide", knockedRestore and noClipMap:get(instance):get() or false)
 
-		if bone then
-			noClipMap:add(bone, "CanCollide", knockedRestore and noClipMap:get(bone):get() or false)
+		local bone = instance:FindFirstChild("Bone")
+		if not bone then
+			continue
 		end
+
+		noClipMap:add(bone, "CanCollide", knockedRestore and noClipMap:get(bone):get() or false)
 	end
 end
 
@@ -104,10 +103,6 @@ end
 ---@param humanoid Humanoid
 local function updateSpeedHack(rootPart, humanoid)
 	if Configuration.expectToggleValue("Fly") then
-		return
-	end
-
-	if not humanoid then
 		return
 	end
 
@@ -140,7 +135,8 @@ end
 
 ---Update fly hack.
 ---@param rootPart BasePart
-local function updateFlyHack(rootPart)
+---@param humanoid Humanoid
+local function updateFlyHack(rootPart, humanoid)
 	local camera = workspace.CurrentCamera
 	if not camera then
 		return
@@ -310,7 +306,7 @@ local function updateMovement()
 	end
 
 	if Configuration.expectToggleValue("Fly") then
-		updateFlyHack(rootPart)
+		updateFlyHack(rootPart, humanoid)
 	else
 		movementMaid["flyBodyVelocity"] = nil
 	end
