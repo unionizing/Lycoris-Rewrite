@@ -39,9 +39,18 @@ local cameraSubject = spectateMaid:mark(OriginalStore.new())
 -- Original store managers.
 local showHiddenMap = spectateMaid:mark(OriginalStoreManager.new())
 
+-- Caching.
+local cachedUpvaluesTable = nil
+local cachedUpvaluesFunction = nil
+local lastCacheTime = os.clock()
+
 ---Get leaderboard data.
 ---@return table?, function?
 local function getLeaderboardData()
+	if cachedUpvaluesFunction and cachedUpvaluesTable and os.clock() - lastCacheTime <= 2.0 then
+		return cachedUpvaluesTable, cachedUpvaluesFunction
+	end
+
 	for _, con in next, getconnections(players.PlayerRemoving) do
 		local func = con.Function
 		if not func or not islclosure(func) then
@@ -62,6 +71,9 @@ local function getLeaderboardData()
 		if not upvalues then
 			continue
 		end
+
+		cachedUpvaluesFunction = upvalues[2]
+		cachedUpvaluesTable = upvalues[1]
 
 		return upvalues[1], upvalues[2]
 	end

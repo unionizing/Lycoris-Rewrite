@@ -46,6 +46,9 @@ local renderStepped = Signal.new(runService.RenderStepped)
 local workspaceDescendantAdded = Signal.new(workspace.DescendantAdded)
 local workspaceDescendantRemoving = Signal.new(workspace.DescendantRemoving)
 
+-- Last update.
+local lastUpdate = os.clock()
+
 ---Update no echo modifiers.
 ---@param localPlayer Player
 local function updateNoEchoModifiers(localPlayer)
@@ -166,6 +169,12 @@ local function updateRemoval()
 	if not localPlayer then
 		return
 	end
+
+	if os.clock() - lastUpdate <= 2.0 then
+		return
+	end
+
+	lastUpdate = os.clock()
 
 	if Configuration.expectToggleValue("NoEchoModifiers") then
 		updateNoEchoModifiers(localPlayer)

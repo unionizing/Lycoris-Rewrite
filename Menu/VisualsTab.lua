@@ -27,7 +27,17 @@ function VisualsTab.initESPCustomization(groupbox)
 		Rounding = 0,
 	})
 
-	groupbox:AddDropdown("Font", { Text = "ESP Fonts", Default = 1, Values = { "Plex", "Monospace", "UI", "System" } })
+	local fonts = {}
+
+	for _, font in next, Enum.Font:GetEnumItems() do
+		if font == Enum.Font.Unknown then
+			continue
+		end
+
+		table.insert(fonts, font.Name)
+	end
+
+	groupbox:AddDropdown("Font", { Text = "ESP Fonts", Default = 1, Values = fonts })
 end
 
 ---Initialize ESP Optimizations section.
@@ -45,37 +55,10 @@ function VisualsTab.initESPOptimizations(groupbox)
 		Text = "ESP Split Frames",
 		Tooltip = "How many frames we have to split the object pool into.",
 		Suffix = "f",
-		Default = 2,
+		Default = 32,
 		Min = 1,
-		Max = 8,
+		Max = 64,
 		Rounding = 0,
-	})
-
-	groupbox:AddToggle("ESPCheckDelay", {
-		Text = "ESP Check Delay",
-		Tooltip = "This is an optimization where the ESP will delay updating the object if it's not visible or it's too far.",
-		Default = false,
-	})
-
-	local ecdDepBox = groupbox:AddDependencyBox()
-
-	ecdDepBox:AddToggle("DelayIgnorePlayers", {
-		Text = "Ignore Players",
-		Tooltip = "Ignore Player ESP types and don't delay updating them.",
-		Default = false,
-	})
-
-	ecdDepBox:AddSlider("ESPCheckDelayTime", {
-		Text = "Delay Time",
-		Suffix = "s",
-		Default = 1,
-		Min = 0.1,
-		Max = 3,
-		Rounding = 2,
-	})
-
-	ecdDepBox:SetupDependencies({
-		{ Toggles.ESPCheckDelay, true },
 	})
 end
 

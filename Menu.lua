@@ -83,8 +83,17 @@ function Menu.init()
 	ExploitTab.init(window)
 	LycorisTab.init(window)
 
+	-- Last update.
+	local lastUpdate = os.clock()
+
 	-- Update watermark.
 	menuMaid:add(renderStepped:connect("Menu_WatermarkUpdate", function()
+		if os.clock() - lastUpdate <= 0.5 then
+			return
+		end
+
+		lastUpdate = os.clock()
+
 		-- Get stats.
 		local networkStats = stats:FindFirstChild("Network")
 		local workspaceStats = stats:FindFirstChild("Workspace")

@@ -1,10 +1,9 @@
----@module Features.Visuals.Objects.PositionESP
-local PositionESP = require("Features/Visuals/Objects/PositionESP")
+---@module Features.Visuals.Objects.InstanceESP
+local InstanceESP = require("Features/Visuals/Objects/InstanceESP")
 
----@note: Optimization - we assume the model coming in is an actual model.
----@class ModelESP: PositionESP
+---@class ModelESP: InstanceESP
 ---@field model Model
-local ModelESP = setmetatable({}, { __index = PositionESP })
+local ModelESP = setmetatable({}, { __index = InstanceESP })
 ModelESP.__index = ModelESP
 
 ---Update ModelESP.
@@ -13,10 +12,10 @@ function ModelESP:update(tags)
 	local model = self.model
 
 	if not model.Parent then
-		return self:hide()
+		return self:visible(false)
 	end
 
-	PositionESP.update(self, model:GetPivot().Position, tags or {})
+	InstanceESP.update(self, model:GetPivot().Position, tags or {})
 end
 
 ---Create new ModelESP object.
@@ -28,7 +27,7 @@ function ModelESP.new(identifier, model, label)
 		return error(string.format("ModelESP expected model on %s creation.", identifier))
 	end
 
-	local self = setmetatable(PositionESP.new(identifier, label), ModelESP)
+	local self = setmetatable(InstanceESP.new(model, identifier, label), ModelESP)
 	self.model = model
 	self.model.ModelStreamingMode = Enum.ModelStreamingMode.Persistent
 

@@ -22,19 +22,10 @@ local function partialStringFind(list, value)
 	return false
 end
 
----Hide FilteredESP and delay the next update.
-function FilteredESP:hide()
-	local object = self.object
-
-	object:hide()
-
-	self.delayTimestamp = object.delayTimestamp
-end
-
 ---Set visible.
 ---@param visible boolean
-function FilteredESP:setVisible(visible)
-	self.object:setVisible(visible)
+function FilteredESP:visible(visible)
+	self.object:visible(visible)
 end
 
 ---Detach FilteredESP.
@@ -54,11 +45,11 @@ function FilteredESP:update()
 		local filterLabelListIndex = partialStringFind(filterLabelList, label)
 
 		if filterLabelListType == "Hide Labels Out Of List" and not filterLabelListIndex then
-			return self:hide()
+			return self:visible(false)
 		end
 
 		if filterLabelListType == "Hide Labels In List" and filterLabelListIndex then
-			return self:hide()
+			return self:visible(false)
 		end
 	end
 

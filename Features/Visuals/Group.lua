@@ -17,14 +17,6 @@ Group.__index = Group
 ---Update ESP object.
 ---@param object ModelESP|PartESP|FilteredESP
 local function updateESPObject(object)
-	local delayTimestamp = object.delayTimestamp
-
-	if delayTimestamp and os.clock() <= delayTimestamp then
-		if object.__type ~= "PlayerESP" or not Configuration.toggleValue("DelayIgnorePlayers") then
-			return
-		end
-	end
-
 	Profiler.run(string.format("ESP_Update_%s", object.identifier), object.update, object)
 end
 
@@ -73,7 +65,7 @@ function Group:hide()
 	end
 
 	for _, object in next, self:data() do
-		object:setVisible(false)
+		object:visible(false)
 	end
 
 	self.updated = false

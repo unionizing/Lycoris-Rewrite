@@ -1,10 +1,9 @@
----@module Features.Visuals.Objects.PositionESP
-local PositionESP = require("Features/Visuals/Objects/PositionESP")
+---@module Features.Visuals.Objects.InstanceESP
+local InstanceESP = require("Features/Visuals/Objects/InstanceESP")
 
----@note: Optimization - we assume the part coming in is an actual part.
----@class PartESP: PositionESP
+---@class PartESP: InstanceESP
 ---@field part Part
-local PartESP = setmetatable({}, { __index = PositionESP })
+local PartESP = setmetatable({}, { __index = InstanceESP })
 PartESP.__index = PartESP
 
 ---Update PartESP.
@@ -13,10 +12,10 @@ function PartESP:update(tags)
 	local part = self.part
 
 	if not part.Parent then
-		return self:hide()
+		return self:visible(false)
 	end
 
-	PositionESP.update(self, part.Position, tags or {})
+	InstanceESP.update(self, part.Position, tags or {})
 end
 
 ---Create new PartESP object.
@@ -28,7 +27,7 @@ function PartESP.new(identifier, part, label)
 		return error(string.format("PartESP expected part on %s creation.", identifier))
 	end
 
-	local self = setmetatable(PositionESP.new(identifier, label), PartESP)
+	local self = setmetatable(InstanceESP.new(part, identifier, label), PartESP)
 	self.part = part
 	return self
 end

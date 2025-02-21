@@ -12,7 +12,7 @@ local ESP_HEALTH = "[%i/%i]"
 function MobESP:update()
 	local humanoid = self.model:FindFirstChildOfClass("Humanoid")
 	if not humanoid then
-		return self:hide()
+		return self:visible(false)
 	end
 
 	ModelESP.update(self, { ESP_HEALTH:format(humanoid.Health, humanoid.MaxHealth) })
