@@ -4,11 +4,15 @@ local ReferencedMap = require("Utility/ReferencedMap")
 ---@module Utility.Profiler
 local Profiler = require("Utility/Profiler")
 
+---@module Utility.Logger
+local Logger = require("Utility/Logger")
+
 ---@module Utility.Configuration
 local Configuration = require("Utility/Configuration")
 
 ---@class Group: ReferencedMap
 ---@field part number
+---@field icount number
 ---@field updated boolean
 ---@field identifier string
 local Group = setmetatable({}, ReferencedMap)
@@ -16,7 +20,22 @@ Group.__index = Group
 
 ---Update ESP object.
 ---@param object ModelESP|PartESP|FilteredESP
-local function updateESPObject(object)
+function Group:object(object)
+	self.count = self.count + 1
+
+	if not self.warned and self.count >= 500 then
+		-- Notify user.
+		Logger.longNotify("(%s) Too many objects will cause your elements to stop updating.", object.identifier)
+
+		-- Set warning.
+		self.warned = true
+	end
+
+	---@note: If we're updating too many objects, it will cause Roblox to hide UI elements and kick us from the game.
+	if self.count >= 500 then
+		return
+	end
+
 	Profiler.run(string.format("ESP_Update_%s", object.identifier), object.update, object)
 end
 
@@ -39,20 +58,22 @@ function Group:update()
 		local endIdx = math.min(currentPart * objectsPerPart, totalElements)
 
 		for idx = startIdx, endIdx do
-			updateESPObject(map[idx])
+			self:object(map[idx])
 		end
 
 		self.part = self.part + 1
 
 		if self.part > totalFrames then
+			self.count = 0
 			self.part = 1
 		end
 	else
 		for _, object in next, map do
-			updateESPObject(object)
+			self:object(object)
 		end
 
 		self.part = 1
+		self.count = 0
 	end
 
 	self.updated = true
@@ -84,6 +105,8 @@ end
 function Group.new(identifier)
 	local self = setmetatable(ReferencedMap.new(), Group)
 	self.part = 1
+	self.count = 0
+	self.warned = false
 	self.updated = true
 	self.identifier = identifier
 	return self

@@ -195,6 +195,14 @@ do
 			self.Library.KeyBlacklistHistory = decoded.infoLoggerBlacklistHistory
 		end
 
+		for _, option in next, decoded.objects do
+			if self.Parser[option.type] then
+				task.spawn(function()
+					self.Parser[option.type].Load(option.idx, option)
+				end) -- task.spawn() so the config loading wont get stuck.
+			end
+		end
+
 		if decoded.infoLoggerBlacklist then
 			self.Library.KeyBlacklistList = decoded.infoLoggerBlacklist
 			self.Library:RefreshInfoLogger()
@@ -203,14 +211,6 @@ do
 		if decoded.infoLoggerCycle then
 			self.Library.InfoLoggerCycle = decoded.infoLoggerCycle
 			self.Library:RefreshInfoLogger()
-		end
-
-		for _, option in next, decoded.objects do
-			if self.Parser[option.type] then
-				task.spawn(function()
-					self.Parser[option.type].Load(option.idx, option)
-				end) -- task.spawn() so the config loading wont get stuck.
-			end
 		end
 
 		return true

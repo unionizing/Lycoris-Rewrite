@@ -251,7 +251,7 @@ end
 function VisualsTab.addFilterESP(identifier, depbox)
 	local filterObjectsToggle = depbox:AddToggle(Configuration.identify(identifier, "FilterObjects"), {
 		Text = "Filter Objects",
-		Default = false,
+		Default = true,
 	})
 
 	local foDepBox = depbox:AddDependencyBox()

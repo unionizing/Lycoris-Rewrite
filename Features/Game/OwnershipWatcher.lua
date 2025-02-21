@@ -34,12 +34,12 @@ local function hasNetworkOwnership(part)
 	local success, partPeerId = pcall(function()
 		return gethiddenproperty(part, "NetworkOwnerV3")
 	end)
-	print(success, partPeerId, clientPeerId)
+
 	if not success then
 		return not part.Anchored and part.ReceiveAge == 0 and part.AssemblyLinearVelocity.Magnitude > 0
 	end
 
-	return partPeerId == clientPeerId
+	return partPeerId ~= clientPeerId
 end
 
 ---Clean up parts. Every model to scan has a maid linked to it.

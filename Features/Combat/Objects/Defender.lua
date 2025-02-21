@@ -30,6 +30,7 @@ local stats = game:GetService("Stats")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local userInputService = game:GetService("UserInputService")
 local players = game:GetService("Players")
+local textChatService = game:GetService("TextChatService")
 
 ---Log a miss to the UI library with distance check.
 ---@param type string
@@ -108,7 +109,12 @@ function Defender:valid(timing, action)
 		return self:notify(timing, "User is pressing down on a key binded to Block.")
 	end
 
-	if Configuration.expectToggleValue("CheckTextboxFocus") and userInputService:GetFocusedTextBox() then
+	local chatInputBarConfiguration = textChatService:FindFirstChildOfClass("ChatInputBarConfiguration")
+
+	if
+		Configuration.expectToggleValue("CheckTextboxFocus")
+		and (userInputService:GetFocusedTextBox() or chatInputBarConfiguration.IsFocused)
+	then
 		return self:notify(timing, "User is typing in a text box.")
 	end
 
