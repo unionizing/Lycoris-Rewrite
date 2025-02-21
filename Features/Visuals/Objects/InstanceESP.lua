@@ -98,7 +98,7 @@ end
 function InstanceESP:setup()
 	local billboardGui = Instance.new("BillboardGui")
 	billboardGui.AlwaysOnTop = true
-	billboardGui.Size = UDim2.new(1e6, 0, 1e6, 0)
+	billboardGui.Size = UDim2.new(1e5, 0, 1e5, 0)
 	billboardGui.Enabled = false
 	billboardGui.Adornee = self.instance
 	billboardGui.Parent = coreGui
