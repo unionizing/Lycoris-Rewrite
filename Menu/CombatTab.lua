@@ -96,13 +96,9 @@ function CombatTab.initCombatWhitelistSection(tab)
 		usernameList:Display()
 	end)
 
-	tab:AddButton("Remove Selected Username", function()
+	tab:AddButton("Remove Selected Usernames", function()
 		local values = usernameList.Values
 		local value = usernameList.Value
-
-		if not value or #value <= 0 then
-			return Logger.longNotify("Please select a username to remove.")
-		end
 
 		for selected, _ in next, value do
 			local index = table.find(values, selected)
