@@ -5,7 +5,6 @@ local Timing = require("Game/Timings/Timing")
 ---@field texture string Texture ID.
 ---@field part string Parent part name.
 ---@field linked string[] Linked animation IDs to filter with.
----@field hitbox Vector3 The main hitbox of the emitter while it moves.
 local EmitterTiming = setmetatable({}, { __index = Timing })
 EmitterTiming.__index = EmitterTiming
 
@@ -31,10 +30,6 @@ function EmitterTiming:load(values)
 	if typeof(values.part) == "string" then
 		self.part = values.part
 	end
-
-	if typeof(values.hitbox) == "table" then
-		self.hitbox = Vector3.new(values.hitbox.X, values.hitbox.Y, values.hitbox.Z)
-	end
 end
 
 ---Clone timing.
@@ -45,7 +40,6 @@ function EmitterTiming:clone()
 	clone.linked = self.linked
 	clone.texture = self.texture
 	clone.part = self.part
-	clone.hitbox = self.hitbox
 
 	return clone
 end
@@ -58,11 +52,6 @@ function EmitterTiming:serialize()
 	serializable.linked = self.linked
 	serializable.texture = self.texture
 	serializable.part = self.part
-	serializable.hitbox = {
-		X = self.hitbox.X,
-		Y = self.hitbox.Y,
-		Z = self.hitbox.Z,
-	}
 
 	return serializable
 end
@@ -76,7 +65,6 @@ function EmitterTiming.new(values)
 	self.linked = {}
 	self.texture = ""
 	self.part = ""
-	self.hitbox = Vector3.new()
 
 	if values then
 		self:load(values)

@@ -57,6 +57,9 @@ function BuilderSection:reset()
 	self.afterWindow:SetRawValue(0)
 	self.initialMinimumDistance:SetRawValue(0)
 	self.delayUntilInHitbox:SetRawValue(false)
+	self.hitboxHeight:SetRawValue(0)
+	self.hitboxLength:SetRawValue(0)
+	self.hitboxWidth:SetRawValue(0)
 
 	-- Reset action list.
 	self:arefresh(nil)
@@ -370,6 +373,9 @@ function BuilderSection:timing()
 			self.initialMaximumDistance:SetRawValue(found.imxd)
 			self.initialMinimumDistance:SetRawValue(found.imdd)
 			self.delayUntilInHitbox:SetRawValue(found.duih)
+			self.hitboxHeight:SetRawValue(found.hitbox.Z)
+			self.hitboxWidth:SetRawValue(found.hitbox.X)
+			self.hitboxLength:SetRawValue(found.hitbox.Y)
 
 			-- Load extra elements.
 			self:exload(found)
@@ -546,6 +552,48 @@ function BuilderSection:builder()
 		Callback = self:tnc(function(timing, value)
 			timing.duih = value
 		end),
+	})
+
+	local duihDepBox = tab:AddDependencyBox()
+
+	self.hitboxLength = duihDepBox:AddSlider(nil, {
+		Text = "Hitbox Length",
+		Min = 0,
+		Max = 300,
+		Suffix = "s",
+		Default = 0,
+		Rounding = 0,
+		Callback = self:tnc(function(timing, value)
+			timing.hitbox = Vector3.new(timing.hitbox.X, timing.hitbox.Y, value)
+		end),
+	})
+
+	self.hitboxWidth = duihDepBox:AddSlider(nil, {
+		Text = "Hitbox Width",
+		Min = 0,
+		Max = 300,
+		Suffix = "s",
+		Default = 0,
+		Rounding = 0,
+		Callback = self:tnc(function(timing, value)
+			timing.hitbox = Vector3.new(value, timing.hitbox.Y, timing.hitbox.Z)
+		end),
+	})
+
+	self.hitboxHeight = duihDepBox:AddSlider(nil, {
+		Text = "Hitbox Height",
+		Min = 0,
+		Max = 300,
+		Suffix = "s",
+		Default = 0,
+		Rounding = 0,
+		Callback = self:tnc(function(timing, value)
+			timing.hitbox = Vector3.new(timing.hitbox.X, value, timing.hitbox.Z)
+		end),
+	})
+
+	duihDepBox:SetupDependencies({
+		{ self.delayUntilInHitbox, true },
 	})
 
 	self:extra(tab)

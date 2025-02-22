@@ -327,7 +327,7 @@ Defender.clean = LPH_NO_VIRTUALIZE(function(self)
 		self.tasks[idx] = nil
 
 		-- Check.
-		blocking = blocking or task.identifier == "Start Block"
+		blocking = blocking or (task.identifier == "Start Block" or task.identifier == "End Block")
 	end
 
 	-- End block if we're blocking.

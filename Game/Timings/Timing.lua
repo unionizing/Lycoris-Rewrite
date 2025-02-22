@@ -10,6 +10,7 @@ local ActionContainer = require("Game/Timings/ActionContainer")
 ---@field after number After window in seconds.
 ---@field duih boolean Delay until in hitbox.
 ---@field actions ActionContainer
+---@field hitbox Vector3
 local Timing = {}
 Timing.__index = Timing
 
@@ -59,6 +60,10 @@ function Timing:load(values)
 	if typeof(values.actions) == "table" then
 		self.actions:load(values.actions)
 	end
+
+	if typeof(values.hitbox) == "table" then
+		self.hitbox = Vector3.new(values.hitbox.X or 0, values.hitbox.Y or 0, values.hitbox.Z or 0)
+	end
 end
 
 ---Clone timing.
@@ -74,6 +79,7 @@ function Timing:clone()
 	clone.punishable = self.punishable
 	clone.after = self.after
 	clone.actions = self.actions:clone()
+	clone.hitbox = self.hitbox
 
 	return clone
 end
@@ -90,6 +96,11 @@ function Timing:serialize()
 		punishable = self.punishable,
 		after = self.after,
 		actions = self.actions:serialize(),
+		hitbox = {
+			X = self.hitbox.X,
+			Y = self.hitbox.Y,
+			Z = self.hitbox.Z,
+		},
 	}
 end
 
@@ -107,6 +118,7 @@ function Timing.new(values)
 	self.after = 0
 	self.duih = false
 	self.actions = ActionContainer.new()
+	self.hitbox = Vector3.zero
 
 	if values then
 		self:load(values)

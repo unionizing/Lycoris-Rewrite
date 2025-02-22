@@ -43,9 +43,6 @@ function PartBuilderSection:exload(timing)
 	self.linkedAnimationIds:SetRawValue({})
 	self.linkedAnimationIds:SetValues(timing.linked)
 	self.linkedAnimationIds:Display()
-	self.hitboxHeight:SetRawValue(timing.hitbox.Z)
-	self.hitboxWidth:SetRawValue(timing.hitbox.X)
-	self.hitboxLength:SetRawValue(timing.hitbox.Y)
 end
 
 ---Reset the elements. Extend me.
@@ -55,9 +52,6 @@ function PartBuilderSection:reset()
 	self.linkedAnimationIds:SetRawValue({})
 	self.linkedAnimationIds:SetValues({})
 	self.linkedAnimationIds:Display()
-	self.hitboxHeight:SetRawValue(0)
-	self.hitboxWidth:SetRawValue(0)
-	self.hitboxLength:SetRawValue(0)
 end
 
 ---Create new timing. Override me.
@@ -74,46 +68,6 @@ end
 function PartBuilderSection:tide(tab)
 	self.partName = tab:AddInput(nil, {
 		Text = "Part Name",
-	})
-end
-
----Add extra elements to the builder tab.
----@param tab table
-function PartBuilderSection:extra(tab)
-	self.hitboxLength = tab:AddSlider(nil, {
-		Text = "Hitbox Length",
-		Min = 0,
-		Max = 300,
-		Suffix = "s",
-		Default = 0,
-		Rounding = 0,
-		Callback = self:tnc(function(timing, value)
-			timing.hitbox = Vector3.new(timing.hitbox.X, timing.hitbox.Y, value)
-		end),
-	})
-
-	self.hitboxWidth = tab:AddSlider(nil, {
-		Text = "Hitbox Width",
-		Min = 0,
-		Max = 300,
-		Suffix = "s",
-		Default = 0,
-		Rounding = 0,
-		Callback = self:tnc(function(timing, value)
-			timing.hitbox = Vector3.new(value, timing.hitbox.Y, timing.hitbox.Z)
-		end),
-	})
-
-	self.hitboxHeight = tab:AddSlider(nil, {
-		Text = "Hitbox Height",
-		Min = 0,
-		Max = 300,
-		Suffix = "s",
-		Default = 0,
-		Rounding = 0,
-		Callback = self:tnc(function(timing, value)
-			timing.hitbox = Vector3.new(timing.hitbox.X, value, timing.hitbox.Z)
-		end),
 	})
 end
 

@@ -68,6 +68,13 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "Not a viable target.")
 	end
 
+	while
+		timing.duih
+		and not self:hitbox((target.root.CFrame).Position, 0, timing.hitbox, { players.LocalPlayer.Character })
+	do
+		task.wait()
+	end
+
 	local character = players.LocalPlayer.Character
 	if not character then
 		return self:notify(timing, "No character found.")
