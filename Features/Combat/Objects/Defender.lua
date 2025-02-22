@@ -39,6 +39,10 @@ local textChatService = game:GetService("TextChatService")
 ---@param distance number
 ---@return boolean
 function Defender:miss(type, key, name, distance)
+	if not Configuration.expectToggleValue("ShowLoggerWindow") then
+		return false
+	end
+
 	if
 		distance < (Configuration.expectOptionValue("MinimumLoggerDistance") or 0)
 		or distance > (Configuration.expectOptionValue("MaximumLoggerDistance") or 0)
