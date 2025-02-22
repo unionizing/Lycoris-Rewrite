@@ -118,45 +118,47 @@ end
 -- Initialize auto defense section.
 ---@param groupbox table
 function CombatTab.initAutoDefenseSection(groupbox)
-	groupbox:AddToggle("EnableAutoDefense", {
-		Text = "Enable Auto Defense",
-		Default = false,
-		Callback = function(value)
-			if not value then
-				return
-			end
+	groupbox
+		:AddToggle("EnableAutoDefense", {
+			Text = "Enable Auto Defense",
+			Default = false,
+			Callback = function(value)
+				if not value then
+					return
+				end
 
-			-- Get local player.
-			local localPlayer = players.LocalPlayer
-			if not localPlayer then
-				return
-			end
+				-- Get local player.
+				local localPlayer = players.LocalPlayer
+				if not localPlayer then
+					return
+				end
 
-			-- Check if ping compensation is enabled. We want it off.
-			if not localPlayer:GetAttribute("EnablePingCompensation") then
-				return
-			end
+				-- Check if ping compensation is enabled. We want it off.
+				if not localPlayer:GetAttribute("EnablePingCompensation") then
+					return
+				end
 
-			-- Get requests module.
-			local requests = replicatedStorage:FindFirstChild("Requests")
-			if not requests then
-				return
-			end
+				-- Get requests module.
+				local requests = replicatedStorage:FindFirstChild("Requests")
+				if not requests then
+					return
+				end
 
-			-- Find update UX settings.
-			local updateUxSettings = requests:FindFirstChild("UpdateUXSettings")
-			if not updateUxSettings then
-				return
-			end
+				-- Find update UX settings.
+				local updateUxSettings = requests:FindFirstChild("UpdateUXSettings")
+				if not updateUxSettings then
+					return
+				end
 
-			-- Disable ping compensation.
-			---@note: Doesn't update the UI.
-			updateUxSettings:FireServer("EnablePingCompensation", false)
+				-- Disable ping compensation.
+				---@note: Doesn't update the UI.
+				updateUxSettings:FireServer("EnablePingCompensation", false)
 
-			-- Notify to the user.
-			Logger.longNotify("Auto Defense assumes ping compensation is disabled. It has been disabled for you.")
-		end,
-	})
+				-- Notify to the user.
+				Logger.longNotify("Auto Defense assumes ping compensation is disabled. It has been disabled for you.")
+			end,
+		})
+		:AddKeyPicker("EnableAutoDefenseKeybind", { Default = "N/A", SyncToggleState = true, Text = "Auto Defense" })
 
 	groupbox:AddToggle("EnableNotifications", {
 		Text = "Enable Notifications",
