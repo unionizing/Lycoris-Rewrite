@@ -662,7 +662,7 @@ return LPH_NO_VIRTUALIZE(function()
 
 				-- Play sound.
 				local sfx = hover:Clone()
-				sfx.Parent = gethui and gethui() or game:GetService("CoreGui")
+				sfx.Parent = game:GetService("CoreGui")
 				sfx.PlaybackSpeed = math.random(100, 105) / 100
 				sfx.PlayOnRemove = true
 				sfx:Destroy()
@@ -811,7 +811,7 @@ return LPH_NO_VIRTUALIZE(function()
 
 		-- Initialize GUI.
 		bestiaryGui.Name = "BestiaryGui"
-		bestiaryGui.Parent = gethui and gethui() or game:GetService("CoreGui")
+		bestiaryGui.Parent = game:GetService("CoreGui")
 		bestiaryGui.Enabled = false
 		bestiaryGui.DisplayOrder = 1
 

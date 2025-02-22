@@ -19,7 +19,7 @@ PlayerESP.__type = "PlayerESP"
 
 -- Services.
 local players = game:GetService("Players")
-local guiFolder = gethui and gethui() or game:GetService("CoreGui")
+local guiFolder = game:GetService("CoreGui")
 
 -- Formats.
 local ESP_HEALTH = "[%i/%i]"

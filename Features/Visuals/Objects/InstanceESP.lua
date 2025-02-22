@@ -15,7 +15,7 @@ local InstanceESP = {}
 InstanceESP.__index = InstanceESP
 
 -- Services.
-local guiFolder = gethui and gethui() or game:GetService("CoreGui")
+local guiFolder = game:GetService("CoreGui")
 
 -- Formats.
 local ESP_DISTANCE_FORMAT = "%s [%i]"
