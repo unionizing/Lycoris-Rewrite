@@ -19,7 +19,6 @@ PlayerESP.__type = "PlayerESP"
 
 -- Services.
 local players = game:GetService("Players")
-local guiFolder = game:GetService("CoreGui")
 
 -- Formats.
 local ESP_HEALTH = "[%i/%i]"
@@ -149,9 +148,11 @@ end)
 ---@param player Player
 ---@param character Model
 function PlayerESP.new(identifier, player, character)
+	setthreadidentity(7)
+
 	local shadow = Instance.new("Part")
 	shadow.Transparency = 1.0
-	shadow.Parent = guiFolder
+	shadow.Parent = game:GetService("CoreGui")
 
 	local self = setmetatable(InstanceESP.new(shadow, identifier, "Unknown Player"), PlayerESP)
 	self.player = player

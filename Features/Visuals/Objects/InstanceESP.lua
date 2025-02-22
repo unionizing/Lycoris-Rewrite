@@ -14,9 +14,6 @@ local Maid = require("Utility/Maid")
 local InstanceESP = {}
 InstanceESP.__index = InstanceESP
 
--- Services.
-local guiFolder = game:GetService("CoreGui")
-
 -- Formats.
 local ESP_DISTANCE_FORMAT = "%s [%i]"
 
@@ -96,12 +93,14 @@ end)
 
 ---Setup InstanceESP.
 function InstanceESP:setup()
+	setthreadidentity(7)
+
 	local billboardGui = Instance.new("BillboardGui")
 	billboardGui.AlwaysOnTop = true
 	billboardGui.Size = UDim2.new(1e5, 0, 1e5, 0)
 	billboardGui.Enabled = false
 	billboardGui.Adornee = self.instance
-	billboardGui.Parent = guiFolder
+	billboardGui.Parent = game:GetService("CoreGui")
 
 	local textLabel = Instance.new("TextLabel")
 	textLabel.BackgroundTransparency = 1.0

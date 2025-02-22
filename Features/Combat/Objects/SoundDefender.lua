@@ -76,9 +76,12 @@ function SoundDefender.new(sound, timing, part)
 	self.timing = timing
 	self.part = part
 	self.owner = sound:FindFirstAncestorWhichIsA("Model")
-	self.maid:mark(soundPlayed:connect("SoundDefender_OnSoundPlayed", function()
-		self:process()
-	end))
+	self.maid:mark(soundPlayed:connect(
+		"SoundDefender_OnSoundPlayed",
+		LPH_NO_VIRTUALIZE(function()
+			self:process()
+		end)
+	))
 
 	return self
 end

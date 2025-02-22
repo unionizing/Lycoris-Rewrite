@@ -270,22 +270,30 @@ function AnimatorDefender.new(animator, manimations)
 	self.track = nil
 	self.heffects = {}
 
-	self.maid:mark(entityDescendantAdded:connect("AnimatorDefender_OnDescendantAdded", function(descendant)
-		if
-			descendant.Name ~= "PunchBlood"
-			and descendant.Name ~= "PunchEffect"
-			and descendant.Name ~= "BloodSpray"
-			and not (descendant:IsA("ParticleEmitter") and descendant.Texture == "rbxassetid://7216855595")
-		then
-			return
-		end
+	self.maid:mark(
+		entityDescendantAdded:connect(
+			"AnimatorDefender_OnDescendantAdded",
+			LPH_NO_VIRTUALIZE(function(descendant)
+				if
+					descendant.Name ~= "PunchBlood"
+					and descendant.Name ~= "PunchEffect"
+					and descendant.Name ~= "BloodSpray"
+					and not (descendant:IsA("ParticleEmitter") and descendant.Texture == "rbxassetid://7216855595")
+				then
+					return
+				end
 
-		self.heffects[#self.heffects + 1] = descendant
-	end))
+				self.heffects[#self.heffects + 1] = descendant
+			end)
+		)
+	)
 
-	self.maid:mark(animationPlayed:connect("AnimatorDefender_OnAnimationPlayed", function(track)
-		self:process(track)
-	end))
+	self.maid:mark(animationPlayed:connect(
+		"AnimatorDefender_OnAnimationPlayed",
+		LPH_NO_VIRTUALIZE(function(track)
+			self:process(track)
+		end)
+	))
 
 	return self
 end
