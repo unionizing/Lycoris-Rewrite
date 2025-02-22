@@ -52,7 +52,7 @@ local findInputClientLevel = LPH_NO_VIRTUALIZE(function()
 		end
 
 		-- Fetch stack.
-		local stack = debug.getstack(level)
+		local stack = debug.getstack(level - 1)
 		if not stack then
 			break
 		end
