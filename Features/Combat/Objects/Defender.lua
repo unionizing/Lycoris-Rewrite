@@ -45,11 +45,13 @@ function Defender:hitbox(cframe, size, filter)
 	overlapParams.FilterDescendantsInstances = filter
 	overlapParams.FilterType = Enum.RaycastFilterType.Include
 
+	cframe = typeof(cframe) == "CFrame" and cframe or CFrame.new(cframe) --- this is so that incase YOU forgot to use cframe instead of vec3
+
 	---@todo: Make the visualizations better. This is just for debugging. Right now, they don't clear up properly.
 	if Configuration.expectToggleValue("EnableVisualizations") then
 		local visualizationPart = InstanceWrapper.create(self.maid, "VisualizationPart", "Part")
 		visualizationPart.Size = size
-		visualizationPart.CFrame = (typeof(cframe) == "CFrame" and cframe or CFrame.new(cframe)) --- this is so that incase YOU forgot to use cframe instead of vec3
+		visualizationPart.CFrame = cframe
 		visualizationPart.Transparency = 0.85
 		visualizationPart.Color = Color3.fromRGB(0, 255, 0)
 		visualizationPart.Parent = workspace

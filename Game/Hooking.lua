@@ -253,7 +253,7 @@ local function onFireServer(...)
 	if hellRemote and self == hellRemote then
 		return
 	end
-
+	
 	return oldFireServer(...)
 end
 

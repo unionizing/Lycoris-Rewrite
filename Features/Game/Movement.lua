@@ -175,6 +175,24 @@ local function updateAABypass(rootPart)
 		players.LocalPlayer:RequestStreamAroundAsync(modOffice:GetPivot().p, 100)
 		return
 	end
+	
+	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
+	if not effectReplicator then
+		return
+	end
+
+	local effectReplicatorModule = require(effectReplicator)
+	local knockedEffect = effectReplicatorModule:FindEffect("Knocked", true)
+
+	if knockedEffect then
+		knockedEffect.Disabled = true
+	end
+
+	for _,v in next, rootPart.Parent.Torso:GetChildren() do
+		if v:IsA("Motor6D") then
+			v.Enabled = true
+		end
+	end
 
 	officeCreature.CollisionGroup = 'Default'
 	officeCreature.CanCollide = true
