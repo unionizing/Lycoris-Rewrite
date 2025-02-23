@@ -33,7 +33,7 @@ local players = game:GetService("Players")
 local textChatService = game:GetService("TextChatService")
 
 -- Constants.
-local MAX_VISUALIZATION_TIME = 10.0
+local MAX_VISUALIZATION_TIME = 5.0
 
 ---Log a miss to the UI library with distance check.
 ---@param type string
@@ -139,8 +139,13 @@ Defender.vupdate = LPH_NO_VIRTUALIZE(function(self)
 		and os.clock() - self.lvisualization <= MAX_VISUALIZATION_TIME
 
 	-- Set transparency.
-	self.vpart.Transparency = showVisualizations and 0.85 or 1.0
-	self.ppart.Transparency = showVisualizations and 0.85 or 1.0
+	if self.vpart then
+		self.vpart.Transparency = showVisualizations and 0.85 or 1.0
+	end
+
+	if self.ppart then
+		self.ppart.Transparency = showVisualizations and 0.85 or 1.0
+	end
 end)
 
 ---Run hitbox check. Returns wheter if the hitbox is being touched.
@@ -207,21 +212,18 @@ Defender.hitbox = LPH_NO_VIRTUALIZE(function(self, cframe, depth, size, filter)
 		self.ppart = ppart
 	end
 
-	-- Visualizations.
-	if Configuration.expectToggleValue("EnableVisualizations") then
-		-- Visual part.
-		self.vpart.Size = size
-		self.vpart.CFrame = realCFrame
-		self.vpart.Color = visColor
+	-- Visual part.
+	self.vpart.Size = size
+	self.vpart.CFrame = realCFrame
+	self.vpart.Color = visColor
 
-		-- Player part.
-		self.ppart.Size = root.Size
-		self.ppart.CFrame = root.CFrame
-		self.ppart.Color = visColor
+	-- Player part.
+	self.ppart.Size = root.Size
+	self.ppart.CFrame = root.CFrame
+	self.ppart.Color = visColor
 
-		-- Set timestamp.
-		self.lvisualization = os.clock()
-	end
+	-- Set timestamp.
+	self.lvisualization = os.clock()
 
 	return inBounds
 end)

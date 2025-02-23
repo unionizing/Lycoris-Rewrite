@@ -74,6 +74,11 @@ end
 ---Initialize save manager section.
 ---@param groupbox table
 function BuilderTab.initSaveManagerSection(groupbox)
+	groupbox:AddToggle("AutoSaveOnLeave", {
+		Text = "Auto Save On Leave",
+		Default = true,
+	})
+
 	local configName = groupbox:AddInput("ConfigName", {
 		Text = "Config Name",
 	})

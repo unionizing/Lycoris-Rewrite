@@ -70,7 +70,12 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 
 	while
 		timing.duih
-		and not self:hitbox(target.root.CFrame, action.hitbox.Z / 2, timing.hitbox, { players.LocalPlayer.Character })
+		and not self:hitbox(
+			target.root.CFrame,
+			timing.fhb and action.hitbox.Z / 2 or 0,
+			timing.hitbox,
+			{ players.LocalPlayer.Character }
+		)
 	do
 		task.wait()
 	end
@@ -80,7 +85,7 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No character found.")
 	end
 
-	if not self:hitbox(target.root.CFrame, action.hitbox.Z / 2, action.hitbox, { character }) then
+	if not self:hitbox(target.root.CFrame, timing.fhb and action.hitbox.Z / 2 or 0, action.hitbox, { character }) then
 		return self:notify(timing, "Not inside of the hitbox.")
 	end
 

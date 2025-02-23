@@ -32,6 +32,7 @@ function AnimationBuilderSection:exload(timing)
 	self.repeatStartDelay:SetRawValue(timing._rsd)
 	self.repeatParryDelay:SetRawValue(timing._rpd)
 	self.hyperarmor:SetRawValue(timing.ha)
+	self.hitboxFacingOffset:SetRawValue(timing.fhb)
 end
 
 ---Reset the elements. Extend me.
@@ -42,6 +43,7 @@ function AnimationBuilderSection:reset()
 	self.repeatStartDelay:SetRawValue(0)
 	self.repeatUntilParryEnd:SetRawValue(false)
 	self.hyperarmor:SetRawValue(false)
+	self.hitboxFacingOffset:SetRawValue(false)
 end
 
 ---Check before creating new timing. Override me.
@@ -80,6 +82,15 @@ function AnimationBuilderSection:extra(tab)
 		Default = false,
 		Callback = self:tnc(function(timing, value)
 			timing.ha = value
+		end),
+	})
+
+	self.hitboxFacingOffset = tab:AddToggle(nil, {
+		Text = "Hitbox Facing Offset",
+		Tooltip = "Should the hitbox be offset towards the facing direction?",
+		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing.fhb = value
 		end),
 	})
 end

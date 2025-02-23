@@ -23,7 +23,10 @@ local SoundTiming = require("Game/Timings/SoundTiming")
 local EmitterTiming = require("Game/Timings/EmitterTiming")
 
 -- SaveManager module.
-local SaveManager = {}
+local SaveManager = {
+	-- Last loaded config name.
+	llcn = nil,
+}
 
 ---@module Utility.Filesystem
 local Filesystem = require("Utility/Filesystem")
@@ -34,14 +37,23 @@ local Logger = require("Utility/Logger")
 ---@module Utility.Deserializer
 local Deserializer = require("Utility/Deserializer")
 
+---@module Utility.Configuration
+local Configuration = require("Utility/Configuration")
+
 ---@module Utility.Serializer
 local Serializer = require("Utility/Serializer")
+
+---@module Utility.Signal
+local Signal = require("Utility/Signal")
 
 -- Manager filesystem.
 local fs = Filesystem.new("Lycoris-Rewrite-Timings")
 
 -- Current timing save.
 local config = TimingSave.new()
+
+-- Services.
+local players = game:GetService("Players")
 
 -- Generate mapping.
 local charByteMap = {}
@@ -271,6 +283,8 @@ function SaveManager.load(name)
 		config:count(),
 		os.clock() - timestamp
 	)
+
+	SaveManager.llcn = name
 end
 
 ---Initialize SaveManager.
@@ -326,6 +340,26 @@ function SaveManager.init()
 
 	-- Emitter stack.
 	SaveManager.ems = TimingContainerPair.new(internalEmitterContainer, config:get().emitter)
+
+	-- Signals.
+	local playerRemoving = Signal.new(players.PlayerRemoving)
+
+	-- Auto-saving.
+	playerRemoving:connect(function(player)
+		if player ~= players.LocalPlayer then
+			return
+		end
+
+		if not SaveManager.llcn then
+			return
+		end
+
+		if not Configuration.expectToggleValue("AutoSaveOnLeave") then
+			return
+		end
+
+		SaveManager.write(SaveManager.llcn)
+	end)
 end
 
 -- Return SaveManager module.
