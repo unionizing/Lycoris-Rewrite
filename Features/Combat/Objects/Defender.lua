@@ -255,6 +255,26 @@ function Defender:ping()
 	return dataPingItem:GetValue() / 1000
 end
 
+---Handle end block.
+Defender.bend = LPH_NO_VIRTUALIZE(function(self)
+	-- Iterate for start block tasks.
+	for idx, task in next, self.tasks do
+		-- Check if task is a start block.
+		if task.identifier ~= "Start Block" then
+			continue
+		end
+
+		-- End start block tasks.
+		task:cancel()
+
+		-- Clear in table.
+		self.tasks[idx] = nil
+	end
+
+	-- End block.
+	InputClient.bend()
+end)
+
 ---Handle action.
 ---@param timing Timing
 ---@param action Action
@@ -280,7 +300,7 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	end
 
 	if action._type == "End Block" then
-		return InputClient.bend()
+		return self:bend()
 	end
 
 	if action._type == "Dodge" then
