@@ -30,7 +30,7 @@ local players = game:GetService("Players")
 ---@param action Action
 ---@return boolean
 SoundDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
-	while timing.duih and not self:hitbox(self.part.Position, 0, timing.hitbox, { players.LocalPlayer.Character }) do
+	while timing.duih and not self:hitbox(self.part.CFrame, 0, timing.hitbox, { players.LocalPlayer.Character }) do
 		task.wait()
 	end
 
@@ -43,7 +43,7 @@ SoundDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No character found.")
 	end
 
-	if not self:hitbox(self.part.Position, 0, action.hitbox, { character }) then
+	if not self:hitbox(self.part.CFrame, 0, action.hitbox, { character }) then
 		return self:notify(timing, "Not inside of the hitbox.")
 	end
 

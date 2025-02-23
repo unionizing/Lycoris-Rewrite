@@ -26,7 +26,7 @@ local MAX_WAIT = 5.0
 ---@param action Action
 ---@return boolean
 EffectDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
-	while timing.duih and not self:hitbox(self.part.Position, 0, timing.hitbox, { players.LocalPlayer.Character }) do
+	while timing.duih and not self:hitbox(self.part.CFrame, 0, timing.hitbox, { players.LocalPlayer.Character }) do
 		if os.clock() - self.last > MAX_WAIT then
 			return false
 		end
@@ -43,7 +43,7 @@ EffectDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No character found.")
 	end
 
-	if not self:hitbox(self.part.Position, 0, action.hitbox, { character }) then
+	if not self:hitbox(self.part.CFrame, 0, action.hitbox, { character }) then
 		return self:notify(timing, "Not inside of the hitbox.")
 	end
 

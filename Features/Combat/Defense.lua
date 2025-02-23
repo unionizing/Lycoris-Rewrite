@@ -50,6 +50,9 @@ local defenderEmitterObjects = {}
 -- Mob animations.
 local mobAnimations = {}
 
+-- Update.
+local lastVisualizationUpdate = os.clock()
+
 ---Iteratively find effect owner from effect data.
 ---@param data table
 ---@return Model?
@@ -197,8 +200,25 @@ local onEffectReplicated = LPH_NO_VIRTUALIZE(function(effect)
 	InputClient.left()
 end)
 
----Update part defenders.
-local updatePartDefenders = LPH_NO_VIRTUALIZE(function()
+---Update visualizations.
+local updateVisualizations = LPH_NO_VIRTUALIZE(function()
+	if os.clock() - lastVisualizationUpdate <= 1.0 then
+		return
+	end
+
+	lastVisualizationUpdate = os.clock()
+
+	for _, object in next, defenderObjects do
+		if not object.vupdate then
+			continue
+		end
+
+		object:vupdate()
+	end
+end)
+
+---Update defenders.
+local updateDefenders = LPH_NO_VIRTUALIZE(function()
 	if not Configuration.expectToggleValue("EnableAutoDefense") then
 		return
 	end
@@ -254,12 +274,14 @@ function Defense.init()
 	-- Signals.
 	local gameDescendantAdded = Signal.new(game.DescendantAdded)
 	local gameDescendantRemoved = Signal.new(game.DescendantRemoving)
+	local renderStepped = Signal.new(runService.RenderStepped)
 	local postSimulation = Signal.new(runService.PostSimulation)
 	local clientEffectEvent = Signal.new(clientEffect.OnClientEvent)
 
 	defenseMaid:add(gameDescendantAdded:connect("Defense_OnDescendantAdded", onGameDescendantAdded))
 	defenseMaid:add(gameDescendantRemoved:connect("Defense_OnDescendantRemoved", onGameDescendantRemoved))
-	defenseMaid:add(postSimulation:connect("Defense_ProjectilePostSimulation", updatePartDefenders))
+	defenseMaid:add(renderStepped:connect("Defense_RenderStepped", updateVisualizations))
+	defenseMaid:add(postSimulation:connect("Defense_ProjectilePostSimulation", updateDefenders))
 	defenseMaid:add(clientEffectEvent:connect("Defense_ClientEffectEvent", onClientEffectEvent))
 
 	for _, descendant in next, game:GetDescendants() do

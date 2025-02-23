@@ -68,7 +68,7 @@ EmitterDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No character found.")
 	end
 
-	if not self:hitbox(self.part.Position, 0, action.hitbox, { character }) then
+	if not self:hitbox(self.part.CFrame, 0, action.hitbox, { character }) then
 		return self:notify(timing, "Not inside of the hitbox.")
 	end
 
@@ -110,7 +110,7 @@ EmitterDefender.update = LPH_NO_VIRTUALIZE(function(self)
 	end
 
 	-- Get current hitbox state.
-	local touching = self:hitbox(self.part.Position, 0, self.timing.hitbox, { character })
+	local touching = self:hitbox(self.part.CFrame, 0, self.timing.hitbox, { character })
 
 	-- Deny updates if we're not touching it.
 	if not touching then

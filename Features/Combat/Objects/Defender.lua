@@ -13,14 +13,14 @@ local Task = require("Features/Combat/Objects/Task")
 ---@module Utility.Maid
 local Maid = require("Utility/Maid")
 
----@module Utility.InstanceWrapper
-local InstanceWrapper = require("Utility/InstanceWrapper")
-
 ---@module GUI.Library
 local Library = require("GUI/Library")
 
 ---@class Defender
 ---@field tasks Task[]
+---@field maid Maid
+---@field vpart Part?
+---@field ppart Part?
 local Defender = {}
 Defender.__index = Defender
 Defender.__type = "Defender"
@@ -31,6 +31,9 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 local userInputService = game:GetService("UserInputService")
 local players = game:GetService("Players")
 local textChatService = game:GetService("TextChatService")
+
+-- Constants.
+local MAX_VISUALIZATION_TIME = 10.0
 
 ---Log a miss to the UI library with distance check.
 ---@param type string
@@ -129,14 +132,25 @@ Defender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	return true
 end)
 
+---Update visualizations.
+Defender.vupdate = LPH_NO_VIRTUALIZE(function(self)
+	-- Calculate whether or not we should be showing visualizations.
+	local showVisualizations = Configuration.expectToggleValue("EnableVisualizations")
+		and os.clock() - self.lvisualization <= MAX_VISUALIZATION_TIME
+
+	-- Set transparency.
+	self.vpart.Transparency = showVisualizations and 0.85 or 1.0
+	self.ppart.Transparency = showVisualizations and 0.85 or 1.0
+end)
+
 ---Run hitbox check. Returns wheter if the hitbox is being touched.
----@note: This check can fail when players suddenly look...
----@param position Vector3
+---@todo: An issue is that the player's current look vector will not be the same as when they attack due to a parry timing being seperate from the attack; causing this check to fail.
+---@param cframe CFrame
 ---@param depth number
 ---@param size Vector3
 ---@param filter Instance[]
 ---@return boolean
-Defender.hitbox = LPH_NO_VIRTUALIZE(function(self, position, depth, size, filter)
+Defender.hitbox = LPH_NO_VIRTUALIZE(function(self, cframe, depth, size, filter)
 	local overlapParams = OverlapParams.new()
 	overlapParams.FilterDescendantsInstances = filter
 	overlapParams.FilterType = Enum.RaycastFilterType.Include
@@ -151,8 +165,8 @@ Defender.hitbox = LPH_NO_VIRTUALIZE(function(self, position, depth, size, filter
 		return nil
 	end
 
-	---@todo: Bad fix. The issue is that the player's current look vector will not be the same as when they attack due to a parry timing being seperate from the attack.
-	local realCFrame = CFrame.lookAt(position, root.Position)
+	-- Real CFrame.
+	local realCFrame = cframe
 
 	-- Add depth.
 	if depth > 0 then
@@ -165,27 +179,48 @@ Defender.hitbox = LPH_NO_VIRTUALIZE(function(self, position, depth, size, filter
 	-- Visualize color.
 	local visColor = inBounds and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
 
-	---@todo: Make the visualizations better. This is just for debugging. Right now, they don't clear up properly.
-	if Configuration.expectToggleValue("EnableVisualizations") then
-		local visualizationPart = InstanceWrapper.create(self.maid, "VisualizationPart", "Part")
-		visualizationPart.Size = size
-		visualizationPart.CFrame = realCFrame
-		visualizationPart.Transparency = 0.85
-		visualizationPart.Color = visColor
-		visualizationPart.Parent = workspace
-		visualizationPart.Anchored = true
-		visualizationPart.CanCollide = false
-		visualizationPart.Material = Enum.Material.SmoothPlastic
+	-- Create visualization part if it doesn't exist.
+	if not self.vpart then
+		-- Create part.
+		local vpart = Instance.new("Part")
+		vpart.Transparency = 1.0
+		vpart.Parent = workspace
+		vpart.Anchored = true
+		vpart.CanCollide = false
+		vpart.Material = Enum.Material.SmoothPlastic
 
-		local playerVisPart = InstanceWrapper.create(self.maid, "PlayerVisualizationPart", "Part")
-		playerVisPart.Size = root.Size
-		playerVisPart.CFrame = root.CFrame
-		playerVisPart.Transparency = 0.85
-		playerVisPart.Color = visColor
-		playerVisPart.Parent = workspace
-		playerVisPart.Anchored = true
-		playerVisPart.CanCollide = false
-		playerVisPart.Material = Enum.Material.Plastic
+		-- Set part.
+		self.vpart = vpart
+	end
+
+	-- Create player part if it doesn't exist.
+	if not self.ppart then
+		-- Create part.
+		local ppart = Instance.new("Part")
+		ppart.Transparency = 1.0
+		ppart.Parent = workspace
+		ppart.Anchored = true
+		ppart.CanCollide = false
+		ppart.Material = Enum.Material.Plastic
+
+		-- Set part.
+		self.ppart = ppart
+	end
+
+	-- Visualizations.
+	if Configuration.expectToggleValue("EnableVisualizations") then
+		-- Visual part.
+		self.vpart.Size = size
+		self.vpart.CFrame = realCFrame
+		self.vpart.Color = visColor
+
+		-- Player part.
+		self.ppart.Size = root.Size
+		self.ppart.CFrame = root.CFrame
+		self.ppart.Color = visColor
+
+		-- Set timestamp.
+		self.lvisualization = os.clock()
 	end
 
 	return inBounds
@@ -385,8 +420,20 @@ end)
 
 ---Detach defender object.
 function Defender:detach()
+	-- Clean self.
 	self:clean()
 	self.maid:clean()
+
+	-- Destroy parts.
+	if self.vpart then
+		self.vpart:Destroy()
+	end
+
+	if self.ppart then
+		self.ppart:Destroy()
+	end
+
+	-- Set object nil.
 	self = nil
 end
 
@@ -395,6 +442,9 @@ function Defender.new()
 	local self = setmetatable({}, Defender)
 	self.tasks = {}
 	self.maid = Maid.new()
+	self.ppart = nil
+	self.vpart = nil
+	self.lvisualization = os.clock()
 	return self
 end
 

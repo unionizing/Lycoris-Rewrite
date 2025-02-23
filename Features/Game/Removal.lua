@@ -174,6 +174,12 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
+		if Configuration.expectToggleValue("NoFog") then
+			updateNoFog()
+		else
+			noFogMap:restore()
+		end
+
 		if os.clock() - lastUpdate <= 2.0 then
 			return
 		end
@@ -203,12 +209,6 @@ return LPH_NO_VIRTUALIZE(function()
 		else
 			yunShulBarrierMap:restore()
 			yunShulResonanceDoorMap:restore()
-		end
-
-		if Configuration.expectToggleValue("NoFog") then
-			updateNoFog()
-		else
-			noFogMap:restore()
 		end
 
 		if Configuration.expectToggleValue("NoBlind") then
