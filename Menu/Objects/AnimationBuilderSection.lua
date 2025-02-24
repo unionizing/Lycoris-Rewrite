@@ -33,6 +33,7 @@ function AnimationBuilderSection:exload(timing)
 	self.repeatParryDelay:SetRawValue(timing._rpd)
 	self.hyperarmor:SetRawValue(timing.ha)
 	self.hitboxFacingOffset:SetRawValue(timing.fhb)
+	self.ignoreAnimationEnd:SetRawValue(timing.iae)
 end
 
 ---Reset the elements. Extend me.
@@ -44,6 +45,7 @@ function AnimationBuilderSection:reset()
 	self.repeatUntilParryEnd:SetRawValue(false)
 	self.hyperarmor:SetRawValue(false)
 	self.hitboxFacingOffset:SetRawValue(false)
+	self.ignoreAnimationEnd:SetRawValue(false)
 end
 
 ---Check before creating new timing. Override me.
@@ -91,6 +93,15 @@ function AnimationBuilderSection:extra(tab)
 		Default = false,
 		Callback = self:tnc(function(timing, value)
 			timing.fhb = value
+		end),
+	})
+
+	self.ignoreAnimationEnd = tab:AddToggle(nil, {
+		Text = "Ignore Animation End",
+		Tooltip = "Should the timing ignore the end of the animation?",
+		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing.iae = value
 		end),
 	})
 end

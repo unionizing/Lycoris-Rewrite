@@ -94,7 +94,7 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "Not being targeted.")
 	end
 
-	if not self.track.IsPlaying then
+	if not timing.iae and not self.track.IsPlaying then
 		return self:notify(timing, "Animation stopped playing.")
 	end
 
@@ -142,6 +142,18 @@ AnimatorDefender.rpue = LPH_NO_VIRTUALIZE(function(self, track, timing, index)
 		)
 	)
 
+	if
+		timing.duih
+		and not self:hitbox(
+			Targeting.find(self.entity).root.CFrame,
+			0,
+			timing.hitbox,
+			{ players.LocalPlayer.Character }
+		)
+	then
+		return
+	end
+
 	if not self:initial(self.entity, SaveManager.as, self.entity.Name, tostring(track.Animation.AnimationId)) then
 		return
 	end
@@ -171,7 +183,8 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 
 	if players:GetPlayerFromCharacter(self.entity) and self.manimations[track.Animation.AnimationId] ~= nil then
 		return Logger.warn(
-			"Animation %s is being skipped from player %s because they're likely AP breaking.",
+			"(%s) Animation %s is being skipped from player %s because they're likely AP breaking.",
+			self.manimations[track.Animation.AnimationId].Name,
 			track.Animation.AnimationId,
 			self.entity.Name
 		)

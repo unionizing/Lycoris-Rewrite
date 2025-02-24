@@ -76,15 +76,13 @@ end)
 
 ---Create new SoundDefender object.
 ---@param sound Sound
----@param timing SoundTiming
 ---@param part BasePart
 ---@return SoundDefender
-function SoundDefender.new(sound, timing, part)
+function SoundDefender.new(sound, part)
 	local self = setmetatable(Defender.new(), SoundDefender)
 	local soundPlayed = Signal.new(sound.Played)
 
 	self.sound = sound
-	self.timing = timing
 	self.part = part
 	self.owner = sound:FindFirstAncestorWhichIsA("Model")
 	self.maid:mark(soundPlayed:connect(

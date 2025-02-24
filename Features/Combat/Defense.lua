@@ -264,6 +264,10 @@ function Defense.init()
 			continue
 		end
 
+		if animation.Name == "RunningAttack" then
+			continue
+		end
+
 		mobAnimations[animation.AnimationId] = animation
 	end
 
