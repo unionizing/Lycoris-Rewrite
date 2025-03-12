@@ -244,9 +244,9 @@ function BuilderTab.init(window)
 	BuilderTab.sbs = SoundBuilderSection.new("Sound", tab:AddDynamicTabbox(), SaveManager.ss, SoundTiming.new())
 
 	-- Initialize builder sections.
-	--BuilderTab.abs:init()
-	--BuilderTab.ebs:init()
-	--BuilderTab.pbs:init()
+	BuilderTab.abs:init()
+	BuilderTab.ebs:init()
+	BuilderTab.pbs:init()
 	BuilderTab.sbs:init()
 end
 
