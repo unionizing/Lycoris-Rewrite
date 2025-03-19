@@ -39,52 +39,52 @@ end
 ---Load the action elements. Override me.
 ---@param action Action
 function AnimationBuilderSection:exaload(action)
-	self.useAnimationDelta:SetRawValue(action.uad)
-	self.animationDelta:SetRawValue(action.adelta)
+	self.useTimePosition:SetRawValue(action.utp)
+	self.timePosition:SetRawValue(action.tp)
 end
 
 ---Action delay. Override me.
 ---@param base table
 function AnimationBuilderSection:daction(base)
-	self.useAnimationDelta = base:AddToggle(nil, {
-		Text = "Use Animation Delta",
-		Tooltip = "Should the action use the animation delta?",
+	self.useTimePosition = base:AddToggle(nil, {
+		Text = "Use Time Position",
+		Tooltip = "Should the action use time position instead of delay?",
 		Default = false,
 		Callback = self:anc(function(action, value)
-			action.uad = value
+			action.utp = value
 		end),
 	})
 
 	local depBoxOn = base:AddDependencyBox()
 	local depBoxOff = base:AddDependencyBox()
 
-	self.animationDelta = depBoxOn:AddSlider(nil, {
-		Text = "Animation Delta",
+	self.timePosition = depBoxOn:AddSlider(nil, {
+		Text = "Time Position",
 		Min = 0,
 		Max = 1,
 		Default = 0,
 		Rounding = 3,
 		Callback = self:anc(function(action, value)
-			action.adelta = value
+			action.tp = value
 		end),
 	})
 
 	BuilderSection.daction(self, depBoxOff)
 
 	depBoxOn:SetupDependencies({
-		{ self.useAnimationDelta, true },
+		{ self.useTimePosition, true },
 	})
 
 	depBoxOff:SetupDependencies({
-		{ self.useAnimationDelta, false },
+		{ self.useTimePosition, false },
 	})
 end
 
 ---Reset action elements. Override me.
 function AnimationBuilderSection:raction()
 	BuilderSection.raction(self)
-	self.useAnimationDelta:SetRawValue(false)
-	self.animationDelta:SetRawValue(0)
+	self.useTimePosition:SetRawValue(false)
+	self.timePosition:SetRawValue(0)
 end
 
 ---Reset the elements. Extend me.

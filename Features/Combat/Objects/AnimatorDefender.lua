@@ -32,6 +32,7 @@ local PlaybackData = require("Game/Timings/PlaybackData")
 ---@field animator Animator
 ---@field entity Model
 ---@field heffects Instance[]
+---@field offset number? The ping in seconds when we received the animation track.
 ---@field lunisynctp number? The last time we unisynced the animation track.
 ---@field keyframes Action[]
 ---@field timing AnimationTiming?
@@ -174,23 +175,34 @@ end)
 ---@return Action?
 AnimatorDefender.latest = LPH_NO_VIRTUALIZE(function(self)
 	local latestKeyframe = nil
-	local latestDelta = nil
+	local latestTimePosition = nil
 
 	for _, keyframe in next, self.keyframes do
-		if (self.track.TimePosition / self.track.Length) <= keyframe.adelta then
+		if self:tp() <= keyframe.tp then
 			continue
 		end
 
-		if latestDelta and keyframe.adelta <= latestDelta then
+		if latestTimePosition and keyframe.tp <= latestTimePosition then
 			continue
 		end
 
-		latestDelta = keyframe.adelta
+		latestTimePosition = keyframe.tp
 		latestKeyframe = keyframe
 	end
 
 	return latestKeyframe
 end)
+
+---Get time position of current track.
+---@return number?
+function AnimatorDefender:tp()
+	if not self.track or self.offset == nil then
+		return nil
+	end
+
+	---@note: Compensate for ping. Shift the current position up by the offset to counteract the delay that we had receiving the animation.
+	return self.track.TimePosition + self.offset
+end
 
 ---Update the defender.
 ---@param self AnimatorDefender
@@ -211,6 +223,7 @@ AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 	end
 
 	-- Start tracking the animation's speed.
+	-- Use the raw time position because we don't have to shift our position up any.
 	pbdata:astrack(self.track.TimePosition, self.track.Speed)
 
 	-- Find the latest keyframe that we have exceeded.
@@ -221,7 +234,7 @@ AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 
 	-- Clear the keyframes that we have exceeded.
 	for idx, keyframe in next, self.keyframes do
-		if (self.track.TimePosition / self.track.Length) <= keyframe.adelta then
+		if self:tp() <= keyframe.tp then
 			continue
 		end
 
@@ -423,6 +436,7 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 	-- Set current data.
 	self.pbdata[aid] = PlaybackData.new(self.entity)
 	self.timing = timing
+	self.offset = self:ping()
 	self.track = track
 	self.heffects = {}
 
@@ -486,6 +500,7 @@ function AnimatorDefender.new(animator, manimations)
 	self.manimations = manimations
 	self.entity = entity
 
+	self.offset = nil
 	self.track = nil
 	self.timing = nil
 	self.lunisynctp = nil
