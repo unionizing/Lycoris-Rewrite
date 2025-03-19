@@ -794,9 +794,6 @@ return LPH_NO_VIRTUALIZE(function()
 
 	---Initialize the Bestiary module.
 	function Bestiary.init()
-		-- Set thread identity.
-		setthreadidentity(7)
-
 		-- Load the initial memory data.
 		local memoryData = httpService:JSONDecode(memStorageService:GetItem("BestiaryData", "[]"))
 		for index, value in next, memoryData do

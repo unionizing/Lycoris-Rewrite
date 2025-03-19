@@ -22,6 +22,9 @@ local InputClient = require("Game/InputClient")
 ---@module Features.Combat.Objects.Task
 local Task = require("Features/Combat/Objects/Task")
 
+---@module Utility.TaskSpawner
+local TaskSpawner = require("Utility/TaskSpawner")
+
 ---@module Game.Timings.PlaybackData
 local PlaybackData = require("Game/Timings/PlaybackData")
 
@@ -29,6 +32,7 @@ local PlaybackData = require("Game/Timings/PlaybackData")
 ---@field animator Animator
 ---@field entity Model
 ---@field heffects Instance[]
+---@field lunisynctp number? The last time we unisynced the animation track.
 ---@field keyframes Action[]
 ---@field timing AnimationTiming?
 ---@field pbdata table<string, PlaybackData>
@@ -42,6 +46,7 @@ AnimatorDefender.__type = "Animation"
 -- Services.
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
+local runService = game:GetService("RunService")
 
 ---Check if we're in a valid state to proceed with the action.
 ---@param timing AnimationTiming
@@ -83,7 +88,12 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	end
 
 	local targetInstance = self.entity:FindFirstChild("Target")
-	if targetInstance and targetInstance.Value ~= character and Configuration.toggleValue("CheckTargetingValue") then
+
+	if
+		targetInstance
+		and targetInstance.Value ~= character
+		and Configuration.expectToggleValue("CheckTargetingValue")
+	then
 		return self:notify(timing, "Not being targeted.")
 	end
 
@@ -189,15 +199,15 @@ AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 		return
 	end
 
-	-- Check if track is playing. Why update if it's not?
-	if not self.track.IsPlaying then
-		return
-	end
-
 	---@note: We should never encounter this scenario? We expect all data to be there, so it's safe to return...
 	local pbdata = self.pbdata[tostring(self.track.Animation.AnimationId)]
 	if not pbdata then
 		return
+	end
+
+	-- Check if track is playing. Why update if it's not?
+	if not self.track.IsPlaying then
+		return pbdata:astop()
 	end
 
 	-- Start tracking the animation's speed.
@@ -239,31 +249,124 @@ AnimatorDefender.aeactions = LPH_NO_VIRTUALIZE(function(self, timing)
 	end
 end)
 
----Process animation track.
----@todo: Logger module.
+---Unisync animation track.
 ---@param track AnimationTrack
-AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
-	if track.Priority == Enum.AnimationPriority.Core then
+function AnimatorDefender:unisync(track)
+	if track.TimePosition == self.lunisynctp then
 		return
 	end
 
+	if track.Looped then
+		return
+	end
+
+	if not Configuration.expectToggleValue("AnimationUnisync") then
+		return
+	end
+
+	-- Fetch frequency.
+	local frequency = (Configuration.expectOptionValue("AnimationUnisyncFrequency") / 1000 or 0.05)
+
+	-- Log.
+	Logger.warn("Unisyncing animation '%s' in %.2fms.", track.Animation.AnimationId, frequency * 1000)
+
+	-- Stop track immediately.
+	track:Stop(0.0)
+
+	-- Save last priority.
+	local lastPriority = track.Priority
+
+	-- Force priority to core instantly.
+	track.Priority = Enum.AnimationPriority.Core
+
+	-- Replay animation at faked priority state.
+	track:Play(0.0, track.WeightCurrent, track.Speed)
+
+	-- As soon as possible, we will reset the priority.
+	self.maid:add(TaskSpawner.spawn("AnimationDefender_ResetPriority", function()
+		-- Wait for next frame.
+		runService.RenderStepped:Wait()
+
+		-- Reset priority.
+		track.Priority = lastPriority
+	end))
+
+	-- Unisync.
+	self.maid:add(TaskSpawner.delay("AnimationDefender_UnisyncAnimation", frequency, function()
+		-- Return if the animation is not playing.
+		if not track.IsPlaying then
+			return track:Stop(0.0)
+		end
+
+		-- Stop and save state.
+		local lastWeightCurrent, lastSpeed, lastTimePosition = track.WeightCurrent, track.Speed, track.TimePosition
+		track:Stop(0.0)
+
+		-- Play animation at fake state.
+		track:Play(
+			0.0,
+			Configuration.expectOptionValue("AnimationUnisyncWeight") or 0.0,
+			Configuration.expectOptionValue("AnimationUnisyncSpeed") or -10.0
+		)
+
+		-- Set *real* animation speed, weight, and time position.
+		track:AdjustSpeed(lastSpeed)
+		track:AdjustWeight(lastWeightCurrent, 0.0)
+		track.TimePosition = lastTimePosition
+
+		-- Set last unisync time position.
+		self.lunisynctp = track.TimePosition
+
+		-- Repeat cycle.
+		self:unisync(track)
+	end))
+end
+
+---Virtualized processing checks.
+---@param track AnimationTrack
+---@return boolean
+function AnimatorDefender:pvalidate(track)
+	if track.Priority == Enum.AnimationPriority.Core then
+		return false
+	end
+
 	if track.WeightTarget <= 0.05 then
-		return Logger.warn(
+		Logger.warn(
 			"Animation %s is being skipped from entity %s with speed %.2f and weight-target %.2f. It is hidden.",
 			track.Animation.AnimationId,
 			self.entity.Name,
 			track.WeightTarget,
 			track.Speed
 		)
+
+		return false
 	end
 
 	if players:GetPlayerFromCharacter(self.entity) and self.manimations[track.Animation.AnimationId] ~= nil then
-		return Logger.warn(
+		Logger.warn(
 			"(%s) Animation %s is being skipped from player %s because they're likely AP breaking.",
 			self.manimations[track.Animation.AnimationId].Name,
 			track.Animation.AnimationId,
 			self.entity.Name
 		)
+
+		return false
+	end
+
+	return true
+end
+
+---Process animation track.
+---@todo: Logger module.
+---@param track AnimationTrack
+AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
+	local localCharacter = players.LocalPlayer.Character
+	if localCharacter and self.entity == localCharacter then
+		return self:unisync(track)
+	end
+
+	if not self:pvalidate(track) then
+		return
 	end
 
 	-- Animation ID.
@@ -276,11 +379,6 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 	end
 
 	if not Configuration.expectToggleValue("EnableAutoDefense") then
-		return
-	end
-
-	local localCharacter = players.LocalPlayer.Character
-	if localCharacter and self.entity == localCharacter then
 		return
 	end
 
@@ -390,6 +488,7 @@ function AnimatorDefender.new(animator, manimations)
 
 	self.track = nil
 	self.timing = nil
+	self.lunisynctp = nil
 
 	self.heffects = {}
 	self.keyframes = {}

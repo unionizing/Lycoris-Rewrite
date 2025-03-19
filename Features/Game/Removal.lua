@@ -96,11 +96,19 @@ return LPH_NO_VIRTUALIZE(function()
 
 	---Update no fog.
 	local function updateNoFog()
+		if lighting.FogStart == 9e9 and lighting.FogEnd == 9e9 then
+			return
+		end
+
 		noFogMap:add(lighting, "FogStart", 9e9)
 		noFogMap:add(lighting, "FogEnd", 9e9)
 
 		local atmosphere = lighting:FindFirstChildOfClass("Atmosphere")
 		if not atmosphere then
+			return
+		end
+
+		if atmosphere.Density == 0 then
 			return
 		end
 

@@ -4,6 +4,9 @@ local Configuration = require("Utility/Configuration")
 ---@module Utility.OriginalStoreManager
 local OriginalStoreManager = require("Utility/OriginalStoreManager")
 
+---@module Utility.TaskSpawner
+local TaskSpawner = require("Utility/TaskSpawner")
+
 ---@module Utility.Maid
 local Maid = require("Utility/Maid")
 
@@ -33,7 +36,15 @@ local function updateAABypass(rootPart)
 
 	local officeCreature = modOffice:FindFirstChild("OfficeCreature")
 	if not officeCreature then
-		return players.LocalPlayer:RequestStreamAroundAsync(modOffice:GetPivot().Position, 100)
+		return movementMaid:add(
+			TaskSpawner.spawn(
+				"Movement_RequestStreamModOffice",
+				players.LocalPlayer.RequestStreamAroundAsync,
+				players.LocalPlayer,
+				modOffice:GetPivot().Position,
+				0.1
+			)
+		)
 	end
 
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")

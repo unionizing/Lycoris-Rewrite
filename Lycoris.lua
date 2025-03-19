@@ -126,6 +126,9 @@ local function handleStartMenu()
 end
 
 ---Initialize instance.
+---@note: AWP has this weird issue where some threads will not have their security level properly set to 8.
+--- This means that anything related to CoreGUI will fail in those threads (e.g sounds & notifications).
+--- This breaks detaching and modules, why? We need to get this solved soon.
 function Lycoris.init()
 	local localPlayer = nil
 
@@ -186,8 +189,6 @@ function Lycoris.init()
 	Features.init()
 
 	Menu.init()
-
-	Visuals.start()
 
 	if memStorageService:HasItem("HandleStartMenu") then
 		handleStartMenu()

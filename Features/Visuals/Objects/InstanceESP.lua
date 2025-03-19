@@ -44,7 +44,7 @@ InstanceESP.build = LPH_NO_VIRTUALIZE(function(self, label, tags)
 	for _, tag in next, tags do
 		local line = lines[#lines] or label
 
-		if not start and #line > Configuration.optionValue("ESPSplitLineLength") then
+		if not start and #line > Configuration.expectOptionValue("ESPSplitLineLength") then
 			lines[#lines + 1] = tag
 			continue
 		end
@@ -88,20 +88,18 @@ InstanceESP.update = LPH_NO_VIRTUALIZE(function(self, position, tags)
 	local text = self.text
 	text.Text = self:build(label, tags)
 	text.TextColor3 = Configuration.idOptionValue(identifier, "Color")
-	text.TextSize = Configuration.optionValue("FontSize")
-	text.Font = Enum.Font[Configuration.optionValue("Font")] or Enum.Font.Code
+	text.TextSize = Configuration.expectOptionValue("FontSize")
+	text.Font = Enum.Font[Configuration.expectOptionValue("Font")] or Enum.Font.Code
 end)
 
 ---Setup InstanceESP.
 function InstanceESP:setup()
-	setthreadidentity(7)
-
 	local billboardGui = Instance.new("BillboardGui")
 	billboardGui.AlwaysOnTop = true
 	billboardGui.Size = UDim2.new(1e5, 0, 1e5, 0)
 	billboardGui.Enabled = false
 	billboardGui.Adornee = self.instance
-	billboardGui.Parent = game:GetService("CoreGui")
+	billboardGui.Parent = workspace
 
 	local textLabel = Instance.new("TextLabel")
 	textLabel.BackgroundTransparency = 1.0

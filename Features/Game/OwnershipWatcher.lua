@@ -4,15 +4,21 @@ local clientPeerId = gethiddenproperty(clientPart, "NetworkOwnerV3")
 clientPart:Destroy()
 
 ---Check for network ownership. Fallback to legacy check if NetworkOwnerV3 is not available.
+---@note: Currently, as of 3/14, this check has been broken by Roblox.
+---@note: If we're using AWP, we can simply use their *good* ownership function.
 ---@param part BasePart
 ---@return boolean
 local function hasNetworkOwnership(part)
+	if getexecutorname():match("AWP") then
+		return isnetworkowner(part)
+	end
+
 	local success, partPeerId = pcall(function()
 		return gethiddenproperty(part, "NetworkOwnerV3")
 	end)
 
 	if not success then
-		return not part.Anchored and part.ReceiveAge == 0 and part.AssemblyLinearVelocity.Magnitude > 0
+		return not part:IsGrounded() and part.AssemblyRootPart.ReceiveAge == 0
 	end
 
 	return partPeerId == clientPeerId

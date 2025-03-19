@@ -3323,6 +3323,7 @@ return LPH_NO_VIRTUALIZE(function()
 			"Part",
 			"Sound",
 			"Effect",
+			"Visualizer",
 		}
 		Library.InfoLoggerData = {
 			MissingDataEntries = {},

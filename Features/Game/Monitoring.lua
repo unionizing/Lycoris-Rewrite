@@ -14,6 +14,9 @@ return LPH_NO_VIRTUALIZE(function()
 	---@module Utility.OriginalStoreManager
 	local OriginalStoreManager = require("Utility/OriginalStoreManager")
 
+	---@module Utility.TaskSpawner
+	local TaskSpawner = require("Utility/TaskSpawner")
+
 	---@module Utility.Logger
 	local Logger = require("Utility/Logger")
 
@@ -91,14 +94,37 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
-		local character = player.Character
-		if not character then
-			return Logger.notify("Failed to spectate %s because their character does not exist.", player.Name)
+		local localPlayer = players.LocalPlayer
+		if not localPlayer then
+			return Logger.notify("Failed to spectate '%s' because the local player does not exist.", player.Name)
 		end
 
+		local character = player.Character
+		if not character then
+			return Logger.notify("Failed to spectate '%s' because their character does not exist.", player.Name)
+		end
+
+		local mapPosition = character:GetAttribute("MapPos")
 		local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+
+		-- Request a stream if we're able to and we know that they're not loaded in.
+		if mapPosition and not humanoidRootPart then
+			spectateMaid:add(
+				TaskSpawner.spawn(
+					"Monitoring_RequestStreamMapPos",
+					players.LocalPlayer.RequestStreamAroundAsync,
+					players.LocalPlayer,
+					mapPosition,
+					0.1
+				)
+			)
+
+			return Logger.notify("Requesting stream for unloaded character '%s' - try again later.", player.Name)
+		end
+
+		-- Fail because they're *truly* not loaded in.
 		if not humanoidRootPart then
-			return Logger.notify("Failed to spectate %s because they are not loaded in.", player.Name)
+			return Logger.notify("Failed to spectate '%s' because they are not loaded in.", player.Name)
 		end
 
 		local shouldUpdateSubject = Monitoring.subject ~= humanoidRootPart and players.LocalPlayer ~= player
@@ -115,20 +141,21 @@ return LPH_NO_VIRTUALIZE(function()
 	---Update spectating.
 	---@todo: Start streaming around the player when spectating.
 	local function updateSpectating()
-		local leaderboardMap, updateLeaderboard = getLeaderboardData()
-		if not leaderboardMap or not updateLeaderboard then
+		local leaderboardMap, refreshLeaderboard = getLeaderboardData()
+		if not leaderboardMap or not refreshLeaderboard then
 			return cameraSubject:restore()
 		end
 
+		-- Refresh leaderboard state.
+		refreshLeaderboard()
+
+		-- Update leaderboard based on state.
 		for player, frame in next, leaderboardMap do
 			local inputBegan = Signal.new(frame.InputBegan)
 			local label = string.format("Monitoring_InputBegan%s", player.Name)
 
 			if Configuration.expectToggleValue("ShowHiddenPlayers") then
 				showHiddenMap:add(frame, "Visible", true)
-			else
-				---@todo: STOP! STOP! Restoring will fuck up the leaderboard here. We need proper restore functions instead of defaulting to map.
-				showHiddenMap:restore()
 			end
 
 			if spectateMaid[frame] then
@@ -193,10 +220,27 @@ return LPH_NO_VIRTUALIZE(function()
 		end
 	end
 
+	---Update subject montioring.
+	local function updateSubjectMonitoring()
+		-- Set camera subject.
+		cameraSubject:set(workspace.CurrentCamera, "CameraSubject", Monitoring.subject)
+
+		-- Request stream.
+		spectateMaid:add(
+			TaskSpawner.spawn(
+				"Monitoring_RequestStreamSpectate",
+				players.LocalPlayer.RequestStreamAroundAsync,
+				players.LocalPlayer,
+				Monitoring.subject.Position,
+				0.1
+			)
+		)
+	end
+
 	---Update monitoring.
 	local function updateMonitoring()
 		if Monitoring.subject then
-			cameraSubject:set(workspace.CurrentCamera, "CameraSubject", Monitoring.subject)
+			updateSubjectMonitoring()
 		else
 			cameraSubject:restore()
 		end
@@ -233,6 +277,14 @@ return LPH_NO_VIRTUALIZE(function()
 		monitoringMaid:clean()
 		spectateMaid:clean()
 		showHiddenMap:restore()
+
+		-- Get leaderboard data.
+		local _, refreshLeaderboard = getLeaderboardData()
+
+		-- Refresh leaderboard.
+		if refreshLeaderboard then
+			refreshLeaderboard()
+		end
 
 		-- Log.
 		Logger.warn("Monitoring detached.")

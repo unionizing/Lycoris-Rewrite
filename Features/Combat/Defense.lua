@@ -234,6 +234,10 @@ Defense.agpd = LPH_NO_VIRTUALIZE(function(aid)
 			continue
 		end
 
+		if not pbdata.recorded then
+			continue
+		end
+
 		return pbdata
 	end
 end)

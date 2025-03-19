@@ -19,9 +19,6 @@ local InputClient = require("Game/InputClient")
 ---@module Features.Combat.Defense
 local Defense = require("Features/Combat/Defense")
 
--- Is something.
-local isA = game.IsA
-
 -- Services.
 local playersService = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -84,6 +81,18 @@ local findInputClientLevel = LPH_NO_VIRTUALIZE(function()
 	end
 end)
 
+---Stop gesture animations.
+---@param animator Animator
+local stopGestureAnimations = LPH_NO_VIRTUALIZE(function(animator)
+	for _, animationTrack in pairs(animator:GetPlayingAnimationTracks()) do
+		if not animationTrack.Animation or animationTrack.Animation.Parent.Name ~= "Gestures" then
+			continue
+		end
+
+		animationTrack:Stop()
+	end
+end)
+
 ---Replicate gesture.
 ---@param gestureName string
 local replicateGesture = LPH_NO_VIRTUALIZE(function(gestureName)
@@ -110,6 +119,11 @@ local replicateGesture = LPH_NO_VIRTUALIZE(function(gestureName)
 		return
 	end
 
+	local animator = humanoid:FindFirstChildWhichIsA("Animator")
+	if not animator then
+		return
+	end
+
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	local effectReplicatorModule = effectReplicator and require(effectReplicator)
 	if not effectReplicatorModule then
@@ -120,36 +134,31 @@ local replicateGesture = LPH_NO_VIRTUALIZE(function(gestureName)
 		return
 	end
 
+	-- Create animation objects.
 	local actionEffect = effectReplicatorModule:CreateEffect("Action")
 	local gesturingEffect = effectReplicatorModule:CreateEffect("Gesturing")
 	local mobileActionEffect = effectReplicatorModule:CreateEffect("MobileAction")
+	local gestureAnimation = animator:LoadAnimation(gesture)
 
-	---Stop gesture animations.
-	local function stopGestureAnimations()
-		for _, animationTrack in pairs(humanoid:GetPlayingAnimationTracks()) do
-			if not animationTrack.Animation or animationTrack.Animation.Parent ~= gestures then
-				continue
-			end
+	-- Play animation.
+	stopGestureAnimations(animator)
+	gestureAnimation:Play()
 
-			animationTrack:Stop()
-		end
-	end
-
-	stopGestureAnimations()
-
-	humanoid:LoadAnimation(gesture):Play()
-
+	-- Wait for movement to cancel.
 	repeat
 		task.wait()
 	until humanoid.MoveDirection.Magnitude > 0
 
+	-- Wait a bit...
 	task.wait(0.5)
 
+	-- Remove effects.
 	actionEffect:Remove()
 	gesturingEffect:Remove()
 	mobileActionEffect:Remove()
 
-	stopGestureAnimations()
+	-- Stop animation.
+	stopGestureAnimations(animator)
 end)
 
 ---Modify ambience color.
@@ -242,15 +251,11 @@ local onNameCall = LPH_NO_VIRTUALIZE(function(...)
 		return
 	end
 
-	if self.Name == "ActivateMantra" then
-		Defense.lastMantraActivate = args[2]
-	end
+	local isActivatingMantra = self.Name == "ActivateMantra"
 
-	if
-		self.Name == "ActivateMantra"
-		and Configuration.expectToggleValue("BlockPunishableMantras")
-		and Defense.blocking()
-	then
+	Defense.lastMantraActivate = isActivatingMantra and args[2] or Defense.lastMantraActivate
+
+	if isActivatingMantra and Configuration.expectToggleValue("BlockPunishableMantras") and Defense.blocking() then
 		return
 	end
 
@@ -258,16 +263,14 @@ local onNameCall = LPH_NO_VIRTUALIZE(function(...)
 		return
 	end
 
-	if
-		typeof(args[2]) == "number"
-		and typeof(args[3]) == "boolean"
-		and Configuration.expectToggleValue("NoFallDamage")
-	then
-		return
-	end
-
 	if self.Name == "Gesture" and Configuration.expectToggleValue("EmoteSpoofer") and typeof(args[2]) == "string" then
 		return replicateGesture(args[2])
+	end
+
+	local fallDamageRemote = KeyHandling.getRemote("FallDamage")
+
+	if self == fallDamageRemote and Configuration.expectToggleValue("NoFallDamage") then
+		return
 	end
 
 	if
@@ -353,6 +356,14 @@ local onNewIndex = LPH_NO_VIRTUALIZE(function(...)
 	local self = args[1]
 	local index = args[2]
 	local value = args[3]
+
+	if self == lighting and (index == "FogStart" or index == "FogEnd") and Configuration.expectToggleValue("NoFog") then
+		return
+	end
+
+	if self:IsA("Atmosphere") and index == "Density" and Configuration.expectToggleValue("NoFog") then
+		return
+	end
 
 	if self == lighting and index == "Ambient" and Configuration.expectToggleValue("ModifyAmbience") then
 		return oldNewIndex(self, index, modifyAmbienceColor(value))

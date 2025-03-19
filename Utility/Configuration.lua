@@ -37,20 +37,6 @@ return LPH_NO_VIRTUALIZE(function()
 		return option.Value
 	end
 
-	---Direct toggle value.
-	---@param key string
-	---@return any?
-	function Configuration.toggleValue(key)
-		return Toggles[key].Value
-	end
-
-	---Direct option value.
-	---@param key string
-	---@return any?
-	function Configuration.optionValue(key)
-		return Options[key].Value
-	end
-
 	---Identify element.
 	---@param identifier string
 	---@param topLevelIdentifier string
@@ -64,7 +50,16 @@ return LPH_NO_VIRTUALIZE(function()
 	---@param topLevelIdentifier string
 	---@return any
 	function Configuration.idToggleValue(identifier, topLevelIdentifier)
-		return Toggles[identifier .. topLevelIdentifier].Value
+		if not Toggles then
+			return nil
+		end
+
+		local toggle = Toggles[identifier .. topLevelIdentifier]
+		if not toggle then
+			return nil
+		end
+
+		return toggle.Value
 	end
 
 	---Fetch option value.
@@ -72,7 +67,16 @@ return LPH_NO_VIRTUALIZE(function()
 	---@param topLevelIdentifier string
 	---@return any
 	function Configuration.idOptionValue(identifier, topLevelIdentifier)
-		return Options[identifier .. topLevelIdentifier].Value
+		if not Options then
+			return nil
+		end
+
+		local option = Options[identifier .. topLevelIdentifier]
+		if not option then
+			return nil
+		end
+
+		return option.Value
 	end
 
 	---Fetch option values.
@@ -80,7 +84,16 @@ return LPH_NO_VIRTUALIZE(function()
 	---@param topLevelIdentifier string
 	---@return any
 	function Configuration.idOptionValues(identifier, topLevelIdentifier)
-		return Options[identifier .. topLevelIdentifier].Values
+		if not Options then
+			return nil
+		end
+
+		local option = Options[identifier .. topLevelIdentifier]
+		if not option then
+			return nil
+		end
+
+		return option.Values
 	end
 
 	-- Return Configuration module.

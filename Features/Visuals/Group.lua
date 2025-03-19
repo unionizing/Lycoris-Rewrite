@@ -47,9 +47,9 @@ Group.update = LPH_NO_VIRTUALIZE(function(self)
 		return self:hide()
 	end
 
-	if Configuration.toggleValue("ESPSplitUpdates") then
+	if Configuration.expectToggleValue("ESPSplitUpdates") then
 		local totalElements = #map
-		local totalFrames = Configuration.optionValue("ESPSplitFrames")
+		local totalFrames = Configuration.expectOptionValue("ESPSplitFrames")
 
 		local objectsPerPart = math.ceil(totalElements / totalFrames)
 		local currentPart = self.part

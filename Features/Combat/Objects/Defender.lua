@@ -122,7 +122,7 @@ Defender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	local chatInputBarConfiguration = textChatService:FindFirstChildOfClass("ChatInputBarConfiguration")
 
 	if
-		Configuration.expectToggleValue("CheckTextboxFocus")
+		Configuration.expectToggleValue("CheckTextboxFocused")
 		and (userInputService:GetFocusedTextBox() or chatInputBarConfiguration.IsFocused)
 	then
 		return self:notify(timing, "User is typing in a text box.")
@@ -290,6 +290,8 @@ function Defender:ping()
 		return
 	end
 
+	---@note: https://devforum.roblox.com/t/in-depth-information-about-robloxs-remoteevents-instance-replication-and-physics-replication-w-sources/1847340
+	--- Perhaps, we should use the RakNet ping instead? We only care about how long it took for the client to receive the animation replication packets.
 	return dataPingItem:GetValue() / 1000
 end
 
@@ -374,6 +376,15 @@ end
 
 ---Clean up all tasks.
 Defender.clean = LPH_NO_VIRTUALIZE(function(self)
+	-- Teleport visualizations away.
+	if self.vpart then
+		self.vpart.CFrame = CFrame.new(math.huge, math.huge, math.huge)
+	end
+
+	if self.ppart then
+		self.ppart.CFrame = CFrame.new(math.huge, math.huge, math.huge)
+	end
+
 	-- Was there a start block?
 	local blocking = false
 
@@ -385,12 +396,13 @@ Defender.clean = LPH_NO_VIRTUALIZE(function(self)
 		self.tasks[idx] = nil
 
 		-- Check.
-		blocking = blocking or (task.identifier == "Start Block" or task.identifier == "End Block")
+		blocking = blocking
+			or (task.identifier == "Start Block" or task.identifier == "End Block" or task.identifier == "Parry")
 	end
 
 	-- End block if we're blocking.
 	if blocking then
-		InputClient.bend()
+		self:bend()
 	end
 end)
 

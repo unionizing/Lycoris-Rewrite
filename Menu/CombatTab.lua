@@ -118,79 +118,88 @@ end
 -- Initialize auto defense section.
 ---@param groupbox table
 function CombatTab.initAutoDefenseSection(groupbox)
-	groupbox
-		:AddToggle("EnableAutoDefense", {
-			Text = "Enable Auto Defense",
-			Default = false,
-			Callback = function(value)
-				if not value then
-					return
-				end
+	local autoDefenseToggle = groupbox:AddToggle("EnableAutoDefense", {
+		Text = "Enable Auto Defense",
+		Default = false,
+		Callback = function(value)
+			if not value then
+				return
+			end
 
-				-- Get local player.
-				local localPlayer = players.LocalPlayer
-				if not localPlayer then
-					return
-				end
+			-- Get local player.
+			local localPlayer = players.LocalPlayer
+			if not localPlayer then
+				return
+			end
 
-				-- Check if ping compensation is enabled. We want it off.
-				if not localPlayer:GetAttribute("EnablePingCompensation") then
-					return
-				end
+			-- Check if ping compensation is enabled. We want it off.
+			if not localPlayer:GetAttribute("EnablePingCompensation") then
+				return
+			end
 
-				-- Get requests module.
-				local requests = replicatedStorage:FindFirstChild("Requests")
-				if not requests then
-					return
-				end
+			-- Get requests module.
+			local requests = replicatedStorage:FindFirstChild("Requests")
+			if not requests then
+				return
+			end
 
-				-- Find update UX settings.
-				local updateUxSettings = requests:FindFirstChild("UpdateUXSettings")
-				if not updateUxSettings then
-					return
-				end
+			-- Find update UX settings.
+			local updateUxSettings = requests:FindFirstChild("UpdateUXSettings")
+			if not updateUxSettings then
+				return
+			end
 
-				-- Disable ping compensation.
-				---@note: Doesn't update the UI.
-				updateUxSettings:FireServer("EnablePingCompensation", false)
+			-- Disable ping compensation.
+			---@note: Doesn't update the UI.
+			updateUxSettings:FireServer("EnablePingCompensation", false)
 
-				-- Notify to the user.
-				Logger.longNotify("Auto Defense assumes ping compensation is disabled. It has been disabled for you.")
-			end,
-		})
-		:AddKeyPicker("EnableAutoDefenseKeybind", { Default = "N/A", SyncToggleState = true, Text = "Auto Defense" })
+			-- Notify to the user.
+			Logger.longNotify("Auto Defense assumes ping compensation is disabled. It has been disabled for you.")
+		end,
+	})
 
-	groupbox:AddToggle("EnableNotifications", {
+	autoDefenseToggle:AddKeyPicker(
+		"EnableAutoDefenseKeybind",
+		{ Default = "N/A", SyncToggleState = true, Text = "Auto Defense" }
+	)
+
+	local autoDefenseDepBox = groupbox:AddDependencyBox()
+
+	autoDefenseDepBox:AddToggle("EnableNotifications", {
 		Text = "Enable Notifications",
 		Default = false,
 	})
 
-	groupbox:AddToggle("EnableVisualizations", {
+	autoDefenseDepBox:AddToggle("EnableVisualizations", {
 		Text = "Enable Visualizations",
 		Default = false,
 	})
 
-	groupbox:AddToggle("RollOnParryCooldown", {
+	autoDefenseDepBox:AddToggle("RollOnParryCooldown", {
 		Text = "Roll On Parry Cooldown",
 		Default = false,
 	})
 
-	groupbox:AddToggle("CheckHoldingBlockInput", {
+	autoDefenseDepBox:AddToggle("CheckHoldingBlockInput", {
 		Text = "Check If Holding Block Input",
 		Tooltip = "If we are holding the block input, stop the auto defense from proceeding.",
 		Default = false,
 	})
 
-	groupbox:AddToggle("CheckWindowActive", {
+	autoDefenseDepBox:AddToggle("CheckWindowActive", {
 		Text = "Check If Window Is Active",
 		Tooltip = "If Roblox isn't the active window, stop the auto defense from proceeding.",
 		Default = false,
 	})
 
-	groupbox:AddToggle("CheckTextboxFocused", {
+	autoDefenseDepBox:AddToggle("CheckTextboxFocused", {
 		Text = "Check If Textbox Is Focused",
 		Tooltip = "If a textbox is focused, stop the auto defense from proceeding.",
 		Default = false,
+	})
+
+	autoDefenseDepBox:SetupDependencies({
+		{ autoDefenseToggle, true },
 	})
 end
 
@@ -260,6 +269,53 @@ function CombatTab.initCombatAssistance(groupbox)
 	groupbox:AddToggle("PerfectMantraCast", {
 		Text = "Perfect Mantra Cast",
 		Default = false,
+	})
+
+	local unisyncToggle = groupbox:AddToggle("AnimationUnisync", {
+		Text = "Animation Unisync",
+		Tooltip = "Secretly and quickly 'unisync' your character's animations which break other auto-defense solutions.",
+		Default = false,
+	})
+
+	unisyncToggle:AddKeyPicker(
+		"AnimationUnisyncKeybind",
+		{ Default = "N/A", SyncToggleState = true, Text = "Animation Unisync" }
+	)
+
+	local unisyncDepBox = groupbox:AddDependencyBox()
+
+	unisyncDepBox:AddSlider("AnimationUnisyncWeight", {
+		Text = "Animation Unisync Weight",
+		Tooltip = "The weight of the animation that will be unisynced.",
+		Min = -100.0,
+		Max = 100.0,
+		Default = 0.0,
+		Rounding = 1,
+		Suffix = "w",
+	})
+
+	unisyncDepBox:AddSlider("AnimationUnisyncSpeed", {
+		Text = "Animation Unisync Speed",
+		Tooltip = "The speed of the animation that will be unisynced.",
+		Min = -100.0,
+		Max = 100.0,
+		Default = -10.0,
+		Rounding = 1,
+		Suffix = "s",
+	})
+
+	unisyncDepBox:AddSlider("AnimationUnisyncFrequency", {
+		Text = "Animation Unisync Frequency",
+		Tooltip = "How frequently should we unisync your character's animations?",
+		Min = 0,
+		Max = 1000,
+		Default = 50,
+		Rounding = 1,
+		Suffix = "ms",
+	})
+
+	unisyncDepBox:SetupDependencies({
+		{ unisyncToggle, true },
 	})
 end
 

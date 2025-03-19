@@ -151,8 +151,6 @@ end)
 ---@param player Player
 ---@param character Model
 function PlayerESP.new(identifier, player, character)
-	setthreadidentity(7)
-
 	local shadow = Instance.new("Part")
 	shadow.Transparency = 1.0
 	shadow.Parent = game:GetService("CoreGui")

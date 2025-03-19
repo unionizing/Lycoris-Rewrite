@@ -138,18 +138,25 @@ end
 ---Initialize Visual Assistance section.
 ---@param groupbox table
 function VisualsTab.initVisualAssistanceSection(groupbox)
-	groupbox:AddToggle("TalentHighlighter", {
+	local talentHighlighterToggle = groupbox:AddToggle("TalentHighlighter", {
 		Text = "Talent Highlighter",
 		Tooltip = "Highlight shown talents that are in your builder link.",
 		Default = false,
 	})
 
-	groupbox:AddInput("TalentHighlighterLink", {
+	local talentHighlighterDepBox = groupbox:AddDependencyBox()
+
+	talentHighlighterDepBox:AddInput("TalentHighlighterLink", {
 		Text = "Talent Highlighter Link",
 		Tooltip = "The builder link that will be used to highlight talents.",
 		Placeholder = "Enter your builder link here.",
 		Finished = true,
 		Callback = function(value)
+			-- Check if talent highligher is enabled.
+			if not talentHighlighterToggle.Value then
+				return
+			end
+
 			-- Get ID.
 			local id = value:gsub("https://deepwoken.co/builder%?id=", ""):gsub(" ", ""):gsub("\n", "")
 
@@ -177,6 +184,10 @@ function VisualsTab.initVisualAssistanceSection(groupbox)
 			-- Set builder data.
 			Visuals.currentBuilderData = result
 		end,
+	})
+
+	talentHighlighterDepBox:SetupDependencies({
+		{ talentHighlighterToggle, true },
 	})
 end
 

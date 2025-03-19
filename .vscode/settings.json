@@ -51,7 +51,10 @@
         "firetouchinterest",
         "gethiddenproperty",
         "iswindowactive",
-        "armorshield"
+        "armorshield",
+        "isnetworkowner",
+        "setthreadientity",
+        "Content"
     ],
     "robloxLsp.suggestedImports.importIgnore": [
         "**/_Index/**",

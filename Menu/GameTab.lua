@@ -177,9 +177,7 @@ function GameTab.initLocalCharacterSection(groupbox)
 		Default = false,
 	})
 
-	local asDelayDepBox = asDepBox:AddDependencyBox()
-
-	asDelayDepBox:AddSlider("AutoSprintDelayTime", {
+	asDepBox:AddSlider("AutoSprintDelayTime", {
 		Text = "Auto Sprint Delay Time",
 		Default = 0.2,
 		Min = 0,
@@ -224,12 +222,12 @@ function GameTab.initLocalCharacterSection(groupbox)
 		end,
 	})
 
-	asDepBox:SetupDependencies({
-		{ Toggles.AutoSprint, true },
+	agilitySpoofDepBox:SetupDependencies({
+		{ Toggles.AgilitySpoof, true },
 	})
 
-	asDelayDepBox:SetupDependencies({
-		{ Toggles.AutoSprintDelay, true },
+	asDepBox:SetupDependencies({
+		{ Toggles.AutoSprint, true },
 	})
 
 	infiniteJumpDepBox:SetupDependencies({

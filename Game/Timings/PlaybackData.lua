@@ -1,8 +1,14 @@
 ---@class PlaybackData
 ---@field asdh table<number, number> Animation speed difference history.
+---@field recorded boolean to track whether or not we have fully finished recording. Simply is set when the animation has atleast stopped once.
 ---@field entity Model Entity to playback.
 local PlaybackData = {}
 PlaybackData.__index = PlaybackData
+
+---Track animation stop.
+function PlaybackData:astop()
+	self.recorded = true
+end
 
 ---Track animation speed.
 ---@param position number
@@ -21,6 +27,7 @@ end
 function PlaybackData.new(entity)
 	local self = setmetatable({}, PlaybackData)
 	self.asdh = {}
+	self.recorded = false
 	self.entity = entity:Clone()
 	return self
 end

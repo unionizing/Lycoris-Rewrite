@@ -38,8 +38,6 @@ local OriginalStoreManager = require("Utility/OriginalStoreManager")
 local Logger = require("Utility/Logger")
 
 -- Visuals module.
----@optimization: All Configuration calls are replaced with direct accessors.
----The rendering starts after our script is loaded; so we can assume the objects exist.
 local Visuals = { currentBuilderData = nil }
 
 -- Last visuals update.
@@ -207,31 +205,31 @@ local updateVisuals = LPH_NO_VIRTUALIZE(function()
 
 	lastVisualsUpdate = os.clock()
 
-	if Configuration.toggleValue("TalentHighlighter") then
+	if Configuration.expectToggleValue("TalentHighlighter") then
 		updateTalentHighlighter()
 	else
 		talentHighlighterMap:restore()
 	end
 
-	if Configuration.toggleValue("NoPersisentESP") then
+	if Configuration.expectToggleValue("NoPersisentESP") then
 		updateNoPersistence()
 	else
 		noPersistentMap:restore()
 	end
 
-	if Configuration.toggleValue("NoAnimatedSea") then
+	if Configuration.expectToggleValue("NoAnimatedSea") then
 		updateNoAnimatedSea()
 	else
 		noAnimatedSeaMap:restore()
 	end
 
-	if Configuration.toggleValue("ModifyFieldOfView") then
-		fieldOfView:set(workspace.CurrentCamera, "FieldOfView", Configuration.optionValue("FieldOfView"))
+	if Configuration.expectToggleValue("ModifyFieldOfView") then
+		fieldOfView:set(workspace.CurrentCamera, "FieldOfView", Configuration.expectOptionValue("FieldOfView"))
 	else
 		fieldOfView:restore()
 	end
 
-	if Configuration.toggleValue("ShowRobloxChat") then
+	if Configuration.expectToggleValue("ShowRobloxChat") then
 		updateShowRobloxChat()
 	else
 		showRobloxChatMap:restore()
@@ -378,7 +376,6 @@ local onInstanceRemoving = LPH_NO_VIRTUALIZE(function(inst)
 end)
 
 ---On player added.
----@todo: Clean this code up.
 ---@param player Player
 local onPlayerAdded = LPH_NO_VIRTUALIZE(function(player)
 	if player == players.LocalPlayer then
@@ -434,12 +431,6 @@ local createChildrenListener = LPH_NO_VIRTUALIZE(function(instance, identifier, 
 	end)
 end)
 
----Initialize update loop.
----@note: Read about optimization above for more information.
-function Visuals.start()
-	visualsMaid:add(renderStepped:connect("Visuals_RenderStepped", updateVisuals))
-end
-
 ---Initialize Visuals.
 function Visuals.init()
 	local live = workspace:WaitForChild("Live")
@@ -463,6 +454,8 @@ function Visuals.init()
 		local areaMarkerName = descendant.Parent.Name or "Unidentified Area Marker"
 		emplaceObject(descendant, FilteredESP.new(PartESP.new("AreaMarker", descendant, areaMarkerName)))
 	end
+
+	visualsMaid:add(renderStepped:connect("Visuals_RenderStepped", updateVisuals))
 
 	Logger.warn("Visuals initialized.")
 end
