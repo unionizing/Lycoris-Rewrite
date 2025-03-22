@@ -128,6 +128,10 @@ PlayerESP.update = LPH_NO_VIRTUALIZE(function(self)
 
 	local expectedAdornee = predictedPosition and self.shadow or model
 
+	if expectedAdornee == nil or not expectedAdornee.Parent:IsDescendantOf(game) then
+		return self:visible(false)
+	end
+
 	---@note: BillboardGUIs only update when a property of it changes.
 	if self.billboard.Adornee ~= expectedAdornee then
 		self.billboard.Adornee = expectedAdornee

@@ -312,7 +312,7 @@ Defender.bend = LPH_NO_VIRTUALIZE(function(self)
 	end
 
 	-- End block.
-	InputClient.bend()
+	InputClient.bend(false)
 end)
 
 ---Handle action.
@@ -385,7 +385,7 @@ Defender.clean = LPH_NO_VIRTUALIZE(function(self)
 		self.ppart.CFrame = CFrame.new(math.huge, math.huge, math.huge)
 	end
 
-	-- Was there a start block?
+	-- Was there a start block, end block, or parry?
 	local blocking = false
 
 	for idx, task in next, self.tasks do
@@ -400,9 +400,9 @@ Defender.clean = LPH_NO_VIRTUALIZE(function(self)
 			or (task.identifier == "Start Block" or task.identifier == "End Block" or task.identifier == "Parry")
 	end
 
-	-- End block if we're blocking.
+	-- Run end block, just in case we get stuck.
 	if blocking then
-		self:bend()
+		InputClient.bend(true)
 	end
 end)
 

@@ -138,7 +138,8 @@ InputClient.getInputData = LPH_NO_VIRTUALIZE(function()
 end)
 
 ---End block function.
-InputClient.bend = LPH_NO_VIRTUALIZE(function()
+---@param noUnsprint boolean
+InputClient.bend = LPH_NO_VIRTUALIZE(function(noUnsprint)
 	local unblockRemote = KeyHandling.getRemote("Unblock")
 	if not unblockRemote then
 		return Logger.warn("Cannot end block without unblock remote.")
@@ -154,6 +155,10 @@ InputClient.bend = LPH_NO_VIRTUALIZE(function()
 	unblockRemote:FireServer()
 
 	inputData["f"] = false
+
+	if noUnsprint then
+		return
+	end
 
 	sprintFunction(false)
 end)
