@@ -103,6 +103,21 @@ function BuilderSection:check()
 	return true
 end
 
+---Check before creating new action. Override me.
+---@param timing Timing
+---@return boolean
+function BuilderSection:acheck(timing)
+	if not self.actionName.Value or #self.actionName.Value <= 0 then
+		return Logger.longNotify("Please enter a valid action name.")
+	end
+
+	if timing.actions:find(self.actionName.Value) then
+		return Logger.longNotify("The action '%s' already exists in the list.", self.actionName.Value)
+	end
+
+	return true
+end
+
 ---Set creation timing properties. Override me.
 ---@param timing Timing
 function BuilderSection:cset(timing)
@@ -150,6 +165,7 @@ end
 
 ---Wrap a callback that needs a timing. This will check for internal timings.
 ---@param callback function(Timing, ...)
+---@return function(...)
 function BuilderSection:tnc(callback)
 	return function(...)
 		-- If no value, return.
@@ -173,8 +189,47 @@ function BuilderSection:tnc(callback)
 	end
 end
 
+---Wrap a callback that needs both an action and a timing.
+---@note: This will check for internal timings.
+---@param callback function(Timing, Action, ...)
+---@return function
+function BuilderSection:tanc(callback)
+	return function(...)
+		-- If no value, return.
+		if not self.timingList.Value then
+			return Logger.warn("No timing selected.")
+		end
+
+		-- Find timing.
+		local timing = self.pair:find(self.timingList.Value)
+		if not timing then
+			return Logger.longNotify("You must select a valid timing to perform this action.")
+		end
+
+		-- If no value, return.
+		if not self.actionList.Value then
+			return Logger.warn("No action selected.")
+		end
+
+		-- Find action.
+		local action = timing.actions:find(self.actionList.Value)
+		if not action then
+			return Logger.longNotify("You must select a valid action to perform this action.")
+		end
+
+		-- Check timing type.
+		if self.timingType.Value == "Internal" then
+			return Logger.longNotify("Internal timing. Changes not replicated. You must clone it to the config first.")
+		end
+
+		-- Fire callback.
+		callback(timing, action, ...)
+	end
+end
+
 ---Wrap a callback that needs a action. This will check for internal timings.
 ---@param callback function(Action, ...)
+---@return function
 function BuilderSection:anc(callback)
 	return function(...)
 		-- If no value, return.
@@ -303,6 +358,11 @@ function BuilderSection:baction(base)
 			-- Fetch actions.
 			local actions = timing.actions
 
+			-- Check.
+			if not self:acheck(timing) then
+				return
+			end
+
 			-- Create new action.
 			local action = Action.new()
 			action.name = self.actionName.Value
@@ -319,6 +379,42 @@ function BuilderSection:baction(base)
 
 			-- Push action.
 			actions:push(action)
+
+			-- Refresh action list.
+			self:arefresh(timing)
+
+			-- Set action list value.
+			self.actionList:SetValue(action.name)
+			self.actionList:Display()
+		end)
+	)
+
+	base:AddButton(
+		"Duplicate Selected Action",
+		self:tanc(function(timing, action)
+			-- Fetch actions.
+			local actions = timing.actions
+
+			-- Check.
+			if not self:acheck(timing) then
+				return
+			end
+
+			-- Create new action.
+			local newAction = action:clone()
+			newAction.name = self.actionName.Value
+
+			-- Record ping for telemetry.
+			local network = stats:FindFirstChild("Network")
+			local serverStatsItem = network and network:FindFirstChild("ServerStatsItem")
+			local dataPingItem = serverStatsItem and serverStatsItem:FindFirstChild("Data Ping")
+
+			if dataPingItem then
+				newAction.ping = dataPingItem:GetValue()
+			end
+
+			-- Push action.
+			actions:push(newAction)
 
 			-- Refresh action list.
 			self:arefresh(timing)

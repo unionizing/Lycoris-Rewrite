@@ -54,12 +54,22 @@ function Features.init()
 	OwnershipWatcher.init()
 	CharismaFarm.init()
 	IntelligenceFarm.init()
-	AnimationVisualizer.init()
+
+	-- Only initialize if we're a builder.
+	if not armorshield or armorshield.current_role == "builder" then
+		AnimationVisualizer.init()
+	end
+
 	Logger.warn("Features initialized.")
 end
 
 ---Detach features.
 function Features.detach()
+	-- Only detach if we're a builder.
+	if not armorshield or armorshield.current_role == "builder" then
+		AnimationVisualizer.detach()
+	end
+
 	Defense.detach()
 	CharismaFarm.detach()
 	IntelligenceFarm.detach()
@@ -69,7 +79,6 @@ function Features.detach()
 	Movement.detach()
 	Removal.detach()
 	Monitoring.detach()
-	AnimationVisualizer.detach()
 	Exploits.detach()
 	Visuals.detach()
 	Logger.warn("Features detached.")
