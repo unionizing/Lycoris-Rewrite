@@ -229,12 +229,9 @@ end)
 ---@return PlaybackData?
 Defense.agpd = LPH_NO_VIRTUALIZE(function(aid)
 	for _, object in next, defenderAnimationObjects do
-		local pbdata = object.pbdata[aid]
+		---@note: Grabbing from 'rpbdata' means that we know that the data has been fully recorded.
+		local pbdata = object.rpbdata[aid]
 		if not pbdata then
-			continue
-		end
-
-		if not pbdata.recorded then
 			continue
 		end
 

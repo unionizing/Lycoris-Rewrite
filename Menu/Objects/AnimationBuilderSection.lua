@@ -52,7 +52,7 @@ function AnimationBuilderSection:daction(base)
 	self.timePosition = depBoxOn:AddSlider(nil, {
 		Text = "Time Position",
 		Min = 0,
-		Max = 1,
+		Max = 10,
 		Default = 0,
 		Rounding = 3,
 		Callback = self:anc(function(action, value)
@@ -162,7 +162,7 @@ function AnimationBuilderSection:action()
 		Text = "Use Time Position",
 		Tooltip = "Should the action use time position instead of delay?",
 		Default = false,
-		Callback = self:tnc(function(action, value)
+		Callback = self:anc(function(action, value)
 			action.utp = value
 		end),
 	})

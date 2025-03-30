@@ -52,8 +52,7 @@ function Task.new(identifier, delay, punishable, after, callback, ...)
 	self.when = os.clock() + delay
 	self.punishable = punishable
 	self.after = after
-	self.thread = (not delay) and TaskSpawner.spawn("Action_" .. identifier, callback, ...)
-		or TaskSpawner.delay("Action_" .. identifier, delay, callback, ...)
+	self.thread = TaskSpawner.delay("Action_" .. identifier, delay, callback, ...)
 
 	if not self.punishable or self.punishable <= 0 then
 		self.punishable = Configuration.expectOptionValue("DefaultPunishableWindow") or 0.7

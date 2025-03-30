@@ -36,10 +36,10 @@ local PlaybackData = require("Game/Timings/PlaybackData")
 ---@field lunisynctp number? The last time we unisynced the animation track.
 ---@field keyframes Action[]
 ---@field timing AnimationTiming?
----@field pbdata table<string, PlaybackData>
+---@field pbdata table<AnimationTrack, PlaybackData> Playback data to be recorded.
+---@field rpbdata table<string, PlaybackData> Recorded playback data. Optimization so we don't have to constantly reiterate over recorded data.
 ---@field manimations table<number, Animation>
 ---@field track AnimationTrack? Don't be confused. This is the **valid && last** animation track played.
----@field utrack AnimationTrack? This is the **last** animation track played.
 ---@field maid Maid This maid is cleaned up after every new animation track. Safe to use for on-animation-track setup.
 local AnimatorDefender = setmetatable({}, { __index = Defender })
 AnimatorDefender.__index = AnimatorDefender
@@ -48,7 +48,6 @@ AnimatorDefender.__type = "Animation"
 -- Services.
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
-local runService = game:GetService("RunService")
 
 ---Check if we're in a valid state to proceed with the action.
 ---@param timing AnimationTiming
@@ -172,7 +171,7 @@ AnimatorDefender.rpue = LPH_NO_VIRTUALIZE(function(self, track, timing, index)
 	InputClient.parry()
 end)
 
----Get latest keyframe.
+---Get latest keyframe that we've exceeded.
 ---@return Action?
 AnimatorDefender.latest = LPH_NO_VIRTUALIZE(function(self)
 	local latestKeyframe = nil
@@ -205,37 +204,34 @@ function AnimatorDefender:tp()
 	return self.track.TimePosition + self.offset
 end
 
----Update playback data tracking.
+---Update playback data tracking. Attempt to record data for tracks that have not been recorded yet.
 ---@param self AnimatorDefender
 AnimatorDefender.updt = LPH_NO_VIRTUALIZE(function(self)
-	-- Check if unvalidated track exists.
-	local utrack = self.utrack
-	if not utrack then
-		return
-	end
+	for track, data in next, self.pbdata do
+		-- Skip if it's already been recorded.
+		if data.recorded then
+			continue
+		end
 
-	---@note: We should never encounter this scenario? We expect all data to be there, so it's safe to return...
-	local pbdata = self.pbdata[tostring(utrack.Animation.AnimationId)]
-	if not pbdata then
-		return
-	end
+		-- Check if the track is playing.
+		if not track.IsPlaying then
+			-- Stop recording.
+			data:astop()
 
-	-- Why update if we're done recording?
-	if pbdata.recorded then
-		return
-	end
+			-- Remove out of 'pbdata' and put it in to the recorded table.
+			self.pbdata[track] = nil
+			self.rpbdata[tostring(track.Animation.AnimationId)] = data
 
-	-- Check if track is playing. Why update if it's not?
-	if not utrack.IsPlaying then
-		return pbdata:astop()
-	end
+			-- Continue to next playback data.
+			continue
+		end
 
-	-- Start tracking the animation's speed.
-	-- Use the raw time position because we don't have to shift our position up any.
-	pbdata:astrack(utrack.TimePosition, utrack.Speed)
+		-- Start tracking the animation's speed.
+		data:astrack(track.Speed)
+	end
 end)
 
----Update the defender.
+---Update keyframe handling.
 ---@param self AnimatorDefender
 AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 	-- Update playback data tracking.
@@ -250,11 +246,14 @@ AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 		return
 	end
 
-	-- Find the latest keyframe that we have exceeded.
+	-- Find the latest keyframe that we have exceeded, if there is even any.
 	local latest = self:latest()
 	if not latest then
 		return
 	end
+
+	-- Start blocking inputs.
+	self:smarker("KeyframeAction")
 
 	-- Clear the keyframes that we have exceeded.
 	for idx, keyframe in next, self.keyframes do
@@ -265,9 +264,12 @@ AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 		self.keyframes[idx] = nil
 	end
 
+	-- End blocking inputs.
+	self:emarker("KeyframeAction")
+
 	-- Ok, run action of this keyframe.
-	self:mark(
-		Task.new(latest._type, nil, self.timing.punishable, self.timing.after, self.handle, self, self.timing, latest)
+	self.maid:mark(
+		TaskSpawner.spawn(string.format("KeyframeAction_%s", latest._type), self.handle, self, self.timing, latest)
 	)
 end)
 
@@ -276,13 +278,22 @@ end)
 ---@param timing AnimationTiming
 AnimatorDefender.aeactions = LPH_NO_VIRTUALIZE(function(self, timing)
 	for _, action in next, timing.actions:get() do
-		-- Skip all actions that are animation delta based.
-		if not action.uad then
+		-- Skip all actions that are non animation delta based.
+		if not action.utp then
 			continue
 		end
 
 		-- Add to keyframe list.
 		self.keyframes[#self.keyframes + 1] = action
+
+		-- Log.
+		self:notify(
+			timing,
+			"Added action '%s' (position %.2f) with ping '%.2f' adjusted for.",
+			action.name,
+			action.tp,
+			self.offset
+		)
 	end
 end)
 
@@ -405,12 +416,11 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 		return
 	end
 
+	-- Add to playback data list.
+	self.pbdata[track] = PlaybackData.new(self.entity)
+
 	-- Animation ID.
 	local aid = tostring(track.Animation.AnimationId)
-
-	-- Track latest unvalidated track.
-	self.utrack = track
-	self.pbdata[aid] = PlaybackData.new(self.entity)
 
 	---@type AnimationTiming?
 	local timing = self:initial(self.entity, SaveManager.as, self.entity.Name, aid)
@@ -464,7 +474,6 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 	self.timing = timing
 	self.offset = self:ping()
 	self.track = track
-	self.heffects = {}
 
 	-- Use module over actions.
 	if timing.umoa then
@@ -473,7 +482,14 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 
 	---@note: Start processing the timing. Add the actions if we're not RPUE.
 	if not timing.rpue then
-		return self:actions(timing) and self:aeactions(timing)
+		-- Add animation actions.
+		self:aeactions(timing)
+
+		-- Add actions.
+		self:actions(timing)
+
+		-- Return.
+		return
 	end
 
 	self:mark(
@@ -501,8 +517,9 @@ end)
 
 ---Clean up the defender.
 function AnimatorDefender:clean()
-	-- Empty keyframes.
+	-- Empty data.
 	self.keyframes = {}
+	self.heffects = {}
 
 	-- Clean through base method.
 	Defender.clean(self)
@@ -528,13 +545,13 @@ function AnimatorDefender.new(animator, manimations)
 
 	self.offset = nil
 	self.track = nil
-	self.utrack = nil
 	self.timing = nil
 	self.lunisynctp = nil
 
 	self.heffects = {}
 	self.keyframes = {}
 	self.pbdata = {}
+	self.rpbdata = {}
 
 	self.maid:mark(
 		entityDescendantAdded:connect(

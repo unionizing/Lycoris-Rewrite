@@ -262,8 +262,8 @@ return LPH_NO_VIRTUALIZE(function()
 	-- Current data for playback loop.
 	local currentPlaybackData = nil
 	local currentTrack = nil
-	local lastFreezeFrame = nil
-	local lastPauseSpeed = nil
+	local isPaused = false
+	local timeElapsed = 0.0
 
 	---Map slider value.
 	---@param value number
@@ -331,66 +331,80 @@ return LPH_NO_VIRTUALIZE(function()
 		currentPlaybackData = playbackData
 		currentTrack = animator:LoadAnimation(animation)
 
+		-- Play animation and keep it at zero speed.
+		currentTrack:Play(0.0, 100, 0.0)
+		currentTrack.Priority = Enum.AnimationPriority.Action
+		currentTrack.Looped = true
+		visualizerMaid:mark(currentTrack.DidLoop:Connect(function()
+			timeElapsed = 0.0
+		end))
+
+		-- Reset time elapsed.
+		timeElapsed = 0.0
+
 		-- Show frames.
 		viewportFrame.Visible = true
 		noViewportFrame.Visible = false
 	end
 
-	---Find latest exceeded speed difference.
-	---@param data PlaybackData
-	---@param current number
+	---Get time elapsed from time position.
+	---@param timePosition number
 	---@return number?
-	local function findLatestExceededSpeed(data, current)
-		local latestExceededSpeed = nil
-		local latestExceededPosition = nil
-
-		for position, speed in next, data.asdh do
-			if current <= position then
-				continue
-			end
-
-			if latestExceededPosition and latestExceededPosition >= position then
-				continue
-			end
-
-			latestExceededSpeed = speed
-			latestExceededPosition = position
+	local function getTimeElapsedFromTp(timePosition)
+		if not currentPlaybackData then
+			return nil
 		end
 
-		return latestExceededSpeed
-	end
-
-	---Update freeze frame.
-	local function updateFreezeFrame()
-		local extrapolatedSpeed =
-			findLatestExceededSpeed(currentPlaybackData, currentTrack.TimePosition + (os.clock() - lastFreezeFrame))
-
-		if extrapolatedSpeed == 0 then
-			return
+		if timePosition <= 0 then
+			return 0.0
 		end
 
-		lastFreezeFrame = nil
+		-- Numerical integration to find elapsed time.
+		local currentPos = 0
+		local elapsed = 0
+		local dt = 0.01
 
-		currentTrack:AdjustSpeed(extrapolatedSpeed)
+		while currentPos < timePosition do
+			local speed = currentPlaybackData:last(elapsed) or 1
+			local stepSize = speed * dt
+
+			-- If adding the full step would exceed the target position, calculate partial step and break.
+			if currentPos + stepSize > timePosition then
+				local remainingTime = (timePosition - currentPos) / speed
+				elapsed = elapsed + remainingTime
+				break
+			end
+
+			currentPos = currentPos + stepSize
+			elapsed = elapsed + dt
+		end
+
+		-- Return the elapsed time.
+		return elapsed
 	end
 
 	---On playback loop.
-	---@param _ number
-	local function onPlaybackLoop(_)
+	---@param delta number
+	local function onPlaybackLoop(delta)
 		if not screenGui.Enabled then
 			return
 		end
 
-		iconTwo.Image = (not currentTrack or not currentTrack.IsPlaying) and "rbxassetid://10734923549"
-			or "rbxassetid://10734919336"
+		iconTwo.Image = isPaused and "rbxassetid://10734923549" or "rbxassetid://10734919336"
 
 		-- Run slider calculations.
 		local mhs = sliderOuter.AbsoluteSize.X
 		local hs = currentTrack and mapSliderValue(currentTrack.TimePosition, 0.0, currentTrack.Length, 0, mhs) or 0.0
 
 		-- Update slider text.
-		sliderText.Text = currentTrack and string.format("%.3f/%.3f", currentTrack.TimePosition, currentTrack.Length)
-			or "0.000 / ???"
+		sliderText.Text = (currentTrack and currentPlaybackData)
+				and string.format(
+					"%.3f/%.3f (%ims)",
+					currentTrack.TimePosition,
+					currentTrack.Length,
+					math.round((getTimeElapsedFromTp(currentTrack.TimePosition) or 0.0) * 1000)
+				)
+			or "0.000 / ??? (???ms)"
 
 		-- Update size.
 		sliderFill.Visible = not (hs == 0)
@@ -404,29 +418,14 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
-		if lastPauseSpeed then
-			return
+		---@todo: Update animation speed according to playback data.
+		if isPaused then
+			return currentTrack:AdjustSpeed(0.0)
 		end
 
-		-- Update speed according to playback data.
-		local latestExceededSpeed = findLatestExceededSpeed(currentPlaybackData, currentTrack.TimePosition)
-		if not latestExceededSpeed then
-			return
-		end
+		timeElapsed = timeElapsed + delta
 
-		if lastFreezeFrame then
-			return updateFreezeFrame()
-		end
-
-		if currentTrack.Speed == latestExceededSpeed then
-			return
-		end
-
-		if latestExceededSpeed == 0 then
-			lastFreezeFrame = os.clock()
-		end
-
-		currentTrack:AdjustSpeed(latestExceededSpeed)
+		currentTrack:AdjustSpeed(currentPlaybackData:last(timeElapsed) or 0.0)
 	end
 
 	---Toggle play stop function.
@@ -436,16 +435,10 @@ return LPH_NO_VIRTUALIZE(function()
 		end
 
 		if not currentTrack.IsPlaying then
-			currentTrack:Play(0.0, 100, 1.0)
-			currentTrack.Priority = Enum.AnimationPriority.Action
+			return
 		end
 
-		if not lastPauseSpeed then
-			lastPauseSpeed = currentTrack.Speed
-			return currentTrack:AdjustSpeed(0)
-		end
-
-		currentTrack:AdjustSpeed(lastPauseSpeed)
+		isPaused = not isPaused
 	end
 
 	---Go backwards one frame.
@@ -483,9 +476,8 @@ return LPH_NO_VIRTUALIZE(function()
 				return
 			end
 
-			if currentTrack.IsPlaying then
-				currentTrack:AdjustSpeed(0)
-			end
+			-- Pause track.
+			isPaused = true
 
 			-- Calculate new time position.
 			local mouse = players.LocalPlayer:GetMouse()
@@ -499,6 +491,8 @@ return LPH_NO_VIRTUALIZE(function()
 			-- Wait.
 			runService.PreRender:Wait()
 		end
+
+		timeElapsed = getTimeElapsedFromTp(currentTrack.TimePosition) or 0.0
 	end
 
 	---Outer input began.

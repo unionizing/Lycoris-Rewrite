@@ -17,6 +17,10 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 local players = game:GetService("Players")
 local debris = game:GetService("Debris")
 
+-- Cache.
+local inputDataCache = nil
+local lastInputDataCache = os.clock()
+
 ---Re-created has talent.
 ---@param character Model
 ---@param talentName string
@@ -100,8 +104,15 @@ end)
 ---Fetch input data.
 ---@return table?
 InputClient.getInputData = LPH_NO_VIRTUALIZE(function()
+	-- Get from cache if we can, this is particularly expensive.
+	if inputDataCache and (os.clock() - lastInputDataCache) <= 2.0 then
+		return inputDataCache
+	end
+
+	-- Store input data.
 	local inputData = nil
 
+	-- Get the input data from RenderStepped.
 	for _, connection in next, getconnections(runService.RenderStepped) do
 		local func = connection.Function
 		if not func then
@@ -134,6 +145,12 @@ InputClient.getInputData = LPH_NO_VIRTUALIZE(function()
 		end
 	end
 
+	-- Add into cache.
+	-- We want to attempt to re-cache again if it's missing.
+	inputDataCache = inputData
+	lastInputDataCache = inputData and os.clock() or lastInputDataCache
+
+	-- Return input data.
 	return inputData
 end)
 
@@ -156,6 +173,7 @@ InputClient.bend = LPH_NO_VIRTUALIZE(function(noUnsprint)
 
 	inputData["f"] = false
 
+	---@note: This can be undesired behavior if we were simply trying to unblock as a backup method.
 	if noUnsprint then
 		return
 	end

@@ -19,8 +19,12 @@ local Library = require("GUI/Library")
 ---@module Game.Timings.ModuleManager
 local ModuleManager = require("Game/Timings/ModuleManager")
 
+---@module Utility.TaskSpawner
+local TaskSpawner = require("Utility/TaskSpawner")
+
 ---@class Defender
 ---@field tasks Task[]
+---@field markers table<string, boolean> Blocking markers for unknown length timings. If the entry exists and is true, then we're blocking.
 ---@field maid Maid
 ---@field vpart Part?
 ---@field ppart Part?
@@ -359,6 +363,14 @@ end)
 ---Check if we have input blocking tasks.
 ---@return boolean
 Defender.blocking = LPH_NO_VIRTUALIZE(function(self)
+	for _, marker in next, self.markers do
+		if not marker then
+			continue
+		end
+
+		return true
+	end
+
 	for _, task in next, self.tasks do
 		if not task:blocking() then
 			continue
@@ -376,6 +388,9 @@ end
 
 ---Clean up all tasks.
 Defender.clean = LPH_NO_VIRTUALIZE(function(self)
+	-- Clear markers.
+	self.markers = {}
+
 	-- Teleport visualizations away.
 	if self.vpart then
 		self.vpart.CFrame = CFrame.new(math.huge, math.huge, math.huge)
@@ -406,6 +421,20 @@ Defender.clean = LPH_NO_VIRTUALIZE(function(self)
 	end
 end)
 
+---Start blocking marker.
+---@param self Defender
+---@param tag string
+Defender.smarker = LPH_NO_VIRTUALIZE(function(self, tag)
+	self.markers[tag] = true
+end)
+
+---End blocking marker.
+---@param self Defender
+---@param tag string
+Defender.emarker = LPH_NO_VIRTUALIZE(function(self, tag)
+	self.markers[tag] = false
+end)
+
 ---Process module.
 ---@param timing Timing
 Defender.module = LPH_NO_VIRTUALIZE(function(self, timing)
@@ -415,18 +444,20 @@ Defender.module = LPH_NO_VIRTUALIZE(function(self, timing)
 		return
 	end
 
-	-- Run loaded function.
-	self:mark(
-		Task.new(
-			string.format("Defender_RunModule_%s", timing.smod),
-			nil,
-			timing.punishable,
-			timing.after,
-			lf,
-			self,
-			timing
-		)
-	)
+	-- Create identifier.
+	local identifier = string.format("Defender_RunModule_%s", timing.smod)
+
+	-- Run module.
+	self.maid:mark(TaskSpawner.spawn(identifier, function()
+		-- Start blocking.
+		self:smarker(identifier)
+
+		-- Run loaded function.
+		lf(self, timing)
+
+		-- End blocking.
+		self:emarker(identifier)
+	end))
 end)
 
 ---Add actions from timing to defender object.
@@ -434,7 +465,7 @@ end)
 Defender.actions = LPH_NO_VIRTUALIZE(function(self, timing)
 	for _, action in next, timing.actions:get() do
 		-- Skip all actions that are animation delta based.
-		if action.uad then
+		if action.utp then
 			continue
 		end
 
@@ -486,6 +517,7 @@ function Defender.new()
 	self.maid = Maid.new()
 	self.ppart = nil
 	self.vpart = nil
+	self.markers = {}
 	self.lvisualization = os.clock()
 	return self
 end
