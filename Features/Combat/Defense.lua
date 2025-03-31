@@ -42,6 +42,9 @@ local defenderObjects = {}
 local defenderPartObjects = {}
 local defenderAnimationObjects = {}
 
+-- Stored deleted playback data.
+local deletedPlaybackData = {}
+
 -- Mob animations.
 local mobAnimations = {}
 
@@ -128,6 +131,10 @@ local onGameDescendantRemoved = LPH_NO_VIRTUALIZE(function(descendant)
 	local object = defenderObjects[descendant]
 	if not object then
 		return
+	end
+
+	if object.rpbdata then
+		deletedPlaybackData[descendant] = object.rpbdata
 	end
 
 	if defenderPartObjects[descendant] then
@@ -228,9 +235,19 @@ end)
 ---@param aid string
 ---@return PlaybackData?
 Defense.agpd = LPH_NO_VIRTUALIZE(function(aid)
+	---@note: Grabbing from 'rpbdata' means that we know that the data has been fully recorded.
 	for _, object in next, defenderAnimationObjects do
-		---@note: Grabbing from 'rpbdata' means that we know that the data has been fully recorded.
 		local pbdata = object.rpbdata[aid]
+		if not pbdata then
+			continue
+		end
+
+		return pbdata
+	end
+
+	---@note: Fallback to deleted playback data if that doesn't exist.
+	for _, rpbdata in next, deletedPlaybackData do
+		local pbdata = rpbdata[aid]
 		if not pbdata then
 			continue
 		end
