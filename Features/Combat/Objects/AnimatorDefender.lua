@@ -178,7 +178,7 @@ AnimatorDefender.latest = LPH_NO_VIRTUALIZE(function(self)
 	local latestTimePosition = nil
 
 	for _, keyframe in next, self.keyframes do
-		if self:tp() <= keyframe.tp then
+		if (self:tp() or 0.0) <= keyframe.tp then
 			continue
 		end
 
@@ -193,6 +193,34 @@ AnimatorDefender.latest = LPH_NO_VIRTUALIZE(function(self)
 	return latestKeyframe
 end)
 
+---Get time position from history and track.
+---@param track AnimationTrack
+---@param pbdata PlaybackData
+---@param offset number
+---@return number?
+function AnimatorDefender:tpfh(track, pbdata, offset)
+	local last, delta = pbdata:last(offset)
+	if not last then
+		return nil
+	end
+
+	local lnext, _ = pbdata:last(offset + delta)
+	if not lnext then
+		return nil
+	end
+
+	---@note: This is the amount of seconds before the delta is reached.
+	local first = offset - delta
+
+	---@note: This is the amount of seconds after the delta is reached.
+	local second = delta
+
+	---@note: This means that the conversion to time position can use the last reached speed from the offset.
+	--- Then, the next conversion to time position can use the next reached speed from the offset after the delta.
+	--- After that, we just add them together and we have our proper answer.
+	return track.TimePosition + (first * last) + (second * lnext)
+end
+
 ---Get time position of current track.
 ---@return number?
 function AnimatorDefender:tp()
@@ -200,8 +228,19 @@ function AnimatorDefender:tp()
 		return nil
 	end
 
+	-- Check if we have valid speed history to go off of.
+	local pbdata = self.rpbdata[tostring(self.track.Animation.AnimationId)]
+	if pbdata then
+		return self:tpfh(self.track, pbdata, self.offset)
+	end
+
 	---@note: Compensate for ping. Shift the current position up by the offset to counteract the delay that we had receiving the animation.
-	return self.track.TimePosition + self.offset
+	--- If we don't have valid playback data, then all we have to go off of is the current data.
+	--- We'll have to convert our seconds into a time position using the current speed.
+	--- If the length of seconds that a track will play is equal to it's length divided by speed:
+	--- Then, Length / Speed = Seconds
+	--- So, Speed * Seconds = Length
+	return self.track.TimePosition + (self.offset * self.track.Speed)
 end
 
 ---Update playback data tracking. Attempt to record data for tracks that have not been recorded yet.
@@ -238,26 +277,30 @@ AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 		return
 	end
 
+	-- Start blocking inputs if we have keyframes to process.
+	if #self.keyframes >= 1 then
+		self:smarker("KeyframeAction")
+	end
+
 	-- Find the latest keyframe that we have exceeded, if there is even any.
 	local latest = self:latest()
 	if not latest then
 		return
 	end
 
-	-- Start blocking inputs.
-	self:smarker("KeyframeAction")
-
 	-- Clear the keyframes that we have exceeded.
 	for idx, keyframe in next, self.keyframes do
-		if self:tp() <= keyframe.tp then
+		if (self:tp() or 0.0) <= keyframe.tp then
 			continue
 		end
 
 		self.keyframes[idx] = nil
 	end
 
-	-- End blocking inputs.
-	self:emarker("KeyframeAction")
+	-- Stop blocking inputs if there are no more keyframes to process.
+	if #self.keyframes <= 0 then
+		self:emarker("KeyframeAction")
+	end
 
 	-- Ok, run action of this keyframe.
 	self.maid:mark(

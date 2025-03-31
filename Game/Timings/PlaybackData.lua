@@ -7,7 +7,7 @@ PlaybackData.__index = PlaybackData
 
 ---Get last exceeded speed difference from a timestamp delta.
 ---@param from number
----@return number?
+---@return number?, number?
 function PlaybackData:last(from)
 	local latestExceededSpeed = nil
 	local latestExceededDelta = nil
@@ -25,7 +25,7 @@ function PlaybackData:last(from)
 		latestExceededDelta = delta
 	end
 
-	return latestExceededSpeed
+	return latestExceededSpeed, latestExceededDelta
 end
 
 ---Track animation speed.
