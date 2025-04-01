@@ -93,7 +93,21 @@ InputClient.getLastRollMoveDirection = LPH_NO_VIRTUALIZE(function()
 		return nil
 	end
 
-	local lastRollMoveDirection = debug.getupvalue(rollFunction, 14) or Vector3.zero
+	local lastRollMoveDirection = nil
+
+	for _, upvalue in next, debug.getupvalues(rollFunction) do
+		if typeof(upvalue) ~= "Vector3" then
+			continue
+		end
+
+		lastRollMoveDirection = upvalue
+		break
+	end
+
+	if not lastRollMoveDirection then
+		lastRollMoveDirection = Vector3.zero
+	end
+
 	if lastRollMoveDirection and typeof(lastRollMoveDirection) ~= "Vector3" then
 		return nil
 	end

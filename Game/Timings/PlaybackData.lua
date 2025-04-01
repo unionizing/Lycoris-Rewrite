@@ -46,7 +46,7 @@ end
 function PlaybackData.new(entity)
 	local self = setmetatable({}, PlaybackData)
 	self.base = os.clock()
-	self.entity = entity
+	self.entity = entity:Clone()
 
 	---@note: Timestamp delta is how many seconds need to pass before being able to reach this speed.
 	self.ash = {}
