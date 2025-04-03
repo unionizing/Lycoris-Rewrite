@@ -128,7 +128,7 @@ PlayerESP.update = LPH_NO_VIRTUALIZE(function(self)
 
 	local expectedAdornee = predictedPosition and self.shadow or model
 
-	if expectedAdornee == nil or not expectedAdornee.Parent:IsDescendantOf(game) then
+	if expectedAdornee == nil or not expectedAdornee.Parent or not expectedAdornee.Parent:IsDescendantOf(game) then
 		return self:visible(false)
 	end
 
