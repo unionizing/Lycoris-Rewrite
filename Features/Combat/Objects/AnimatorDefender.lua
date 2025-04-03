@@ -193,16 +193,51 @@ AnimatorDefender.latest = LPH_NO_VIRTUALIZE(function(self)
 	return latestKeyframe
 end)
 
----Get time position of current track.
----@return number?
-function AnimatorDefender:tp()
-	if not self.track or self.offset == nil then
-		return nil
-	end
-
-	---@note: Compensate for ping. Shift the current position up by the offset to counteract the delay that we had receiving the animation.
-	--- Assume that our time is shifted by X amount of time position of speed 1.
-	return self.track.TimePosition + self.offset
+--Get time position from history and track.
+ ---@param track AnimationTrack
+ ---@param pbdata PlaybackData
+ ---@param offset number
+ ---@return number?
+ function AnimatorDefender:tpfh(track, pbdata, offset)
+ 	local last, delta = pbdata:last(offset)
+ 	if not last then
+ 		return nil
+ 	end
+ 
+ 	local lnext, _ = pbdata:last(offset + delta)
+ 	if not lnext then
+ 		return nil
+ 	end
+ 
+ 	---@note: This is the amount of seconds before the delta is reached.
+ 	local first = offset - delta
+ 
+ 	---@note: This is the amount of seconds after the delta is reached.
+ 	local second = delta
+ 
+ 	---@note: This means that the conversion to time position can use the last reached speed from the offset.
+ 	--- Then, the next conversion to time position can use the next reached speed from the offset after the delta.
+ 	--- After that, we just add them together and we have our proper answer.
+ 	return track.TimePosition + (first * last) + (second * lnext)
+ end
+ 
+ ---Get time position of current track.
+ ---@note: This method is ping compensated, we attempt to calculate from the initial delay of receiving the animation how much forwards (e.g where we would be at) we would be.
+ ---@return number?
+ function AnimatorDefender:tp()
+ 	if not self.track or self.offset == nil then
+ 		return nil
+ 	end
+ 
+ 	-- Check if we have valid speed history to go off of.
+ 	local pbdata = self.rpbdata[tostring(self.track.Animation.AnimationId)]
+ 	if pbdata then
+ 		return self:tpfh(self.track, pbdata, self.offset)
+ 	end
+ 
+ 	---@note: Compensate for ping. Shift the current position up by the offset to counteract the delay that we had receiving the animation.
+ 	--- We have no valid speed history to go off of. Let's use the current speed.
+ 	return self.track.TimePosition + (self.offset * self.track.Speed)
 end
 
 ---Update playback data tracking. Attempt to record data for tracks that have not been recorded yet.
