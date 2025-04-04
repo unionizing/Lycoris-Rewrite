@@ -1,8 +1,6 @@
 ---@class Action
 ---@field _type string
 ---@field _when number When the action will occur in miliseconds. Never access directly.
----@field tp number Time position if applicable.
----@field utp boolean Use time position instead of delay.
 ---@field hitbox Vector3 The hitbox of the action.
 local Action = {}
 Action.__index = Action
@@ -31,14 +29,6 @@ function Action:load(values)
 	if typeof(values.hitbox) == "table" then
 		self.hitbox = Vector3.new(values.hitbox.X, values.hitbox.Y, values.hitbox.Z)
 	end
-
-	if typeof(values.tp) == "number" then
-		self.tp = values.tp
-	end
-
-	if typeof(values.utp) == "boolean" then
-		self.utp = values.utp
-	end
 end
 
 ---Clone action.
@@ -50,8 +40,6 @@ function Action:clone()
 	clone._when = self._when
 	clone.name = self.name
 	clone.hitbox = self.hitbox
-	clone.tp = self.tp
-	clone.utp = self.utp
 
 	return clone
 end
@@ -63,8 +51,6 @@ function Action:serialize()
 		_type = self._type,
 		when = self._when,
 		name = self.name,
-		tp = self.tp,
-		utp = self.utp,
 		hitbox = {
 			X = self.hitbox.X,
 			Y = self.hitbox.Y,
@@ -83,8 +69,6 @@ function Action.new(values)
 	self._when = 0
 	self.name = ""
 	self.hitbox = Vector3.zero
-	self.tp = 0
-	self.utp = false
 
 	if values then
 		self:load(values)

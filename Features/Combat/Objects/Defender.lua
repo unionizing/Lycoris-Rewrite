@@ -277,6 +277,8 @@ Defender.notify = LPH_NO_VIRTUALIZE(function(self, timing, str, ...)
 end)
 
 ---Get ping.
+---@note: https://devforum.roblox.com/t/in-depth-information-about-robloxs-remoteevents-instance-replication-and-physics-replication-w-sources/1847340
+---@note: This is our round-trip time (e.g double the ping) since we have a receiving delay (replication) and a sending delay when we send the input to the server.
 ---@return number
 function Defender:ping()
 	local network = stats:FindFirstChild("Network")
@@ -294,9 +296,7 @@ function Defender:ping()
 		return
 	end
 
-	---@note: https://devforum.roblox.com/t/in-depth-information-about-robloxs-remoteevents-instance-replication-and-physics-replication-w-sources/1847340
-	--- Perhaps, we should use the RakNet ping instead? We only care about how long it took for the client to receive the animation replication packets.
-	return dataPingItem:GetValue() / 1000
+	return (dataPingItem:GetValue() / 1000) * 2.0
 end
 
 ---Handle end block.

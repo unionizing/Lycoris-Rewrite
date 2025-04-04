@@ -32,7 +32,6 @@ local PlaybackData = require("Game/Timings/PlaybackData")
 ---@field animator Animator
 ---@field entity Model
 ---@field heffects Instance[]
----@field offset number? The ping in seconds when we received the animation track.
 ---@field lunisynctp number? The last time we unisynced the animation track.
 ---@field keyframes Action[]
 ---@field timing AnimationTiming?
@@ -171,79 +170,9 @@ AnimatorDefender.rpue = LPH_NO_VIRTUALIZE(function(self, track, timing, index)
 	InputClient.parry()
 end)
 
----Get latest keyframe that we've exceeded.
----@return Action?
-AnimatorDefender.latest = LPH_NO_VIRTUALIZE(function(self)
-	local latestKeyframe = nil
-	local latestTimePosition = nil
-
-	for _, keyframe in next, self.keyframes do
-		if (self:tp() or 0.0) <= keyframe.tp then
-			continue
-		end
-
-		if latestTimePosition and keyframe.tp <= latestTimePosition then
-			continue
-		end
-
-		latestTimePosition = keyframe.tp
-		latestKeyframe = keyframe
-	end
-
-	return latestKeyframe
-end)
-
- ---Get time position from history and track.
- ---@param track AnimationTrack
- ---@param pbdata PlaybackData
- ---@param offset number
- ---@return number?
- function AnimatorDefender:tpfh(track, pbdata, offset)
- 	local last, delta = pbdata:last(offset)
- 	if not last then
- 		return nil
- 	end
- 
- 	local lnext, _ = pbdata:last(offset + delta)
- 	if not lnext then
- 		return nil
- 	end
- 
- 	---@note: This is the amount of seconds before the delta is reached.
- 	local first = offset - delta
- 
- 	---@note: This is the amount of seconds after the delta is reached.
- 	local second = delta
- 
- 	---@note: This means that the conversion to time position can use the last reached speed from the offset.
- 	--- Then, the next conversion to time position can use the next reached speed from the offset after the delta.
- 	--- After that, we just add them together and we have our proper answer.
- 	return track.TimePosition + (first * last) + (second * lnext)
- end
- 
- ---Get time position of current track.
- ---@note: This method is ping compensated, we attempt to calculate from the initial delay of receiving the animation how much forwards (e.g where we would be at) we would be.
- ---@todo: We should likely also subtract our round-trip time (e.g double the ping) since we have a receiving delay and a sending delay when we send the action to the server.
- ---@return number?
- function AnimatorDefender:tp()
- 	if not self.track or self.offset == nil then
- 		return nil
- 	end
- 
- 	-- Check if we have valid speed history to go off of.
- 	local pbdata = self.rpbdata[tostring(self.track.Animation.AnimationId)]
- 	if pbdata then
- 		return self:tpfh(self.track, pbdata, self.offset)
- 	end
- 
- 	---@note: Compensate for ping. Shift the current position up by the offset to counteract the delay that we had receiving the animation.
- 	--- We have no valid speed history to go off of. Let's use the current speed.
- 	return self.track.TimePosition + (self.offset * self.track.Speed)
-end
-
----Update playback data tracking. Attempt to record data for tracks that have not been recorded yet.
+---Update keyframe handling.
 ---@param self AnimatorDefender
-AnimatorDefender.updt = LPH_NO_VIRTUALIZE(function(self)
+AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 	for track, data in next, self.pbdata do
 		-- Check if the track is playing.
 		if not track.IsPlaying then
@@ -257,88 +186,6 @@ AnimatorDefender.updt = LPH_NO_VIRTUALIZE(function(self)
 
 		-- Start tracking the animation's speed.
 		data:astrack(track.Speed)
-	end
-end)
-
----Update keyframe handling.
----@param self AnimatorDefender
-AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
-	-- Update playback data tracking.
-	self:updt()
-
-	-- Run on validated track & timing.
-	if not self.track or not self.timing then
-		return
-	end
-
-	if not self.track.IsPlaying then
-		return
-	end
-
-	-- Start blocking inputs if we have keyframes to process.
-	if #self.keyframes >= 1 then
-		self:smarker("KeyframeAction")
-	end
-
-	-- Find the latest keyframe that we have exceeded, if there is even any.
-	local latest = self:latest()
-	if not latest then
-		return
-	end
-
-	-- Clear the keyframes that we have exceeded.
-	local tp = self:tp() or 0.0
-
-	for idx, keyframe in next, self.keyframes do
-		if tp <= keyframe.tp then
-			continue
-		end
-
-		self.keyframes[idx] = nil
-	end
-
-	-- Stop blocking inputs if there are no more keyframes to process.
-	if #self.keyframes <= 0 then
-		self:emarker("KeyframeAction")
-	end
-
-	-- Ok, run action of this keyframe.
-	self.maid:mark(
-		TaskSpawner.spawn(
-			string.format("KeyframeAction_%s", latest._type),
-			self.handle,
-			self,
-			self.timing,
-			latest,
-			"(%.2f) (compensating %.2f) Keyframe action type '%s' is being executed.",
-			tp,
-			tp - self.track.TimePosition,
-			latest._type
-		)
-	)
-end)
-
----Add animation delta actions.
----@param self AnimatorDefender
----@param timing AnimationTiming
-AnimatorDefender.aeactions = LPH_NO_VIRTUALIZE(function(self, timing)
-	for _, action in next, timing.actions:get() do
-		-- Skip all actions that are non animation delta based.
-		if not action.utp then
-			continue
-		end
-
-		-- Add to keyframe list.
-		self.keyframes[#self.keyframes + 1] = action
-
-		-- Log.
-		self:notify(
-			timing,
-			"Added action '%s' (position %.2f) with ping '%.2f' adjusted for.",
-			action.name,
-			action.tp,
-			self.offset
-		)
 	end
 end)
 
@@ -517,7 +364,6 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 
 	-- Set current data.
 	self.timing = timing
-	self.offset = self:ping()
 	self.track = track
 
 	-- Use module over actions.
@@ -527,14 +373,7 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 
 	---@note: Start processing the timing. Add the actions if we're not RPUE.
 	if not timing.rpue then
-		-- Add animation actions.
-		self:aeactions(timing)
-
-		-- Add actions.
-		self:actions(timing)
-
-		-- Return.
-		return
+		return self:actions()
 	end
 
 	self:mark(
@@ -588,7 +427,6 @@ function AnimatorDefender.new(animator, manimations)
 	self.manimations = manimations
 	self.entity = entity
 
-	self.offset = nil
 	self.track = nil
 	self.timing = nil
 	self.lunisynctp = nil

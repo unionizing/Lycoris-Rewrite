@@ -36,48 +36,6 @@ function AnimationBuilderSection:exload(timing)
 	self.ignoreAnimationEnd:SetRawValue(timing.iae)
 end
 
----Load the action elements. Override me.
----@param action Action
-function AnimationBuilderSection:exaload(action)
-	self.useTimePosition:SetRawValue(action.utp)
-	self.timePosition:SetRawValue(action.tp)
-end
-
----Action delay. Override me.
----@param base table
-function AnimationBuilderSection:daction(base)
-	local depBoxOn = base:AddDependencyBox()
-	local depBoxOff = base:AddDependencyBox()
-
-	self.timePosition = depBoxOn:AddSlider(nil, {
-		Text = "Time Position",
-		Min = 0,
-		Max = 10,
-		Default = 0,
-		Rounding = 3,
-		Callback = self:anc(function(action, value)
-			action.tp = value
-		end),
-	})
-
-	BuilderSection.daction(self, depBoxOff)
-
-	depBoxOn:SetupDependencies({
-		{ self.useTimePosition, true },
-	})
-
-	depBoxOff:SetupDependencies({
-		{ self.useTimePosition, false },
-	})
-end
-
----Reset action elements. Override me.
-function AnimationBuilderSection:raction()
-	BuilderSection.raction(self)
-	self.useTimePosition:SetRawValue(false)
-	self.timePosition:SetRawValue(0)
-end
-
 ---Reset the elements. Extend me.
 function AnimationBuilderSection:reset()
 	BuilderSection.reset(self)
@@ -157,15 +115,6 @@ end
 ---Initialize action tab.
 function AnimationBuilderSection:action()
 	local tab = self.tabbox:AddTab("Action")
-
-	self.useTimePosition = tab:AddToggle(nil, {
-		Text = "Use Time Position",
-		Tooltip = "Should the action use time position instead of delay?",
-		Default = false,
-		Callback = self:anc(function(action, value)
-			action.utp = value
-		end),
-	})
 
 	self.repeatUntilParryEnd = tab:AddToggle(nil, {
 		Text = "Repeat Parry Until End",
