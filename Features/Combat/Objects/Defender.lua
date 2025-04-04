@@ -465,11 +465,6 @@ end)
 ---@param timing Timing
 Defender.actions = LPH_NO_VIRTUALIZE(function(self, timing)
 	for _, action in next, timing.actions:get() do
-		-- Skip all actions that are animation delta based.
-		if action.utp then
-			continue
-		end
-
 		-- Get ping.
 		local ping = self:ping()
 

@@ -373,7 +373,7 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 
 	---@note: Start processing the timing. Add the actions if we're not RPUE.
 	if not timing.rpue then
-		return self:actions()
+		return self:actions(timing)
 	end
 
 	self:mark(
