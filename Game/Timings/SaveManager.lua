@@ -226,6 +226,36 @@ function SaveManager.write(name)
 	Logger.notify("Config file %s has written to.", name)
 end
 
+---Clear config from config name.
+---@param name string
+function SaveManager.clear(name)
+	if not name or #name <= 0 then
+		return Logger.longNotify("Config name cannot be empty.")
+	end
+
+	local success, result = pcall(Serializer.marshal, TimingSave.new():serialize())
+
+	if not success then
+		Logger.longNotify("Failed to serialize config file %s.", name)
+
+		return Logger.warn(
+			"Timing manager ran into the error '%s' while attempting to serialize config %s.",
+			result,
+			name
+		)
+	end
+
+	success, result = pcall(fs.write, fs, name .. ".bin", result)
+
+	if not success then
+		Logger.longNotify("Failed to write config file %s.", name)
+
+		return Logger.warn("Timing manager ran into the error '%s' while attempting to write config %s.", result, name)
+	end
+
+	Logger.notify("Config file %s has cleared.", name)
+end
+
 ---Load timing from config name.
 ---@param name string
 function SaveManager.load(name)

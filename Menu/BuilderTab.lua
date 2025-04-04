@@ -108,6 +108,14 @@ function BuilderTab.initSaveManagerSection(groupbox)
 		end,
 	})
 
+	groupbox:AddButton({
+		Text = "Clear Config",
+		DoubleClick = true,
+		Func = function()
+			SaveManager.clear(configList.Value)
+		end,
+	})
+
 	groupbox:AddButton("Refresh List", function()
 		SaveManager.refresh(configList)
 		BuilderTab.refresh()
