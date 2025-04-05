@@ -78,7 +78,10 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 			{ players.LocalPlayer.Character }
 		)
 	do
+		-- Wait.
 		task.wait()
+
+		-- Mark that we should skip the action hitbox check.
 		skipActionHitbox = true
 	end
 
@@ -156,14 +159,12 @@ AnimatorDefender.rpue = LPH_NO_VIRTUALIZE(function(self, track, timing, index)
 		)
 	)
 
+	local target = Targeting.find(self.entity)
+
 	if
-		timing.duih
-		and not self:hitbox(
-			Targeting.find(self.entity).root.CFrame,
-			0,
-			timing.hitbox,
-			{ players.LocalPlayer.Character }
-		)
+		target
+		and timing.duih
+		and not self:hitbox(target.root.CFrame, 0, timing.hitbox, { players.LocalPlayer.Character })
 	then
 		return
 	end
