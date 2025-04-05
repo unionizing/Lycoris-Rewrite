@@ -279,6 +279,7 @@ function Defense.init()
 	local requests = replicatedStorage:WaitForChild("Requests")
 	local clientEffect = requests:WaitForChild("ClientEffect")
 	local clientEffectLarge = requests:WaitForChild("ClientEffectLarge")
+	local clientEffectDirect = requests:WaitForChild("ClientEffectDirect")
 
 	-- Signals.
 	local gameDescendantAdded = Signal.new(game.DescendantAdded)
@@ -287,6 +288,7 @@ function Defense.init()
 	local postSimulation = Signal.new(runService.PostSimulation)
 	local clientEffectEvent = Signal.new(clientEffect.OnClientEvent)
 	local clientEffectLargeEvent = Signal.new(clientEffectLarge.OnClientEvent)
+	local cientEffectDirect = Signal.new(clientEffectDirect.Event)
 
 	defenseMaid:add(gameDescendantAdded:connect("Defense_OnDescendantAdded", onGameDescendantAdded))
 	defenseMaid:add(gameDescendantRemoved:connect("Defense_OnDescendantRemoved", onGameDescendantRemoved))
@@ -294,6 +296,7 @@ function Defense.init()
 	defenseMaid:add(postSimulation:connect("Defense_UpdateDefenders", updateDefenders))
 	defenseMaid:add(clientEffectEvent:connect("Defense_ClientEffectEvent", onClientEffectEvent))
 	defenseMaid:add(clientEffectLargeEvent:connect("Defense_ClientEffectEventLarge", onClientEffectEvent))
+	defenseMaid:add(cientEffectDirect:connect("Defense_ClientEffectEventDirect", onClientEffectEvent))
 
 	for _, descendant in next, game:GetDescendants() do
 		onGameDescendantAdded(descendant)

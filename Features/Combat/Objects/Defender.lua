@@ -24,6 +24,7 @@ local TaskSpawner = require("Utility/TaskSpawner")
 
 ---@class Defender
 ---@field tasks Task[]
+---@field tmaid Maid Cleaned up every clean cycle.
 ---@field markers table<string, boolean> Blocking markers for unknown length timings. If the entry exists and is true, then we're blocking.
 ---@field maid Maid
 ---@field vpart Part?
@@ -391,6 +392,9 @@ end
 
 ---Clean up all tasks.
 Defender.clean = LPH_NO_VIRTUALIZE(function(self)
+	-- Clear temporary maid.
+	self.tmaid:clean()
+
 	-- Clear markers.
 	self.markers = {}
 
@@ -454,7 +458,7 @@ Defender.module = LPH_NO_VIRTUALIZE(function(self, timing)
 	self:notify(timing, "Running module '%s' on timing.", timing.smod)
 
 	-- Run module.
-	self.maid:mark(TaskSpawner.spawn(identifier, lf, self, timing))
+	self.tmaid:mark(TaskSpawner.spawn(identifier, lf, self, timing))
 end)
 
 ---Add a action to the defender object.
@@ -515,6 +519,7 @@ end
 function Defender.new()
 	local self = setmetatable({}, Defender)
 	self.tasks = {}
+	self.tmaid = Maid.new()
 	self.maid = Maid.new()
 	self.ppart = nil
 	self.vpart = nil
