@@ -32,6 +32,7 @@ local oldNewIndex = nil
 local oldTick = nil
 local oldCoroutineWrap = nil
 local oldTaskSpawn = nil
+local oldDestroy = nil
 
 ---Recursively find first valid InputClient stack.
 ---@return table?
@@ -251,6 +252,14 @@ local onNameCall = LPH_NO_VIRTUALIZE(function(...)
 		return
 	end
 
+	if
+		getnamecallmethod() == "Destroy"
+		and typeof(self) == "Instance"
+		and (self.Name == "InputClient" or self.Name == "CharacterHandler")
+	then
+		return
+	end
+
 	local isActivatingMantra = self.Name == "ActivateMantra"
 
 	Defense.lastMantraActivate = isActivatingMantra and args[2] or Defense.lastMantraActivate
@@ -418,6 +427,26 @@ local onCoroutineWrap = LPH_NO_VIRTUALIZE(function(...)
 	return oldCoroutineWrap(unpack(args))
 end)
 
+---On destroy.
+---@return any
+local onDestroy = LPH_NO_VIRTUALIZE(function(...)
+	if checkcaller() then
+		return oldDestroy(...)
+	end
+
+	-- Arguments.
+	local args = { ... }
+	local self = args[1]
+
+	-- Prevent destroy.
+	if typeof(self) == "Instance" and (self.Name == "CharacterHandler" or self.Name == "InputClient") then
+		return
+	end
+
+	-- Return.
+	return oldDestroy(...)
+end)
+
 ---On task spawn.
 ---@return any
 local onTaskSpawn = LPH_NO_VIRTUALIZE(function(...)
@@ -473,6 +502,7 @@ function Hooking.init()
 	clientManager.Enabled = false
 
 	---@todo: Optimize hooks - preferably filter out calls slowing performance.
+	oldDestroy = hookfunction(game.Destroy, onDestroy)
 	oldFireServer = hookfunction(Instance.new("RemoteEvent").FireServer, onFireServer)
 	oldUnreliableFireServer = hookfunction(Instance.new("UnreliableRemoteEvent").FireServer, onUnreliableFireServer)
 	oldCoroutineWrap = hookfunction(coroutine.wrap, onCoroutineWrap)
@@ -488,6 +518,10 @@ end
 ---Hooking detach.
 function Hooking.detach()
 	local localPlayer = playersService.LocalPlayer
+
+	if oldDestroy then
+		hookfunction(game.Destroy, oldDestroy)
+	end
 
 	if oldTick then
 		hookfunction(tick, oldTick)

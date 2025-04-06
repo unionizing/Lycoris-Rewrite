@@ -445,6 +445,11 @@ function Visuals.init()
 	createChildrenListener(ingredients, "Ingredients", onIngredientsChildAdded, onInstanceRemoving)
 	createChildrenListener(players, "Players", onPlayerAdded, onInstanceRemoving)
 
+	local chests = workspace:FindFirstChild("Chests")
+	if chests then
+		createChildrenListener(chests, "Chests", onWorkspaceChildAdded, onInstanceRemoving)
+	end
+
 	---@note: We only need to get this once.
 	for _, descendant in next, replicatedStorage:WaitForChild("MarkerWorkspace"):GetDescendants() do
 		if descendant.Name ~= "AreaMarker" then
