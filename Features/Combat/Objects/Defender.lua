@@ -323,16 +323,10 @@ Defender.bend = LPH_NO_VIRTUALIZE(function(self)
 	InputClient.bend(false)
 end)
 
----Handle action.
----@param timing Timing
+---Direct action handling.
+---@param timing Action
 ---@param action Action
----@param origin Vector3?
----@varargs ... any Arguments to be passed into notification.
-Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, origin, ...)
-	if not self:valid(timing, action, origin) then
-		return
-	end
-
+Defender.dahandle = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then
 		return
@@ -342,8 +336,6 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, origin, ...)
 	if not effectReplicatorModule then
 		return
 	end
-
-	self:notify(timing, ...)
 
 	if action._type == "Start Block" then
 		return InputClient.bstart()
@@ -364,6 +356,21 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, origin, ...)
 	end
 
 	InputClient.parry()
+end)
+
+---Handle action.
+---@param timing Timing
+---@param action Action
+---@param origin Vector3?
+---@varargs ... any Arguments to be passed into notification.
+Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, origin, ...)
+	if not self:valid(timing, action, origin) then
+		return
+	end
+
+	self:notify(timing, ...)
+
+	self:dahandle(timing, action)
 end)
 
 ---Check if we have input blocking tasks.
