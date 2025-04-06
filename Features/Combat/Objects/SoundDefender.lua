@@ -29,13 +29,14 @@ local players = game:GetService("Players")
 ---@param timing PartTiming
 ---@param action Action
 ---@param origin CFrame?
+---@param foreign boolean?
 ---@return boolean
-SoundDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin)
+SoundDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin, foreign)
 	while timing.duih and not self:hitbox(self.part.CFrame, 0, timing.hitbox, { players.LocalPlayer.Character }) do
 		task.wait()
 	end
 
-	if self.owner and not Targeting.find(self.owner) then
+	if not foreign and self.owner and not Targeting.find(self.owner) then
 		return self:notify(timing, "Not a viable target.")
 	end
 

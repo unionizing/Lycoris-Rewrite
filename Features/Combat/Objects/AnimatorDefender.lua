@@ -53,8 +53,9 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 ---@param timing AnimationTiming
 ---@param action Action
 ---@param origin CFrame?
+---@param foreign boolean? If true, we don't want to check the target.
 ---@return boolean
-AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin)
+AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin, foreign)
 	if not self.track then
 		return self:notify(timing, "No current track.")
 	end
@@ -64,7 +65,7 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin
 	end
 
 	local target = Targeting.find(self.entity)
-	if not target then
+	if not foreign and not target then
 		return self:notify(timing, "Not a viable target.")
 	end
 
@@ -149,7 +150,11 @@ end)
 ---@param index number
 AnimatorDefender.rpue = LPH_NO_VIRTUALIZE(function(self, track, timing, index)
 	if not track.IsPlaying then
-		return
+		return Logger.warn(
+			"Stopping RPUE '%s' because the track (%s) is not playing.",
+			timing.name,
+			track.Animation.AnimationId
+		)
 	end
 
 	self:mark(
@@ -178,11 +183,18 @@ AnimatorDefender.rpue = LPH_NO_VIRTUALIZE(function(self, track, timing, index)
 			{ players.LocalPlayer.Character }
 		)
 	then
-		return
+		return Logger.warn("Stopping RPUE '%s' because the hitbox is not valid.", timing.name)
 	end
 
-	if not self:initial(self.entity, SaveManager.as, self.entity.Name, tostring(track.Animation.AnimationId)) then
-		return
+	-- Fetch distance.
+	local distance = self:distance(self.entity)
+	if not distance then
+		return Logger.warn("Stopping RPUE '%s' because the distance is missing.", timing.name)
+	end
+
+	-- Check for distance; if we have a timing.
+	if timing and (distance < timing.imdd or distance > timing.imxd) then
+		return Logger.warn("Stopping RPUE '%s' because the distance is not valid.", timing.name)
 	end
 
 	self:notify(timing, "(%i) Action 'RPUE Parry' is being executed.", index)

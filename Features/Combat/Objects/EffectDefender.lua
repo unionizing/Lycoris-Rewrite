@@ -25,8 +25,9 @@ local MAX_WAIT = 5.0
 ---@param timing PartTiming
 ---@param action Action
 ---@param origin CFrame?
+---@param foreign boolean?
 ---@return boolean
-EffectDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin)
+EffectDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin, foreign)
 	local humanoidRootPart = self.owner:FindFirstChild("HumanoidRootPart")
 	if not humanoidRootPart then
 		return self:notify(timing, "No humanoid root part found.")
@@ -42,7 +43,7 @@ EffectDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin)
 		task.wait()
 	end
 
-	if not Targeting.find(self.owner) then
+	if not foreign and not Targeting.find(self.owner) then
 		return self:notify(timing, "Not a viable target.")
 	end
 

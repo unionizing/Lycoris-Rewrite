@@ -58,9 +58,10 @@ end)
 ---@param timing PartTiming
 ---@param action Action
 ---@param origin CFrame?
+---@param foreign boolean?
 ---@return boolean
-PartDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin)
-	if self.owner and not Targeting.find(self.owner) then
+PartDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin, foreign)
+	if not foreign and self.owner and not Targeting.find(self.owner) then
 		return self:notify(timing, "Not a viable target.")
 	end
 
