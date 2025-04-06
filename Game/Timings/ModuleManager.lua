@@ -70,7 +70,7 @@ function ModuleManager.refresh()
 		end
 
 		if typeof(result) ~= "function" then
-			Logger.warn("Module file '%s' is invalid because it does not return a function.")
+			Logger.warn("Module file '%s' is invalid because it does not return a function.", file)
 			continue
 		end
 

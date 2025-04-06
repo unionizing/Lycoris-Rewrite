@@ -363,9 +363,10 @@ end)
 ---@param timing Timing
 ---@param action Action
 ---@param origin Vector3?
+---@param foreign boolean
 ---@varargs ... any Arguments to be passed into notification.
-Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, origin, ...)
-	if not self:valid(timing, action, origin) then
+Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, origin, foreign, ...)
+	if not self:valid(timing, action, origin, foreign) then
 		return
 	end
 
@@ -474,7 +475,8 @@ end)
 ---Add a action to the defender object.
 ---@param timing Timing
 ---@param action Action
-Defender.action = LPH_NO_VIRTUALIZE(function(self, timing, action)
+---@param foreign boolean
+Defender.action = LPH_NO_VIRTUALIZE(function(self, timing, action, foreign)
 	-- Get ping.
 	local ping = self:ping()
 
@@ -490,6 +492,7 @@ Defender.action = LPH_NO_VIRTUALIZE(function(self, timing, action)
 			timing,
 			action,
 			nil,
+			foreign,
 			"Action type '%s' is being executed.",
 			action._type
 		)
@@ -503,7 +506,7 @@ end)
 ---@param timing Timing
 Defender.actions = LPH_NO_VIRTUALIZE(function(self, timing)
 	for _, action in next, timing.actions:get() do
-		self:action(timing, action)
+		self:action(timing, action, false)
 	end
 end)
 
