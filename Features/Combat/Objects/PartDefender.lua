@@ -70,7 +70,12 @@ PartDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin, fo
 		return self:notify(timing, "No character found.")
 	end
 
-	if not self:hitbox(origin or self.part.CFrame, 0, action.hitbox, { character }) then
+	---@note: If we're using PartDefender, why perserve rotation? It's likely wrong or gonna mess us up.
+	--- Also, ignore this if we're using delay until in hitbox since there'd be no use-case for it being seperated.
+	if
+		not self.timing.duih
+		and not self:hitbox(origin or CFrame.new(self.part.Position), 0, action.hitbox, { character })
+	then
 		return self:notify(timing, "Not inside of the hitbox.")
 	end
 
@@ -116,7 +121,8 @@ PartDefender.update = LPH_NO_VIRTUALIZE(function(self)
 	end
 
 	-- Get current hitbox state.
-	local touching = self:hitbox(self.part.CFrame, 0, self.timing.hitbox, { character })
+	---@note: If we're using PartDefender, why perserve rotation? It's likely wrong or gonna mess us up.
+	local touching = self:hitbox(CFrame.new(self.part.Position), 0, self.timing.hitbox, { character })
 
 	-- Deny updates if we're not touching the part.
 	if not touching then

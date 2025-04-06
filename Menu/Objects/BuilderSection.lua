@@ -310,7 +310,7 @@ function BuilderSection:baction(base)
 
 	self:daction(base)
 
-	self.timingHitboxLength = base:AddSlider(nil, {
+	self.hitboxLength = base:AddSlider(nil, {
 		Text = "Hitbox Length",
 		Min = 0,
 		Max = 300,
@@ -322,7 +322,7 @@ function BuilderSection:baction(base)
 		end),
 	})
 
-	self.timingHitboxWidth = base:AddSlider(nil, {
+	self.hitboxWidth = base:AddSlider(nil, {
 		Text = "Hitbox Width",
 		Min = 0,
 		Max = 300,
@@ -334,7 +334,7 @@ function BuilderSection:baction(base)
 		end),
 	})
 
-	self.timingHitboxHeight = base:AddSlider(nil, {
+	self.hitboxHeight = base:AddSlider(nil, {
 		Text = "Hitbox Height",
 		Min = 0,
 		Max = 300,
@@ -496,7 +496,7 @@ function BuilderSection:timing()
 			self.delayUntilInHitbox:SetRawValue(found.duih)
 			self.timingHitboxLength:SetRawValue(found.hitbox.Z)
 			self.timingHitboxWidth:SetRawValue(found.hitbox.X)
-			self.timingHitboxLength:SetRawValue(found.hitbox.Y)
+			self.timingHitboxHeight:SetRawValue(found.hitbox.Y)
 			self.punishableWindow:SetRawValue(found.punishable)
 			self.afterWindow:SetRawValue(found.after)
 			self.useModuleOverActions:SetRawValue(found.umoa)
@@ -717,7 +717,7 @@ function BuilderSection:builder()
 
 	local duihDepBox = tab:AddDependencyBox()
 
-	self.hitboxLength = duihDepBox:AddSlider(nil, {
+	self.timingHitboxLength = duihDepBox:AddSlider(nil, {
 		Text = "Hitbox Length",
 		Min = 0,
 		Max = 300,
@@ -729,7 +729,7 @@ function BuilderSection:builder()
 		end),
 	})
 
-	self.hitboxWidth = duihDepBox:AddSlider(nil, {
+	self.timingHitboxWidth = duihDepBox:AddSlider(nil, {
 		Text = "Hitbox Width",
 		Min = 0,
 		Max = 300,
@@ -741,7 +741,7 @@ function BuilderSection:builder()
 		end),
 	})
 
-	self.hitboxHeight = duihDepBox:AddSlider(nil, {
+	self.timingHitboxHeight = duihDepBox:AddSlider(nil, {
 		Text = "Hitbox Height",
 		Min = 0,
 		Max = 300,
