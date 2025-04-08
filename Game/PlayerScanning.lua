@@ -61,14 +61,14 @@ local runPlayerScans = LPH_NO_VIRTUALIZE(function()
 			end
 
 			if Configuration.expectToggleValue("NotifyMod") and result then
+				Logger.longNotify("%s is a staff member with the rank '%s' in group.", player.Name, result)
+
 				local moderatorSound = Instance.new("Sound", game:GetService("CoreGui"))
 				moderatorSound.SoundId = "rbxassetid://6045346303"
 				moderatorSound.PlaybackSpeed = 1
 				moderatorSound.Volume = 10
 				moderatorSound.PlayOnRemove = true
 				moderatorSound:Destroy()
-
-				Logger.longNotify("%s is a staff member with the rank '%s' in group.", player.Name, result)
 			end
 
 			PlayerScanning.scanDataCache[player] = { staffRank = result }

@@ -167,6 +167,10 @@ return LPH_NO_VIRTUALIZE(function()
 				continue
 			end
 
+			Logger.notify("%s entered your proximity radius of %i studs.", player.Name, proximityRange)
+
+			Monitoring.seen[player] = true
+
 			if Configuration.expectToggleValue("PlayerProximityBeep") then
 				local beepSound = Instance.new("Sound", game:GetService("CoreGui"))
 				beepSound.SoundId = "rbxassetid://100849623977896"
@@ -175,10 +179,6 @@ return LPH_NO_VIRTUALIZE(function()
 				beepSound.PlayOnRemove = true
 				beepSound:Destroy()
 			end
-
-			Logger.notify("%s entered your proximity radius of %i studs.", player.Name, proximityRange)
-
-			Monitoring.seen[player] = true
 		end
 	end
 

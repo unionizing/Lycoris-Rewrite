@@ -22,9 +22,6 @@ local InputClient = require("Game/InputClient")
 ---@module Features.Combat.Objects.Task
 local Task = require("Features/Combat/Objects/Task")
 
----@module Utility.TaskSpawner
-local TaskSpawner = require("Utility/TaskSpawner")
-
 ---@module Game.Timings.PlaybackData
 local PlaybackData = require("Game/Timings/PlaybackData")
 
@@ -226,6 +223,7 @@ AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 end)
 
 ---Unisync animation track.
+---@note: Bugged and doesn't work properly.
 ---@param track AnimationTrack
 function AnimatorDefender:unisync(track)
 	if track.Looped or track.Priority == Enum.AnimationPriority.Core then
@@ -236,22 +234,32 @@ function AnimatorDefender:unisync(track)
 		return
 	end
 
+	Logger.warn(
+		"Animation %s is being unisynced from entity %s with speed %.2f and weight-target %.2f.",
+		track.Animation.AnimationId,
+		self.entity.Name,
+		track.Speed,
+		track.WeightTarget
+	)
+
 	-- Stop track immediately and save state.
-	local lastWeightCurrent, lastSpeed, lastPriority = track.WeightCurrent, track.Speed, track.Priority
+	local lastWeightTarget, lastSpeed, lastPriority = track.WeightTarget, track.Speed, track.Priority
 	track:Stop(0.0)
 
-	-- Set fake track state.
+	-- Set fake priority.
 	track.Priority = Enum.AnimationPriority.Core
-	track:AdjustSpeed(Configuration.expectOptionValue("AnimationUnisyncSpeed") or 0.0)
-	track:AdjustWeight(Configuration.expectOptionValue("AnimationUnisyncWeight") or -10.0, 0.0)
 
 	-- Replay animation.
-	track:Play(0.0, lastWeightCurrent, lastSpeed)
+	track:Play(
+		0.0,
+		Configuration.expectOptionValue("AnimationUnisyncWeight") or -10.0,
+		Configuration.expectOptionValue("AnimationUnisyncSpeed") or 0.0
+	)
 
 	-- Now, set the real track state.
 	track.Priority = lastPriority
 	track:AdjustSpeed(lastSpeed)
-	track:AdjustWeight(lastWeightCurrent, 0.0)
+	track:AdjustWeight(lastWeightTarget, 0.0)
 end
 
 ---Virtualized processing checks.
