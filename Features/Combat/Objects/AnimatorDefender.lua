@@ -79,8 +79,6 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin
 		return self:notify(timing, "No character found.")
 	end
 
-	local skipActionHitbox = false
-
 	while
 		timing.duih
 		and self.track.IsPlaying
@@ -91,15 +89,11 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin
 			{ character }
 		)
 	do
-		-- Wait.
 		task.wait()
-
-		-- Mark that we should skip the action hitbox check.
-		skipActionHitbox = true
 	end
 
 	if
-		not skipActionHitbox
+		not timing.duih
 		and not self:hitbox(
 			origin or root.CFrame,
 			timing.fhb and action.hitbox.Z / 2 or 0,
@@ -124,7 +118,7 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action, origin
 		return self:notify(timing, "Animation stopped playing.")
 	end
 
-	if timing.iae and not self.track.IsPlaying and self.track.TimePosition < self.track.Length then
+	if timing.iae and not timing.ieae and not self.track.IsPlaying and self.track.TimePosition < self.track.Length then
 		return self:notify(timing, "Animation stopped playing early.")
 	end
 

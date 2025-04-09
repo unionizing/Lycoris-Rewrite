@@ -9,6 +9,7 @@ local Timing = require("Game/Timings/Timing")
 ---@param ha boolean Flag to see whether or not this timing can be cancelled by a hit.
 ---@param fhb boolean Flag to see whether or not this timing should offset facing.
 ---@param iae boolean Flag to see whether or not this timing should ignore animation end.
+---@param ieae boolean Flag to see whether or not this timing should ignore early animation end.
 local AnimationTiming = setmetatable({}, { __index = Timing })
 AnimationTiming.__index = AnimationTiming
 
@@ -70,6 +71,10 @@ function AnimationTiming:load(values)
 	if typeof(values.iae) == "boolean" then
 		self.iae = values.iae
 	end
+
+	if typeof(values.ieae) == "boolean" then
+		self.ieae = values.ieae
+	end
 end
 
 ---Clone timing.
@@ -84,6 +89,7 @@ function AnimationTiming:clone()
 	clone.ha = self.ha
 	clone.fhb = self.fhb
 	clone.iae = self.iae
+	clone.ieae = self.ieae
 
 	return clone
 end
@@ -100,6 +106,7 @@ function AnimationTiming:serialize()
 	serializable.ha = self.ha
 	serializable.fhb = self.fhb
 	serializable.iae = self.iae
+	serializable.ieae = self.ieae
 
 	return serializable
 end
@@ -117,6 +124,7 @@ function AnimationTiming.new(values)
 	self.ha = false
 	self.fhb = true
 	self.iae = false
+	self.ieae = false
 
 	if values then
 		self:load(values)

@@ -34,6 +34,7 @@ function AnimationBuilderSection:exload(timing)
 	self.hyperarmor:SetRawValue(timing.ha)
 	self.hitboxFacingOffset:SetRawValue(timing.fhb)
 	self.ignoreAnimationEnd:SetRawValue(timing.iae)
+	self.ignoreEarlyAnimationEnd:SetRawValue(timing.ieae)
 end
 
 ---Reset the elements. Extend me.
@@ -46,6 +47,7 @@ function AnimationBuilderSection:reset()
 	self.hyperarmor:SetRawValue(false)
 	self.hitboxFacingOffset:SetRawValue(true)
 	self.ignoreAnimationEnd:SetRawValue(false)
+	self.ignoreEarlyAnimationEnd:SetRawValue(false)
 end
 
 ---Check before creating new timing. Override me.
@@ -108,6 +110,15 @@ function AnimationBuilderSection:extra(tab)
 		Default = false,
 		Callback = self:tnc(function(timing, value)
 			timing.iae = value
+		end),
+	})
+
+	self.ignoreEarlyAnimationEnd = tab:AddToggle(nil, {
+		Text = "Ignore Early Animation End",
+		Tooltip = "Should the timing ignore the early end of the animation?",
+		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing.ieae = value
 		end),
 	})
 end
