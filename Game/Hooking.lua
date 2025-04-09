@@ -33,6 +33,9 @@ local oldTick = nil
 local oldCoroutineWrap = nil
 local oldTaskSpawn = nil
 
+-- Ban remotes table.
+local banRemotes = {}
+
 ---Recursively find first valid InputClient stack.
 ---@return table?
 local findInputClientStack = LPH_NO_VIRTUALIZE(function()
@@ -240,15 +243,8 @@ local onNameCall = LPH_NO_VIRTUALIZE(function(...)
 	local args = { ... }
 	local self = args[1]
 
-	local heavenRemote = KeyHandling.getRemote("Heaven")
-	local hellRemote = KeyHandling.getRemote("Hell")
-
-	if heavenRemote and self == heavenRemote then
-		return
-	end
-
-	if hellRemote and self == hellRemote then
-		return
+	if banRemotes[self] then
+		return Logger.warn("(%s) Anticheat is referencing a ban remote.", self.Name)
 	end
 
 	local isActivatingMantra = self.Name == "ActivateMantra"
@@ -294,21 +290,8 @@ local onUnreliableFireServer = LPH_NO_VIRTUALIZE(function(...)
 	local args = { ... }
 	local self = args[1]
 
-	local heavenRemote = KeyHandling.getRemote("Heaven")
-	local hellRemote = KeyHandling.getRemote("Hell")
-
-	if not heavenRemote or not hellRemote then
-		Logger.warn("Heaven (%s) or Hell (%s) remote is nil.", tostring(heavenRemote), tostring(hellRemote))
-	end
-
-	if heavenRemote and self == heavenRemote then
-		Logger.warn("Anticheat is attempting to ban us with the Heaven remote.")
-		return warn(...)
-	end
-
-	if hellRemote and self == hellRemote then
-		Logger.warn("Anticheat is attempting to ban us with the Hell remote.")
-		return warn(...)
+	if banRemotes[self] then
+		return Logger.warn("(%s) Anticheat is calling a unreliable ban remote.", self.Name)
 	end
 
 	local leftClickRemote = KeyHandling.getRemote("LeftClick")
@@ -337,21 +320,8 @@ local onFireServer = LPH_NO_VIRTUALIZE(function(...)
 	local args = { ... }
 	local self = args[1]
 
-	local heavenRemote = KeyHandling.getRemote("Heaven")
-	local hellRemote = KeyHandling.getRemote("Hell")
-
-	if not heavenRemote or not hellRemote then
-		Logger.warn("Heaven (%s) or Hell (%s) remote is nil.", tostring(heavenRemote), tostring(hellRemote))
-	end
-
-	if heavenRemote and self == heavenRemote then
-		Logger.warn("Anticheat is attempting to ban us with the Heaven remote.")
-		return warn(...)
-	end
-
-	if hellRemote and self == hellRemote then
-		Logger.warn("Anticheat is attempting to ban us with the Hell remote.")
-		return warn(...)
+	if banRemotes[self] then
+		return Logger.warn("(%s) Anticheat is calling a ban remote.", self.Name)
 	end
 
 	return oldFireServer(...)
@@ -487,9 +457,27 @@ function Hooking.init()
 	local playerScripts = localPlayer:WaitForChild("PlayerScripts")
 	local clientActor = playerScripts:WaitForChild("ClientActor")
 	local clientManager = clientActor:WaitForChild("ClientManager")
+	local requests = replicatedStorage:WaitForChild("Requests")
 
 	---@note: Crucial part because of the actor and the error detection.
 	clientManager.Enabled = false
+
+	---@note: Dynamically get the ban remotes.
+	local banRemoteCount = 0
+
+	for _, request in next, requests:GetChildren() do
+		local hasChangedConnection = #getconnections(request.Changed)
+		if hasChangedConnection <= 0 then
+			continue
+		end
+
+		banRemoteCount = banRemoteCount + 1
+		banRemotes[request] = true
+	end
+
+	if banRemoteCount ~= 2 then
+		return error("Anticheat has less or more than two ban remotes.")
+	end
 
 	---@todo: Optimize hooks - preferably filter out calls slowing performance.
 	oldFireServer = hookfunction(Instance.new("RemoteEvent").FireServer, onFireServer)
