@@ -48,6 +48,10 @@ local deletedPlaybackData = {}
 -- Mob animations.
 local mobAnimations = {}
 
+-- Current wisp string & position.
+local cws = nil
+local cwp = nil
+
 -- Update.
 local lastVisualizationUpdate = os.clock()
 
@@ -256,6 +260,98 @@ Defense.agpd = LPH_NO_VIRTUALIZE(function(aid)
 	end
 end)
 
+---Handle spell string & position.
+---@param position number
+---@param str string
+local hssp = LPH_NO_VIRTUALIZE(function(position, str)
+	if position <= 0 or position > #str then
+		return
+	end
+
+	local character = str:sub(position, position)
+	if character ~= "Z" and character ~= "X" and character ~= "C" and character ~= "V" then
+		return
+	end
+
+	local localPlayer = players.LocalPlayer
+	local mouse = localPlayer:GetMouse()
+
+	local requests = replicatedStorage:FindFirstChild("Requests")
+	if not requests then
+		return
+	end
+
+	local spellCheck = requests:FindFirstChild("SpellCheck")
+	if not spellCheck then
+		return
+	end
+
+	spellCheck:FireServer(character, mouse.Hit)
+end)
+
+---On spell event.
+---@param name string
+---@param data any?
+local onSpellEvent = LPH_NO_VIRTUALIZE(function(name, data)
+	if not Configuration.expectToggleValue("AutoWisp") then
+		return
+	end
+
+	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
+	if not effectReplicator then
+		return
+	end
+
+	local effectReplicatorModule = require(effectReplicator)
+	if not effectReplicatorModule then
+		return
+	end
+
+	if not effectReplicatorModule:HasEffect("RitualCastingSpell") then
+		return
+	end
+
+	if effectReplicatorModule:HasEffect("Knocked") then
+		return
+	end
+
+	local requests = replicatedStorage:FindFirstChild("Requests")
+	local spellCheck = requests and requests:FindFirstChild("SpellCheck")
+	if not spellCheck then
+		return
+	end
+
+	-- Close.
+	if name == "close" then
+		cws = nil
+		cwp = nil
+	end
+
+	---@note: We don't want to handle the current position if it isn't set or shift.
+	if name ~= "set" and name ~= "shift" then
+		return
+	end
+
+	-- Set the current position & string.
+	if name == "set" then
+		cws = data
+		cwp = 0
+	end
+
+	-- If there's no 'cws' and no 'cwp', don't continue.
+	if not cws or not cwp then
+		return
+	end
+
+	-- Shift our position if we were successful!
+	if name == "shift" then
+		cwp = cwp + 1
+	end
+
+	-- Handle position.
+	hssp(cwp, cws)
+end)
+
 ---Initialize defense.
 function Defense.init()
 	-- Cache mob animations.
@@ -280,6 +376,7 @@ function Defense.init()
 	local clientEffect = requests:WaitForChild("ClientEffect")
 	local clientEffectLarge = requests:WaitForChild("ClientEffectLarge")
 	local clientEffectDirect = requests:WaitForChild("ClientEffectDirect")
+	local spell = requests:WaitForChild("Spell")
 
 	-- Signals.
 	local gameDescendantAdded = Signal.new(game.DescendantAdded)
@@ -289,6 +386,7 @@ function Defense.init()
 	local clientEffectEvent = Signal.new(clientEffect.OnClientEvent)
 	local clientEffectLargeEvent = Signal.new(clientEffectLarge.OnClientEvent)
 	local cientEffectDirect = Signal.new(clientEffectDirect.Event)
+	local spellEvent = Signal.new(spell.OnClientEvent)
 
 	defenseMaid:add(gameDescendantAdded:connect("Defense_OnDescendantAdded", onGameDescendantAdded))
 	defenseMaid:add(gameDescendantRemoved:connect("Defense_OnDescendantRemoved", onGameDescendantRemoved))
@@ -297,6 +395,7 @@ function Defense.init()
 	defenseMaid:add(clientEffectEvent:connect("Defense_ClientEffectEvent", onClientEffectEvent))
 	defenseMaid:add(clientEffectLargeEvent:connect("Defense_ClientEffectEventLarge", onClientEffectEvent))
 	defenseMaid:add(cientEffectDirect:connect("Defense_ClientEffectEventDirect", onClientEffectEvent))
+	defenseMaid:add(spellEvent:connect("Defense_SpellEvent", onSpellEvent))
 
 	for _, descendant in next, game:GetDescendants() do
 		onGameDescendantAdded(descendant)

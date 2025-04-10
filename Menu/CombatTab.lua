@@ -239,20 +239,22 @@ function CombatTab.initAttackAssistanceSection(groupbox)
 	})
 end
 
--- Initialize input assistance section.
----@param groupbox table
-function CombatTab.initInputAssistance(groupbox)
-	groupbox:AddToggle("M1Hold", {
-		Text = "M1 Hold",
-		Default = false,
-	})
-end
-
--- Initialize combat assistance section.
+---Initialize combat assistance section.
 ---@param groupbox table
 function CombatTab.initCombatAssistance(groupbox)
+	groupbox:AddToggle("AutoWisp", {
+		Text = "Auto Wisp",
+		Default = false,
+		Tooltip = "Automatically cast your Wisp for you without pressing the buttons.",
+	})
+
 	groupbox:AddToggle("PerfectMantraCast", {
 		Text = "Perfect Mantra Cast",
+		Default = false,
+	})
+
+	groupbox:AddToggle("M1Hold", {
+		Text = "M1 Hold",
 		Default = false,
 	})
 
@@ -311,7 +313,6 @@ function CombatTab.init(window)
 	-- Initialize other sections.
 	CombatTab.initFeintDetectionSection(tab:AddDynamicGroupbox("Feint Detection"))
 	CombatTab.initAttackAssistanceSection(tab:AddDynamicGroupbox("Attack Assistance"))
-	CombatTab.initInputAssistance(tab:AddDynamicGroupbox("Input Assistance"))
 	CombatTab.initCombatAssistance(tab:AddDynamicGroupbox("Combat Assistance"))
 end
 
