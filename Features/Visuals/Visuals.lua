@@ -112,6 +112,7 @@ local updateSanityTracker = LPH_NO_VIRTUALIZE(function()
 	local sanityTextLabel = InstanceWrapper.mark(visualsMaid, "SanityTextLabel", crownsTextLabel:Clone())
 	sanityTextLabel.Name = "Sanity"
 	sanityTextLabel.Parent = currencyFrame
+	sanityTextLabel.Visible = true
 
 	-- Amount.
 	local amountLabel = sanityTextLabel:FindFirstChild("Amount")
@@ -119,7 +120,7 @@ local updateSanityTracker = LPH_NO_VIRTUALIZE(function()
 		return
 	end
 
-	amountLabel.Text = string.format("%.2f / %.2f", sanity.Value, sanity.MaxValue)
+	amountLabel.Text = string.format("%i / %i", sanity.Value, sanity.MaxValue)
 	amountLabel.TextColor3 = Color3.fromRGB(2, 177, 255)
 
 	-- Icon.
@@ -130,6 +131,8 @@ local updateSanityTracker = LPH_NO_VIRTUALIZE(function()
 
 	icon.Image = "http://www.roblox.com/asset/?id=16865012250"
 	icon.ImageColor3 = Color3.fromRGB(0, 162, 255)
+	icon.ImageRectOffset = Vector2.new(0, 0)
+	icon.ImageRectSize = Vector2.new(0, 0)
 
 	-- Lore.
 	sanityTextLabel:SetAttribute("Tip_Title", "Sanity")
