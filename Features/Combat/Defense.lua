@@ -54,7 +54,6 @@ local mobAnimations = {}
 -- Current wisp string & position.
 local cws = nil
 local cwp = nil
-local cwt = nil
 
 -- Update.
 local lastVisualizationUpdate = os.clock()
@@ -208,12 +207,6 @@ end)
 ---@param position number
 ---@param str string
 local hssp = LPH_NO_VIRTUALIZE(function(position, str)
-	if os.clock() - cwt <= 0.1 then
-		return
-	end
-
-	cwt = os.clock()
-
 	if position <= 0 or position > #str then
 		return Logger.warn("Invalid position (%i vs. %i) for Auto Wisp.", position, #str)
 	end
@@ -277,7 +270,7 @@ local updateDefenders = LPH_NO_VIRTUALIZE(function()
 		InputClient.left()
 	end
 
-	if Configuration.expectToggleValue("AutoWisp") and cwp and cws and cwt then
+	if Configuration.expectToggleValue("AutoWisp") and cwp and cws then
 		hssp(cwp, cws)
 	end
 
@@ -339,18 +332,16 @@ local onSpellEvent = LPH_NO_VIRTUALIZE(function(name, data)
 	if name == "close" then
 		cws = nil
 		cwp = nil
-		cwt = nil
 	end
 
 	-- Set the current position & string.
 	if name == "set" then
 		cws = data
 		cwp = 1
-		cwt = os.clock()
 	end
 
 	-- Shift our position if we were successful.
-	if cws and cwt and cwp and name == "shift" then
+	if cws and cwp and name == "shift" then
 		cwp = cwp + 1
 	end
 end)
