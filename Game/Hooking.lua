@@ -275,26 +275,8 @@ end)
 ---On name call.
 ---@return any
 local onNameCall = LPH_NO_VIRTUALIZE(function(...)
-	if checkcaller() then
-		return oldNameCall(...)
-	end
-
 	local args = { ... }
 	local self = args[1]
-
-	if banRemotes[self] then
-		return Logger.warn("(%s) Anticheat is referencing a ban remote.", self.Name)
-	end
-
-	local isActivatingMantra = self.Name == "ActivateMantra"
-
-	if typeof(args[2]) == "Instance" and isActivatingMantra then
-		Defense.lastMantraActivate = args[2]
-	end
-
-	if isActivatingMantra and Configuration.expectToggleValue("BlockPunishableMantras") and Defense.blocking() then
-		return
-	end
 
 	if
 		typeof(self) == "Instance"
@@ -303,7 +285,7 @@ local onNameCall = LPH_NO_VIRTUALIZE(function(...)
 		and Configuration.expectToggleValue("InfoSpoofing")
 	then
 		local character = playersService.LocalPlayer.Character
-		local humanoid = character:FindFirstChild("Humanoid")
+		local humanoid = game.FindFirstChild(character, "Humanoid")
 		local foreign = true
 
 		if character and humanoid and (self.Parent == character and self.Parent == humanoid) then
@@ -337,6 +319,24 @@ local onNameCall = LPH_NO_VIRTUALIZE(function(...)
 		if args[2] == "GuildRich" then
 			return foreign and "discord.gg/lyc" or Configuration.expectOptionValue("SpoofedGuildName")
 		end
+	end
+
+	if checkcaller() then
+		return oldNameCall(...)
+	end
+
+	if banRemotes[self] then
+		return Logger.warn("(%s) Anticheat is referencing a ban remote.", self.Name)
+	end
+
+	local isActivatingMantra = self.Name == "ActivateMantra"
+
+	if typeof(args[2]) == "Instance" and isActivatingMantra then
+		Defense.lastMantraActivate = args[2]
+	end
+
+	if isActivatingMantra and Configuration.expectToggleValue("BlockPunishableMantras") and Defense.blocking() then
+		return
 	end
 
 	---@note: Fix object if we're using a lighting template.
