@@ -33,6 +33,7 @@ local oldNewIndex = nil
 local oldTick = nil
 local oldCoroutineWrap = nil
 local oldTaskSpawn = nil
+local oldIndex = nil
 
 -- Ban remotes table.
 local banRemotes = {}
@@ -234,6 +235,43 @@ local onTick = LPH_NO_VIRTUALIZE(function(...)
 	return -math.huge
 end)
 
+---On index.
+---@return any
+local onIndex = LPH_NO_VIRTUALIZE(function(...)
+	if checkcaller() then
+		return oldIndex(...)
+	end
+
+	local args = { ... }
+	local self = args[1]
+	local index = args[2]
+
+	---@note: Patch out InputClient detection for __index hooking to prevent annoying errors.
+	if typeof(index) == "table" and findInputClientLevel() then
+		return error("InputClient - Lycoris On Top")
+	end
+
+	if not Configuration.expectToggleValue("InfoSpoofing") then
+		return oldIndex(...)
+	end
+
+	if typeof(self) == "Instance" and typeof(index) == "string" and index == "Value" then
+		if self.Name == "SERVER_NAME" then
+			return Configuration.expectOptionValue("SpoofedServerName")
+		end
+
+		if self.Name == "SERVER_REGION" then
+			return Configuration.expectOptionValue("SpoofedServerRegion")
+		end
+
+		if self.Name == "SERVER_AGE" then
+			return Configuration.expectOptionValue("SpoofedServerAge")
+		end
+	end
+
+	return oldIndex(...)
+end)
+
 ---On name call.
 ---@return any
 local onNameCall = LPH_NO_VIRTUALIZE(function(...)
@@ -258,14 +296,41 @@ local onNameCall = LPH_NO_VIRTUALIZE(function(...)
 		return
 	end
 
-	---@note: Just shut it down if we're using a lighting template.
-	if getnamecallmethod() == "Play" and typeof(self) == "Instance" and game.IsA(self, "Tween") then
-		if
-			self.Instance == lighting
-			and (Configuration.expectToggleValue("NoFog") or Configuration.expectToggleValue("ModifyAmbience"))
-		then
-			return
+	if
+		typeof(self) == "Instance"
+		and typeof(args[2]) == "string"
+		and getnamecallmethod() == "GetAttribute"
+		and Configuration.expectToggleValue("InfoSpoofing")
+	then
+		local character = playersService.LocalPlayer.Character
+		local other = (self.Parent == character and Configuration.expectToggleValue("SpoofOtherPlayers"))
+
+		if character and args[2] == "CharacterName" then
+			return other and "Lycoris On Top" or Configuration.expectOptionValue("SpoofedCharacterName")
 		end
+	end
+
+	---@note: Fix object if we're using a lighting template.
+	local lightingTemplate = args[3]
+
+	if
+		getnamecallmethod() == "Create"
+		and typeof(lightingTemplate) == "table"
+		and lightingTemplate["FogStart"]
+		and lightingTemplate["FogEnd"]
+	then
+		if Configuration.expectToggleValue("NoFog") then
+			lightingTemplate["FogStart"] = 9e9
+			lightingTemplate["FogEnd"] = 9e9
+			args[2] = TweenInfo.new(0.0)
+		end
+
+		if Configuration.expectToggleValue("ModifyAmbience") then
+			lightingTemplate["Ambient"] = modifyAmbienceColor(lightingTemplate["Ambient"])
+			args[2] = TweenInfo.new(0.0)
+		end
+
+		return oldNameCall(unpack(args))
 	end
 
 	if self.Name == "AcidCheck" and Configuration.expectToggleValue("NoAcidWater") then
@@ -497,6 +562,7 @@ function Hooking.init()
 	oldUnreliableFireServer = hookfunction(Instance.new("UnreliableRemoteEvent").FireServer, onUnreliableFireServer)
 	oldCoroutineWrap = hookfunction(coroutine.wrap, onCoroutineWrap)
 	oldTaskSpawn = hookfunction(task.spawn, onTaskSpawn)
+	oldIndex = hookfunction(getrawmetatable(game).__index, onIndex)
 	oldNameCall = hookfunction(getrawmetatable(game).__namecall, onNameCall)
 	oldNewIndex = hookfunction(getrawmetatable(game).__newindex, onNewIndex)
 	oldTick = hookfunction(tick, onTick)
@@ -519,6 +585,10 @@ function Hooking.detach()
 
 	if oldCoroutineWrap then
 		hookfunction(coroutine.wrap, oldCoroutineWrap)
+	end
+
+	if oldIndex then
+		hookfunction(getrawmetatable(game).__index, oldIndex)
 	end
 
 	if oldNameCall then

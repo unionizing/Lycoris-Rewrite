@@ -4,6 +4,9 @@ local GameTab = {}
 ---@module Features.Game.Bestiary
 local Bestiary = require("Features/Game/Bestiary")
 
+---@module Features.Game.Spoofing
+local Spoofing = require("Features/Game/Spoofing")
+
 -- Services.
 local players = game:GetService("Players")
 
@@ -490,6 +493,72 @@ function GameTab.initDebuggingSection(groupbox)
 		{ irlToggle, true },
 	})
 end
+
+---Info spoofing section.
+---@param groupbox table
+function GameTab.initInfoSpoofingSection(groupbox)
+	groupbox:AddToggle("InfoSpoofing", {
+		Text = "Enable Info Spoofing",
+		Default = false,
+		Callback = Spoofing.rics,
+	})
+
+	local isDepBox = groupbox:AddDependencyBox()
+
+	isDepBox:AddToggle("SpoofOtherPlayers", {
+		Text = "Spoof Other Players",
+		Default = false,
+		Callback = Spoofing.rics,
+	})
+
+	isDepBox:AddToggle("HideGameVersion", {
+		Text = "Hide Game Version",
+		Default = false,
+	})
+
+	isDepBox:AddToggle("HideDeathInformation", {
+		Text = "Hide Death Information",
+		Default = false,
+	})
+
+	isDepBox:AddToggle("HideCharacterKey", {
+		Text = "Hide Character Key",
+		Default = false,
+	})
+
+	isDepBox:AddInput("SpoofedCharacterName", {
+		Text = "Spoofed Character Name",
+		Default = "Linoria V2 On Top",
+		Finished = true,
+		Callback = Spoofing.rics,
+	})
+
+	isDepBox:AddInput("SpoofedServerName", {
+		Text = "Spoofed Server Name",
+		Default = "Linoria V2",
+		Finished = true,
+		Callback = Spoofing.rics,
+	})
+
+	isDepBox:AddInput("SpoofedServerRegion", {
+		Text = "Spoofed Server Region",
+		Default = "discord.gg/lyc",
+		Finished = true,
+		Callback = Spoofing.rics,
+	})
+
+	isDepBox:AddInput("SpoofedServerAge", {
+		Text = "Spoofed Server Age",
+		Default = "???",
+		Finished = true,
+		Callback = Spoofing.rics,
+	})
+
+	isDepBox:SetupDependencies({
+		{ Toggles.InfoSpoofing, true },
+	})
+end
+
 ---Initialize tab.
 function GameTab.init(window)
 	-- Create tab.
@@ -501,6 +570,7 @@ function GameTab.init(window)
 	GameTab.initEffectRemovalsSection(tab:AddDynamicGroupbox("Effect Removals"))
 	GameTab.initInstanceRemovalsSection(tab:AddDynamicGroupbox("Instance Removals"))
 	GameTab.initPlayerMonitoringSection(tab:AddDynamicGroupbox("Player Monitoring"))
+	GameTab.initInfoSpoofingSection(tab:AddDynamicGroupbox("Info Spoofing"))
 end
 
 -- Return GameTab module.

@@ -20,6 +20,7 @@ return LPH_NO_VIRTUALIZE(function()
 	local starterGui = game:GetService("StarterGui")
 	local players = game:GetService("Players")
 	local collectionService = game:GetService("CollectionService")
+	local replicatedStorage = game:GetService("ReplicatedStorage")
 
 	-- Signals.
 	local renderStepped = Signal.new(runService.RenderStepped)
@@ -165,6 +166,41 @@ return LPH_NO_VIRTUALIZE(function()
 		else
 			fakeFreestylerBand.Parent = nil
 		end
+	end
+
+	---Fire all connections under a given signal.
+	---@param signal Signal
+	function Spoofing.fire(signal)
+		for _, connection in next, getconnections(signal) do
+			print(connection, connection.Function)
+		end
+	end
+
+	---Refresh info changed signals.
+	function Spoofing.rics()
+		for _, player in next, players:GetPlayers() do
+			Spoofing.fire(player:GetAttributeChangedSignal("Guild"))
+
+			local character = player.Character
+			if not character then
+				continue
+			end
+
+			Spoofing.fire(character:GetAttributeChangedSignal("CharacterName"))
+			Spoofing.fire(character:GetAttributeChangedSignal("GuildRich"))
+		end
+
+		local serverRegion = replicatedStorage:FindFirstChild("SERVER_REGION")
+		local serverName = replicatedStorage:FindFirstChild("SERVER_NAME")
+		local serverAge = replicatedStorage:FindFirstChild("SERVER_AGE")
+
+		if not serverRegion or not serverName or not serverAge then
+			return
+		end
+
+		Spoofing.fire(serverRegion.Changed)
+		Spoofing.fire(serverName.Changed)
+		Spoofing.fire(serverAge.Changed)
 	end
 
 	---Initialize spoofing.
