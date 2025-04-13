@@ -102,6 +102,7 @@ return LPH_NO_VIRTUALIZE(function()
 	---@param tween Tween?
 	local function resetBloodJarTween(tween)
 		movementMaid["bloodJarTween"] = nil
+		bloodJarTarget = nil
 	end
 
 	-- Find an empty altar.
