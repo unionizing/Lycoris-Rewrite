@@ -254,7 +254,7 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
-		local gameVersionLabel = gameInfo:FindFirstChild("GameVersion")
+		local gameVersionLabel = gameInfo:FindFirstChild("VersionTitle")
 		if not gameVersionLabel then
 			return
 		end
@@ -277,12 +277,12 @@ return LPH_NO_VIRTUALIZE(function()
 
 		local worldInfo = playerGui:FindFirstChild("WorldInfo")
 		local infoFrame = worldInfo and worldInfo:FindFirstChild("InfoFrame")
-		local gameInfo = infoFrame and infoFrame:FindFirstChild("GameInfo")
-		if not gameInfo then
+		local worldInfoFrame = infoFrame and infoFrame:FindFirstChild("WorldInfo")
+		if not worldInfoFrame then
 			return
 		end
 
-		local dateLabel = gameInfo:FindFirstChild("DateLabel")
+		local dateLabel = worldInfoFrame:FindFirstChild("Date")
 		if not dateLabel then
 			return
 		end
