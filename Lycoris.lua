@@ -124,7 +124,7 @@ local function handleStartMenu()
 end
 
 ---Initialize instance.
----@note: AWP has this weird issue where some threads will not have their security level properly set to 8.
+---@note: AWP & Wave have this weird issue where some threads will not have their security level properly set to 8.
 --- This means that anything related to CoreGUI will fail in those threads (e.g sounds & notifications).
 --- This breaks detaching and modules, why? We need to get this solved soon.
 function Lycoris.init()
