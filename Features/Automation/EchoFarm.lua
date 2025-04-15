@@ -234,22 +234,24 @@ function Callbacks:onentertwself(fsm)
 		-- Mark that we're coming from self state.
 		PersistentData.set("shw", true)
 
-		-- Send the dialogue event for [The End] so as soon as we talk to him - we get instantly wiped.
+		-- Get the dialogue event.
 		local dialogueEvent = KeyHandling.getRemote("SendDialogue")
 		if not dialogueEvent then
 			return
 		end
 
-		dialogueEvent:FireServer({
-			["choice"] = "[The End]",
-		})
-
 		-- Get interact prompt.
 		local interactPrompt = selfNpc:WaitForChild("InteractPrompt")
 
-		-- Constantly fire the interact prompt.
+		-- Constantly fire the interact prompt & fire the dialogue event.
 		while task.wait() do
-			interactPrompt:FireServer()
+			-- Fire prompt.
+			fireproximityprompt(interactPrompt)
+
+			-- Send the dialogue event for [The End] so we can get wiped.
+			dialogueEvent:FireServer({
+				["choice"] = "[The End]",
+			})
 		end
 	end))
 
@@ -283,7 +285,7 @@ function Callbacks:onenteringredients(fsm, name)
 		fsm:transition(name)
 	end))
 
-	return StateMachine.ASYNC
+	return fsm.ASYNC
 end
 
 ---Campfire state.
@@ -577,13 +579,18 @@ end
 
 ---Stop EchoFarm module.
 function EchoFarm.stop()
+	echoFarmMaid:clean()
+
 	PersistentData.set("aei", false)
 
 	if machine:is("none") then
 		return Logger.notify("Echo farm is already no longer running.")
 	end
 
-	machine:none()
+	machine.current = machine.NONE
+	machine:cancelTransition(machine.currentTransitioningEvent)
+
+	stateMaid:clean()
 end
 
 -- Return module.
