@@ -369,12 +369,16 @@ function Callbacks.onentercampfire(fsm, name)
 		})
 
 		local playerGui = localPlayer:WaitForChild("PlayerGui")
+		local backpack = localPlayer:WaitForChild("Backpack")
+
 		local choicePrompt = playerGui:FindFirstChild("ChoicePrompt")
 		local choiceRemote = choicePrompt and choicePrompt:WaitForChild("Choice")
 
 		if choiceRemote then
 			choiceRemote:InvokeServer(1)
 		end
+
+		backpack:WaitForChild("Mushroom Soup")
 
 		fsm:transition(name)
 		fsm:serverhop()
