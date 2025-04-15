@@ -154,6 +154,7 @@ local function getNearestIngredient(name)
 	local localPlayer = players.LocalPlayer
 	local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
 	local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+	local ingredients = workspace:WaitForChild("Ingredients")
 
 	local nearestIngredient = findNearestIngredient(humanoidRootPart.Position, name)
 	if not nearestIngredient then
@@ -172,7 +173,7 @@ local function getNearestIngredient(name)
 
 	EchoFarm.tweening = true
 
-	while nearestIngredient and nearestIngredient:IsDescendantOf(game) do
+	while nearestIngredient and nearestIngredient:IsDescendantOf(ingredients) do
 		-- Wait.
 		task.wait()
 
