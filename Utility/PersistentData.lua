@@ -16,7 +16,7 @@ local PersistentData = {
 		-- The last used slot.
 		lus = nil,
 
-		-- Echo farm persistence - did we trigger a server hop from wiping our character? If so, skip the wipe slot handler.
+		-- Echo farm persistence - did we trigger a server hop from wiping our character or distance? If so, skip the wipe slot handler.
 		shw = false,
 
 		-- Echo farm persistence - do we need to activate on initialization?

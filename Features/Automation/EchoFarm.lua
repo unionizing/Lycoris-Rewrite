@@ -535,6 +535,9 @@ runNearbyPlayerCheck = function()
 		return
 	end
 
+	-- Mark that we're coming from nearby check.
+	PersistentData.set("shw", true)
+
 	machine:cancelTransition(machine.currentTransitioningEvent)
 	machine:serverhop()
 end
