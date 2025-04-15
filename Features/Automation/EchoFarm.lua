@@ -199,7 +199,7 @@ end
 ---Server hop state.
 ---@param fsm StateMachine
 ---@return string?
-function Callbacks:onenterserverhop(fsm)
+function Callbacks.onenterserverhop(fsm)
 	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterServerHop", function()
 		local requests = replicatedStorage:WaitForChild("Requests")
 		local returnToMenu = requests:WaitForChild("ReturnToMenu")
@@ -220,7 +220,7 @@ end
 ---Wipe & teleport to self state.
 ---@param fsm StateMachine
 ---@return string?
-function Callbacks:onentertwself(fsm)
+function Callbacks.onentertwself(fsm)
 	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterTwSelf", function()
 		local character = players.LocalPlayer.Character or players.LocalPlayer.CharacterAdded:Wait()
 		local humanoidRootPart = character and character:WaitForChild("HumanoidRootPart")
@@ -271,7 +271,7 @@ end
 ---@param fsm StateMachine
 ---@param name string
 ---@return string?
-function Callbacks:onenteringredients(fsm, name)
+function Callbacks.onenteringredients(fsm, name)
 	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterIngredients", function()
 		while task.wait() do
 			local hasBrowncapIngredient = findIngredient("Browncap")
@@ -300,7 +300,7 @@ end
 ---@param fsm StateMachine
 ---@param name string
 ---@return string?
-function Callbacks:onentercampfire(fsm, name)
+function Callbacks.onentercampfire(fsm, name)
 	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterCampfire", function()
 		local localPlayer = players.LocalPlayer
 		local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
@@ -366,7 +366,7 @@ end
 ---Character setup state.
 ---@param fsm StateMachine
 ---@return string?
-function Callbacks:onentercsetup(fsm)
+function Callbacks.onentercsetup(fsm)
 	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterCSetup", function()
 		local requests = replicatedStorage:WaitForChild("Requests")
 		local characterCreator = requests:WaitForChild("CharacterCreator")
@@ -386,7 +386,7 @@ end
 ---Wipe slot state.
 ---@param fsm StateMachine
 ---@return string?
-function Callbacks:onenterwslot(fsm)
+function Callbacks.onenterwslot(fsm)
 	if PersistentData.get("shw") then
 		return PersistentData.set("shw", false)
 	end
@@ -408,7 +408,7 @@ end
 ---Quick join state.
 ---@param fsm StateMachine
 ---@return string?
-function Callbacks:onenterqjoin(fsm)
+function Callbacks.onenterqjoin(fsm)
 	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterQJoin", function()
 		local lastUsedSlot = PersistentData.get("lus")
 		if not lastUsedSlot then
