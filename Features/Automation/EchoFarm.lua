@@ -592,6 +592,8 @@ function EchoFarm.start()
 	PersistentData.set("shw", false)
 	PersistentData.set("aei", true)
 
+	runNearbyPlayerCheck()
+
 	local renderStepped = Signal.new(runService.RenderStepped)
 	echoFarmMaid:add(renderStepped:connect("EchoFarm_NearbyPlayerCheck", runNearbyPlayerCheck))
 
