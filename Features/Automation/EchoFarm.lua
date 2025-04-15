@@ -442,7 +442,7 @@ function Callbacks.onenterqjoin(fsm)
 		local requests = replicatedStorage:WaitForChild("Requests")
 		local startMenu = requests:WaitForChild("StartMenu")
 
-		repeat
+		while task.wait() do
 			-- Pick a slot.
 			local pickSlot = startMenu:WaitForChild("PickSlot")
 			pickSlot:FireServer(lastUsedSlot, { PrivateTest = false })
@@ -450,7 +450,7 @@ function Callbacks.onenterqjoin(fsm)
 			-- Pick a server.
 			local pickServer = startMenu:WaitForChild("PickServer")
 			pickServer:FireServer("none")
-		until task.wait()
+		end
 	end))
 
 	return fsm.ASYNC
