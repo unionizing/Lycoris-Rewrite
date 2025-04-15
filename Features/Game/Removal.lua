@@ -291,7 +291,7 @@ return LPH_NO_VIRTUALIZE(function()
 
 		if
 			(effect.Class == "NoJump" or effect.Class == "NoJumpAlt")
-			and Configuration.expectToggleValue("NoJumpCooldown")
+			and Configuration.expectToggleValue("AlwaysAllowJump")
 		then
 			return hideEffect(effect)
 		end

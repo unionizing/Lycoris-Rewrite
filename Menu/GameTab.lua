@@ -431,9 +431,9 @@ function GameTab.initEffectRemovalsSection(groupbox)
 		Default = false,
 	})
 
-	groupbox:AddToggle("NoJumpCooldown", {
-		Text = "No Jump Cooldown",
-		Tooltip = "Remove any 'Jump Cooldown' effects from the server.",
+	groupbox:AddToggle("AlwaysAllowJump", {
+		Text = "Always Allow Jump",
+		Tooltip = "Remove any 'No Jump' effects from the server.",
 		Default = false,
 	})
 end
