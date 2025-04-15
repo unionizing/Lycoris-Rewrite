@@ -66,7 +66,7 @@ end
 ---Read unsigned long.
 ---@return number
 function DeserializerStream:unsignedLong()
-	local bytes = self:be_read_bytes(8)
+	local bytes = self:beReadBytes(8)
 	local p1 = bit32.bor(bytes[1], bit32.lshift(bytes[2], 8), bit32.lshift(bytes[3], 16), bit32.lshift(bytes[4], 24))
 	local p2 = bit32.bor(bytes[5], bit32.lshift(bytes[6], 8), bit32.lshift(bytes[7], 16), bit32.lshift(bytes[8], 24))
 	return bit32.bor(p1, bit32.lshift(p2, 32))
@@ -75,7 +75,7 @@ end
 ---Read unsigned int.
 ---@return number
 function DeserializerStream:unsignedInt()
-	local bytes = self:be_read_bytes(4)
+	local bytes = self:beReadBytes(4)
 	return bit32.bor(bytes[1], bit32.lshift(bytes[2], 8), bit32.lshift(bytes[3], 16), bit32.lshift(bytes[4], 24))
 end
 
