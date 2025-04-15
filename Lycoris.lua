@@ -25,6 +25,9 @@ local PlayerScanning = require("Game/PlayerScanning")
 ---@module Game.Timings.SaveManager
 local SaveManager = require("Game/Timings/SaveManager")
 
+---@module Utility.PersistentData
+local PersistentData = require("Utility/PersistentData")
+
 ---@module Game.KeyHandling
 local KeyHandling = require("Game/KeyHandling")
 
@@ -45,83 +48,8 @@ local memStorageService = game:GetService("MemStorageService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local playersService = game:GetService("Players")
 
--- Constants.
-local LOBBY_PLACE_ID = 4111023553
-
 -- Timestamp.
 local startTimestamp = os.clock()
-
----Handle server hop while in the main menu.
----@param slotString string
----@param jobId string?
-local function handleMainMenuServerHop(slotString, jobId)
-	memStorageService:RemoveItem("ServerHop")
-	memStorageService:RemoveItem("ServerHopJobId")
-
-	local localPlayer = playersService.LocalPlayer
-
-	local requests = replicatedStorage:WaitForChild("Requests")
-	local startMenu = requests:WaitForChild("StartMenu")
-
-	local start = startMenu:WaitForChild("Start")
-	local pickServer = startMenu:WaitForChild("PickServer")
-
-	local slotData = replicatedStorage:WaitForChild("SlotData")
-	local slotUserIdData = slotData:WaitForChild(localPlayer.UserId):WaitForChild(slotString)
-
-	local slotUserIdRealm = slotUserIdData:WaitForChild("Realm").Value
-	local serversRealm = nil
-
-	if slotUserIdRealm == "???" then
-		serversRealm = "EtreanLuminant"
-	end
-
-	if slotUserIdRealm:find("The Depths") then
-		serversRealm = "Depths"
-	end
-
-	if slotUserIdRealm:find("The Eastern") then
-		serversRealm = "EastLuminant"
-	end
-
-	local servers = replicatedStorage:WaitForChild("Servers")
-	local serversInRealm = servers:WaitForChild(serversRealm)
-
-	if jobId and not serversInRealm:FindFirstChild(jobId, true) then
-		return Logger.warn("(%s) (%s) Attempted to find server, but it did not exist.", serversRealm, jobId)
-	end
-
-	-- Start.
-	start:FireServer(slotString, { PrivateTest = false })
-
-	-- Pick server.
-	pickServer:FireServer(jobId or "none")
-end
-
----Handle start menu.
-local function handleStartMenu()
-	local localPlayer = playersService.LocalPlayer
-	if localPlayer.Character or localPlayer.Character:FindFirstChild("CharacterHandler") then
-		return
-	end
-
-	local requests = replicatedStorage:FindFirstChild("Requests")
-	if not requests then
-		return
-	end
-
-	local startMenu = requests:FindFirstChild("StartMenu")
-	if not startMenu then
-		return
-	end
-
-	local start = startMenu:FindFirstChild("Start")
-	if not start then
-		return
-	end
-
-	start:FireServer()
-end
 
 ---Initialize instance.
 ---@note: AWP & Wave have this weird issue where some threads will not have their security level properly set to 8.
@@ -159,22 +87,11 @@ function Lycoris.init()
 		)
 	end
 
-	if not memStorageService:HasItem("FirstLycorisInitialization") then
-		memStorageService:SetItem("FirstLycorisInitialization", os.time())
-	end
-
-	local serverHopSlot = memStorageService:HasItem("ServerHop") and memStorageService:GetItem("ServerHop")
-	local serverHopJobId = memStorageService:HasItem("ServerHopJobId") and memStorageService:GetItem("ServerHopJobId")
-	local inLobbyPlace = game.PlaceId == LOBBY_PLACE_ID
-
-	if inLobbyPlace then
-		return serverHopSlot and handleMainMenuServerHop(serverHopSlot, serverHopJobId)
-			or Logger.warn("Script exit initialization early because we are in the lobby.")
-	end
-
 	KeyHandling.init()
 
 	Hooking.init()
+
+	PersistentData.init()
 
 	InputClient.cache()
 
@@ -188,17 +105,13 @@ function Lycoris.init()
 
 	Menu.init()
 
-	if memStorageService:HasItem("HandleStartMenu") then
-		-- Handle it.
-		handleStartMenu()
-
-		-- Remove entry.
-		memStorageService:RemoveItem("HandleStartMenu")
-	end
-
 	PlayerScanning.init()
 
 	Logger.notify("Script has been initialized in %ims.", (os.clock() - startTimestamp) * 1000)
+
+	if not PersistentData.fli then
+		PersistentData.set("fli", os.time())
+	end
 
 	local modules = replicatedStorage:FindFirstChild("Modules")
 	local bloxstrapRPC = modules and modules:FindFirstChild("BloxstrapRPC")
@@ -214,7 +127,7 @@ function Lycoris.init()
 			"Currently attached to the script - time elapsed is a session of %s time spent.",
 			armorshield and "testing" or "developing"
 		),
-		timeStart = tonumber(memStorageService:GetItem("FirstLycorisInitialization")) or os.time(),
+		timeStart = PersistentData.fli or os.time(),
 		largeImage = {
 			assetId = armorshield and 13029433631 or 11289930484,
 			hoverText = armorshield and "Testing Deepwoken" or "Developing Deepwoken",
@@ -274,7 +187,7 @@ function Lycoris.detach()
 			details = "Lycoris Rewrite (Detached)",
 			state = armorshield and "Detached from script - something broke or a hot-reload."
 				or "Detached from script - something broke, fixing a bug, or a hot-reload.",
-			timeStart = tonumber(memStorageService:GetItem("FirstLycorisInitialization")) or os.time(),
+			timeStart = PersistentData.fli or os.time(),
 			largeImage = {
 				assetId = armorshield and 90216003739455 or 11289930484,
 				hoverText = armorshield and "Not Testing Deepwoken" or "Developing Deepwoken",
