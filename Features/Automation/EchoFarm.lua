@@ -463,17 +463,17 @@ local machine = StateMachine.create({
 		{ name = "serverhop", from = "campfire", to = StateMachine.NONE },
 
 		-- Fragments states.
-		{ name = "twself", from = "none", to = StateMachine.NONE },
+		{ name = "twself", from = "twself", to = StateMachine.NONE },
 
 		-- Overworld states.
-		{ name = "ingredients", from = "none", to = "campfire" },
+		{ name = "ingredients", from = "ingredients", to = "campfire" },
 		{ name = "campfire", from = "ingredients", to = "serverhop" },
 
 		-- Selection states.
-		{ name = "csetup", from = "none", to = "ingredients" },
+		{ name = "csetup", from = "csetup", to = "ingredients" },
 
 		-- Lobby states.
-		{ name = "wslot", from = "none", to = "qjoin" },
+		{ name = "wslot", from = "wslot", to = "qjoin" },
 		{ name = "qjoin", from = "wslot", to = StateMachine.NONE },
 	},
 	dexit = function()
@@ -484,7 +484,7 @@ local machine = StateMachine.create({
 
 ---Nearby player check.
 local function runNearbyPlayerCheck()
-	if machine:is("serverhop") or machine:is("none") then
+	if machine:is("serverhop") or machine:is(StateMachine.NONE) then
 		return
 	end
 
