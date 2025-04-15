@@ -61,10 +61,6 @@ end
 ---@param field string
 ---@param value any
 function PersistentData.set(field, value)
-	if not field or not value then
-		return
-	end
-
 	-- Set persistent field.
 	PersistentData._data[field] = value
 

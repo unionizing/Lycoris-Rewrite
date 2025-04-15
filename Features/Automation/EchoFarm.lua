@@ -176,7 +176,6 @@ local function getNearestIngredient(name)
 	EchoFarm.tweening = true
 
 	while nearestIngredient and nearestIngredient.Parent == ingredients do
-		print(nearestIngredient.Parent)
 		-- Wait.
 		task.wait()
 
@@ -409,10 +408,11 @@ end
 ---@param name string
 ---@return string?
 function Callbacks.onenterwslot(fsm, name)
-	if PersistentData.get("shw") then
+	print(PersistentData.get("shw"))
+	if PersistentData.get("shw") == true then
 		return PersistentData.set("shw", false)
 	end
-
+	print("lol")
 	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterWSlot", function()
 		local lastUsedSlot = PersistentData.get("lus")
 		if not lastUsedSlot then
@@ -426,6 +426,7 @@ function Callbacks.onenterwslot(fsm, name)
 
 		-- Transition.
 		fsm:transition(name)
+		print("lololol")
 		fsm:qjoin()
 	end))
 
@@ -444,12 +445,12 @@ function Callbacks.onenterqjoin(fsm)
 
 		local requests = replicatedStorage:WaitForChild("Requests")
 		local startMenu = requests:WaitForChild("StartMenu")
-
+		print("yaa")
 		while task.wait() do
 			-- Pick a slot.
 			local pickSlot = startMenu:WaitForChild("PickSlot")
 			pickSlot:FireServer(lastUsedSlot, { PrivateTest = false })
-
+			print("foo")
 			-- Pick a server.
 			local pickServer = startMenu:WaitForChild("PickServer")
 			pickServer:FireServer("none")
@@ -481,7 +482,7 @@ local machine = StateMachine.create({
 		-- Lobby states.
 		{ name = "wslot", from = StateMachine.NONE, to = "wslot" },
 		{ name = "wslot", from = "wslot", to = "qjoin" },
-		{ name = "qjoin", from = "wslot", to = StateMachine.NONE },
+		{ name = "qjoin", from = "wslot", to = "qjoin" },
 	},
 	dexit = function()
 		stateMaid:clean()
