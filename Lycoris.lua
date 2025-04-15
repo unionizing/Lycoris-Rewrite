@@ -96,7 +96,7 @@ function Lycoris.init()
 	PersistentData.init()
 
 	if PersistentData.get("aei") then
-		EchoFarm.init()
+		EchoFarm.start()
 	end
 
 	InputClient.cache()
