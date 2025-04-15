@@ -180,7 +180,11 @@ local function getNearestIngredient(name)
 		fireproximityprompt(interactPrompt)
 
 		-- If we've not completed the tween, wait for it to complete.
-		if tween.PlaybackState ~= Enum.PlaybackState.Completed then
+		if
+			tween.PlaybackState ~= Enum.PlaybackState.Begin
+			and tween.PlaybackState ~= Enum.PlaybackState.Paused
+			and tween.PlaybackState ~= Enum.PlaybackState.Completed
+		then
 			continue
 		end
 
@@ -338,7 +342,11 @@ function Callbacks:onentercampfire(fsm, name)
 			fireproximityprompt(interactPrompt)
 
 			-- If we've not completed the tween, wait for it to complete.
-			if tween.PlaybackState ~= Enum.PlaybackState.Completed then
+			if
+				tween.PlaybackState ~= Enum.PlaybackState.Begin
+				and tween.PlaybackState ~= Enum.PlaybackState.Paused
+				and tween.PlaybackState ~= Enum.PlaybackState.Completed
+			then
 				continue
 			end
 
