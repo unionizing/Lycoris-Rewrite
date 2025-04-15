@@ -562,9 +562,9 @@ function EchoFarm.start()
 
 	local areaMarker = getNearestAreaMarker(humanoidRootPart.Position)
 	local areaMarkerParent = areaMarker and areaMarker.Parent
-	print(areaMarkerParent.Name)
+
 	-- Go to start of fragment states.
-	if areaMarkerParent.Name == "Fragments Of Self" then
+	if areaMarkerParent.Name == "Fragments of Self" then
 		return machine:twself()
 	end
 

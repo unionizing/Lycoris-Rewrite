@@ -178,6 +178,8 @@ end
 function Lycoris.detach()
 	lycorisMaid:clean()
 
+	EchoFarm.stop()
+
 	SaveManager.autosave()
 
 	Menu.detach()
