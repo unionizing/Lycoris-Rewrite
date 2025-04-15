@@ -272,12 +272,14 @@ return LPH_NO_VIRTUALIZE(function()
 
 			if asset then
 				task.spawn(function()
-					local lol = game:GetService("MarketplaceService"):GetProductInfo(asset)
-					if not lol then
-						return
-					end
+					pcall(function()
+						local lol = game:GetService("MarketplaceService"):GetProductInfo(asset)
+						if not lol then
+							return
+						end
 
-					label.Text = string.format("(%s) %s", lol.Name, label.Text)
+						label.Text = string.format("(%s) %s", lol.Name, label.Text)
+					end)
 				end)
 			end
 
