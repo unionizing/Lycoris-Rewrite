@@ -48,74 +48,6 @@ local echoFarmMaid = Maid.new()
 ---@note: Cleaned after every state exit.
 local stateMaid = Maid.new()
 
----Server hop state.
----@param fsm StateMachine
----@return string?
-function Callbacks:onenterserverhop(fsm)
-	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterServerHop", function()
-		local requests = replicatedStorage:WaitForChild("Requests")
-		local returnToMenu = requests:WaitForChild("ReturnToMenu")
-
-		returnToMenu:FireServer()
-
-		local localPlayer = players.LocalPlayer
-		local playerGui = localPlayer:WaitForChild("PlayerGui")
-		local choicePrompt = playerGui:WaitForChild("ChoicePrompt")
-		local choice = choicePrompt:WaitForChild("Choice")
-
-		choice:FireServer(true)
-	end))
-
-	return fsm.ASYNC
-end
-
----Wipe & teleport to self state.
----@param fsm StateMachine
----@return string?
-function Callbacks:onentertwself(fsm)
-	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterTwSelf", function()
-		local character = players.LocalPlayer.Character or players.LocalPlayer.CharacterAdded:Wait()
-		local humanoidRootPart = character and character:WaitForChild("HumanoidRootPart")
-
-		local npcs = workspace:WaitForChild("NPCs")
-		local selfNpc = npcs:WaitForChild("Self")
-
-		-- Attempt to repeatedly teleport until we're within 10 studs of the NPC.
-		local selfCFrame = selfNpc:GetPivot()
-
-		repeat
-			-- Teleport to NPC.
-			character:PivotTo(selfCFrame)
-
-			-- Wait.
-			task.wait()
-		until (humanoidRootPart.Position - selfCFrame.Position).Magnitude <= 10
-
-		-- Mark that we're coming from self state.
-		PersistentData.set("shw", true)
-
-		-- Send the dialogue event for [The End] so as soon as we talk to him - we get instantly wiped.
-		local dialogueEvent = KeyHandling.getRemote("SendDialogue")
-		if not dialogueEvent then
-			return
-		end
-
-		dialogueEvent:FireServer({
-			["choice"] = "[The End]",
-		})
-
-		-- Get interact prompt.
-		local interactPrompt = selfNpc:WaitForChild("InteractPrompt")
-
-		-- Constantly fire the interact prompt.
-		while task.wait() do
-			interactPrompt:FireServer()
-		end
-	end))
-
-	return fsm.ASYNC
-end
-
 ---Find an ingredient in our inventory.
 ---@param name string
 ---@return BasePart|nil
@@ -254,6 +186,74 @@ local function getNearestIngredient(name)
 	end
 
 	EchoFarm.tweening = false
+end
+
+---Server hop state.
+---@param fsm StateMachine
+---@return string?
+function Callbacks:onenterserverhop(fsm)
+	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterServerHop", function()
+		local requests = replicatedStorage:WaitForChild("Requests")
+		local returnToMenu = requests:WaitForChild("ReturnToMenu")
+
+		returnToMenu:FireServer()
+
+		local localPlayer = players.LocalPlayer
+		local playerGui = localPlayer:WaitForChild("PlayerGui")
+		local choicePrompt = playerGui:WaitForChild("ChoicePrompt")
+		local choice = choicePrompt:WaitForChild("Choice")
+
+		choice:FireServer(true)
+	end))
+
+	return fsm.ASYNC
+end
+
+---Wipe & teleport to self state.
+---@param fsm StateMachine
+---@return string?
+function Callbacks:onentertwself(fsm)
+	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterTwSelf", function()
+		local character = players.LocalPlayer.Character or players.LocalPlayer.CharacterAdded:Wait()
+		local humanoidRootPart = character and character:WaitForChild("HumanoidRootPart")
+
+		local npcs = workspace:WaitForChild("NPCs")
+		local selfNpc = npcs:WaitForChild("Self")
+
+		-- Attempt to repeatedly teleport until we're within 10 studs of the NPC.
+		local selfCFrame = selfNpc:GetPivot()
+
+		repeat
+			-- Teleport to NPC.
+			character:PivotTo(selfCFrame)
+
+			-- Wait.
+			task.wait()
+		until (humanoidRootPart.Position - selfCFrame.Position).Magnitude <= 10
+
+		-- Mark that we're coming from self state.
+		PersistentData.set("shw", true)
+
+		-- Send the dialogue event for [The End] so as soon as we talk to him - we get instantly wiped.
+		local dialogueEvent = KeyHandling.getRemote("SendDialogue")
+		if not dialogueEvent then
+			return
+		end
+
+		dialogueEvent:FireServer({
+			["choice"] = "[The End]",
+		})
+
+		-- Get interact prompt.
+		local interactPrompt = selfNpc:WaitForChild("InteractPrompt")
+
+		-- Constantly fire the interact prompt.
+		while task.wait() do
+			interactPrompt:FireServer()
+		end
+	end))
+
+	return fsm.ASYNC
 end
 
 ---Ingredients state.
@@ -421,18 +421,21 @@ local machine = StateMachine.create({
 		{ name = "serverhop", from = "campfire", to = StateMachine.NONE },
 
 		-- Fragments states.
-		{ name = "twself", from = "twself", to = StateMachine.NONE },
+		{ name = "twself", from = "none", to = "twself" },
 
 		-- Overworld states.
+		{ name = "ingredients", from = "none", to = "ingredients" },
 		{ name = "ingredients", from = "ingredients", to = "campfire" },
 		{ name = "campfire", from = "campfire", to = "serverhop" },
 
 		-- Selection states.
+		{ name = "csetup", from = "none", to = "csetup" },
 		{ name = "csetup", from = "csetup", to = "ingredients" },
 
 		-- Lobby states.
+		{ name = "wslot", from = "none", to = "wslot" },
 		{ name = "wslot", from = "wslot", to = "qjoin" },
-		{ name = "qjoin", from = "qjoin", to = StateMachine.NONE },
+		{ name = "qjoin", from = "wslot", to = StateMachine.NONE },
 	},
 	dexit = function()
 		stateMaid:clean()

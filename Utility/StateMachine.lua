@@ -20,7 +20,6 @@ local function createTransition(name)
 	local can, to, from, params
 
 	local function transition(self, ...)
-		print(name)
 		if self.asyncState == NONE then
 			can, to = self:can(name)
 			from = self.current
