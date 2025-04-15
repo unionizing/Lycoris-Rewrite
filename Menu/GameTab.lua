@@ -510,14 +510,29 @@ end
 ---Info spoofing section.
 ---@param groupbox table
 function GameTab.initInfoSpoofingSection(groupbox)
+	local hasEverBeenEnabled = true
+
 	groupbox:AddToggle("InfoSpoofing", {
 		Text = "Enable Info Spoofing",
 		Default = false,
-		Callback = function()
-			Spoofing.rics()
+		Callback = function(value)
+			-- Only refresh if we've ever enabled this feature or we're currently enabling it.
+			if value or hasEverBeenEnabled then
+				Spoofing.rics()
+			end
+
+			-- We don't need to mark if we're disabling it.
+			if not value then
+				return
+			end
+
+			-- Spoof UI.
 			Spoofing.sss(Configuration.expectOptionValue("SpoofedSlotString"))
 			Spoofing.sds(Configuration.expectOptionValue("SpoofedDateString"))
 			Spoofing.sgv(Configuration.expectOptionValue("SpoofedGameVersion"))
+
+			-- Mark that we've enabled this atleast once...
+			hasEverBeenEnabled = true
 		end,
 	})
 
@@ -555,46 +570,54 @@ function GameTab.initInfoSpoofingSection(groupbox)
 		Callback = Spoofing.sgv,
 	})
 
+	local function refreshHandler()
+		if not Configuration.expectOptionValue("InfoSpoofing") then
+			return
+		end
+
+		Spoofing.rics()
+	end
+
 	isDepBox:AddInput("SpoofedFirstName", {
 		Text = "Spoofed First Name",
 		Default = "Linoria V2",
 		Finished = true,
-		Callback = Spoofing.rics,
+		Callback = refreshHandler,
 	})
 
 	isDepBox:AddInput("SpoofedLastName", {
 		Text = "Spoofed Last Name",
 		Default = "On Top",
 		Finished = true,
-		Callback = Spoofing.rics,
+		Callback = refreshHandler,
 	})
 
 	isDepBox:AddInput("SpoofedGuildName", {
 		Text = "Spoofed Guild Name",
 		Default = "discord.gg/lyc",
 		Finished = true,
-		Callback = Spoofing.rics,
+		Callback = refreshHandler,
 	})
 
 	isDepBox:AddInput("SpoofedServerName", {
 		Text = "Spoofed Server Name",
 		Default = "Linoria V2",
 		Finished = true,
-		Callback = Spoofing.rics,
+		Callback = refreshHandler,
 	})
 
 	isDepBox:AddInput("SpoofedServerRegion", {
 		Text = "Spoofed Server Region",
 		Default = "discord.gg/lyc",
 		Finished = true,
-		Callback = Spoofing.rics,
+		Callback = refreshHandler,
 	})
 
 	isDepBox:AddInput("SpoofedServerAge", {
 		Text = "Spoofed Server Age",
 		Default = "???",
 		Finished = true,
-		Callback = Spoofing.rics,
+		Callback = refreshHandler,
 	})
 
 	isDepBox:SetupDependencies({
