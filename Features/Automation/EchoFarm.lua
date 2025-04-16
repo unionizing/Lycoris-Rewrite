@@ -303,8 +303,9 @@ function Callbacks.onenteringredients(fsm, name)
 			end
 		end
 
+		-- Transition.
 		fsm:transition(name)
-		fsm:campfire()
+		fsm:ostep()
 	end))
 
 	return fsm.ASYNC
@@ -401,7 +402,7 @@ function Callbacks.onentercampfire(fsm, name)
 		until backpack:FindFirstChild("Mushroom Soup")
 
 		fsm:transition(name)
-		fsm:serverhop()
+		fsm:hop()
 	end))
 
 	return fsm.ASYNC
@@ -409,8 +410,9 @@ end
 
 ---Character setup state.
 ---@param fsm StateMachine
+---@param name string
 ---@return string?
-function Callbacks.onentercsetup(fsm)
+function Callbacks.onentercsetup(fsm, name)
 	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterCSetup", function()
 		local requests = replicatedStorage:WaitForChild("Requests")
 		local characterCreator = requests:WaitForChild("CharacterCreator")
@@ -422,6 +424,10 @@ function Callbacks.onentercsetup(fsm)
 
 		local finishCreation = characterCreator:WaitForChild("FinishCreation")
 		finishCreation:InvokeServer()
+
+		-- Transition.
+		fsm:transition(name)
+		fsm:sstep()
 	end))
 
 	return fsm.ASYNC
@@ -437,7 +443,7 @@ function Callbacks.onenterwslot(fsm, name)
 		PersistentData.set("shw", false)
 
 		-- Return and manually transition.
-		return fsm:qjoin()
+		return fsm:lstep()
 	end
 
 	stateMaid:add(TaskSpawner.spawn("EchoFarmCallbacks_OnEnterWSlot", function()
@@ -453,7 +459,7 @@ function Callbacks.onenterwslot(fsm, name)
 
 		-- Transition.
 		fsm:transition(name)
-		fsm:qjoin()
+		fsm:lstep()
 	end))
 
 	return fsm.ASYNC
@@ -494,25 +500,23 @@ end
 local machine = StateMachine.create({
 	initial = StateMachine.NONE,
 	events = {
-		-- Server hop.
-		{ name = "serverhop", from = { "campfire", "ingredients", "twself", StateMachine.NONE }, to = "serverhop" },
+		-- Server hopping.
+		{ name = "hop", from = "*", to = "serverhop" },
 
 		-- Fragments states.
-		{ name = "twself", from = StateMachine.NONE, to = "twself" },
+		{ name = "fstep", from = StateMachine.NONE, to = "twself" },
 
 		-- Overworld states.
-		{ name = "ingredients", from = { "csetup", StateMachine.NONE }, to = "ingredients" },
-		{ name = "ingredients", from = "ingredients", to = "campfire" },
-		{ name = "campfire", from = "ingredients", to = "campfire" },
+		{ name = "ostep", from = StateMachine.NONE, to = "ingredients" },
+		{ name = "ostep", from = "ingredients", to = "campfire" },
 
 		-- Selection states.
-		{ name = "csetup", from = StateMachine.NONE, to = "csetup" },
-		{ name = "csetup", from = "csetup", to = "ingredients" },
+		{ name = "sstep", from = StateMachine.NONE, to = "csetup" },
+		{ name = "sstep", from = "csetup", to = "ingredients" },
 
 		-- Lobby states.
-		{ name = "wslot", from = StateMachine.NONE, to = "wslot" },
-		{ name = "wslot", from = "wslot", to = "qjoin" },
-		{ name = "qjoin", from = "wslot", to = "qjoin" },
+		{ name = "lstep", from = StateMachine.NONE, to = "wslot" },
+		{ name = "lstep", from = "wslot", to = "qjoin" },
 	},
 	dexit = function()
 		stateMaid:clean()
@@ -550,7 +554,7 @@ runNearbyPlayerCheck = function()
 
 	-- Server hop, cancel transitions.
 	machine:cancelTransition(machine.currentTransitioningEvent)
-	machine:serverhop()
+	machine:hop()
 
 	-- Clean maids.
 	stateMaid:clean()
@@ -641,8 +645,8 @@ function EchoFarm.start()
 		-- Warn.
 		Logger.warn("We're in the lobby - initial state is 'wslot' in the state machine.")
 
-		-- Set initial state and return.
-		return machine:wslot()
+		-- Step forwards in lobby states.
+		return machine:lstep()
 	end
 
 	PersistentData.set("shw", false)
@@ -670,13 +674,10 @@ function EchoFarm.start()
 
 			-- Get nearest area marker.
 			areaMarker = getNearestAreaMarker(humanoidRootPart.Position)
-		until areaMarker and areaMarker.Parent == "Fragments of Self"
+		until areaMarker and (tostring(areaMarker.Parent) or "") == "Fragments of Self"
 
-		-- Log.
-		Logger.notify("We're in the fragments area - initial state is 'twself' in the state machine.")
-
-		-- Put us in the fragments state.
-		return machine:twself()
+		-- Step forwards in fragments states.
+		return machine:fstep()
 	end
 
 	local localPlayer = players.LocalPlayer
@@ -684,18 +685,11 @@ function EchoFarm.start()
 
 	-- Go to the start of character states.
 	if playerGui:WaitForChild("CharacterCreator", 1.0) then
-		-- Log.
-		Logger.notify("We're in the character creator - initial state is 'csetup' in the state machine.")
-
-		-- Put us in the character setup state.
-		return machine:csetup()
+		return machine:cstep()
 	end
 
-	-- Log.
-	Logger.notify("We're in the overworld - initial state is 'ingredients' in the state machine.")
-
-	-- Go to start of overworld states.
-	return machine:ingredients()
+	-- Step forwards in overworld states.
+	return machine:ostep()
 end
 
 ---Stop EchoFarm module.
