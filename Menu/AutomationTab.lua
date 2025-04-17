@@ -226,7 +226,7 @@ function AutomationTab.initEchoFarmSection(groupbox)
 		Text = "Start Echo Farm",
 		Tooltip = "Quickly stop at any time with the '0' key on your keyboard.",
 		DoubleClick = true,
-		DoubleClickText = "Do you want to wipe the current slot?",
+		DoubleClickText = "Wipe the current slot?",
 		Func = EchoFarm.start,
 	})
 
