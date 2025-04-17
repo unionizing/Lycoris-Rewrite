@@ -1,5 +1,5 @@
 -- Module manager.
-local ModuleManager = { modules = {} }
+local ModuleManager = { modules = {}, globals = {} }
 
 ---@module Utility.Filesystem
 local Filesystem = require("Utility/Filesystem")
@@ -44,6 +44,7 @@ end
 function ModuleManager.refresh()
 	-- Reset current list.
 	ModuleManager.modules = {}
+	ModuleManager.globals = {}
 
 	-- Load all modules in our filesystem.
 	for _, file in next, fs:list(false) do
@@ -71,6 +72,10 @@ function ModuleManager.refresh()
 		getfenv(lf).Targeting = Targeting
 		getfenv(lf).Logger = Logger
 
+		for name, entry in next, ModuleManager.globals do
+			getfenv(lf)[name] = entry
+		end
+
 		-- Run executable function to initialize it.
 		local success, result = pcall(lf)
 		if not success then
@@ -78,6 +83,31 @@ function ModuleManager.refresh()
 			continue
 		end
 
+		---@note: We'll know when we have a global module if it returns a table.
+		if typeof(result) == "table" then
+			-- Check if there's a name field.
+			local name = result.name
+
+			-- Check field type.
+			if typeof(name) ~= "string" then
+				Logger.warn("Global module file '%s' is invalid because it does not have a valid name.", file)
+				continue
+			end
+
+			-- Add to global modules list.
+			ModuleManager.globals[name] = result
+
+			-- For previous entries, set function environment.
+			-- The key will be the global field.
+			for _, entry in next, ModuleManager.modules do
+				getfenv(entry)[name] = result
+			end
+
+			-- Continue to next file.
+			continue
+		end
+
+		---@note: Else, we'll know when we have a local module if it returns a function.
 		if typeof(result) ~= "function" then
 			Logger.warn("Module file '%s' is invalid because it does not return a function.", file)
 			continue
