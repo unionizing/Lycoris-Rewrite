@@ -76,6 +76,11 @@ function ActionContainer:count()
 	return count
 end
 
+---Clear actions.
+function ActionContainer:clear()
+	self._data = {}
+end
+
 ---Get action data.
 ---@return table<string, Action>
 function ActionContainer:get()

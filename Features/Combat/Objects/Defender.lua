@@ -410,10 +410,16 @@ Defender.bend = LPH_NO_VIRTUALIZE(function(self)
 	InputClient.bend(false)
 end)
 
----Direct action handling.
----@param timing Action
+---Handle action.
+---@param timing Timing
 ---@param action Action
-Defender.dahandle = LPH_NO_VIRTUALIZE(function(self, timing, action)
+Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action)
+	if not self:valid(timing, action) then
+		return
+	end
+
+	self:notify(timing, "Action type '%s' is being executed.", action._type)
+
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then
 		return
@@ -454,6 +460,24 @@ Defender.dahandle = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
 	end
 
+	if action._type == "Teleport Up" then
+		local character = players.LocalPlayer.Character
+		if not character then
+			return
+		end
+
+		local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+		if not humanoidRootPart then
+			return
+		end
+
+		if Entitites.isNear(humanoidRootPart.Position) then
+			return self:notify(timing, "Action 'Teleport Up' blocked because there are players nearby.")
+		end
+
+		humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position + Vector3.new(0, 50, 0))
+	end
+
 	---@note: Okay, we'll assume that we're in the parry state. There's no other type.
 	if
 		(not effectReplicatorModule:FindEffect("Equipped") or effectReplicatorModule:FindEffect("ParryCool"))
@@ -464,20 +488,6 @@ Defender.dahandle = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	end
 
 	InputClient.parry()
-end)
-
----Handle action.
----@param timing Timing
----@param action Action
----@varargs ... any Arguments to be passed into notification.
-Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, ...)
-	if not self:valid(timing, action) then
-		return
-	end
-
-	self:notify(timing, ...)
-
-	self:dahandle(timing, action)
 end)
 
 ---Check if we have input blocking tasks.
@@ -506,9 +516,8 @@ function Defender:mark(task)
 	self.tasks[#self.tasks + 1] = task
 end
 
----Clean up all tasks.
-Defender.clean = LPH_NO_VIRTUALIZE(function(self)
-	-- Clean-up hooks.
+---Clean up hooks.
+function Defender:clhook()
 	for key, old in next, self.rhook do
 		if not self[key] then
 			continue
@@ -516,6 +525,12 @@ Defender.clean = LPH_NO_VIRTUALIZE(function(self)
 
 		self[key] = old
 	end
+end
+
+---Clean up all tasks.
+Defender.clean = LPH_NO_VIRTUALIZE(function(self)
+	-- Clean-up hooks.
+	self:clhook()
 
 	-- Clear temporary maid.
 	self.tmaid:clean()
@@ -569,7 +584,8 @@ end)
 
 ---Process module.
 ---@param timing Timing
-Defender.module = LPH_NO_VIRTUALIZE(function(self, timing)
+---@varargs any
+Defender.module = LPH_NO_VIRTUALIZE(function(self, timing, ...)
 	-- Get loaded function.
 	local lf = ModuleManager.modules[timing.smod]
 	if not lf then
@@ -585,7 +601,7 @@ Defender.module = LPH_NO_VIRTUALIZE(function(self, timing)
 	end
 
 	-- Run module.
-	self.tmaid:mark(TaskSpawner.spawn(identifier, lf, self, timing))
+	self.tmaid:mark(TaskSpawner.spawn(identifier, lf, self, timing, ...))
 end)
 
 ---Add a action to the defender object.
@@ -597,18 +613,7 @@ Defender.action = LPH_NO_VIRTUALIZE(function(self, timing, action)
 
 	-- Add action.
 	self:mark(
-		Task.new(
-			action._type,
-			action:when() - ping,
-			timing.punishable,
-			timing.after,
-			self.handle,
-			self,
-			timing,
-			action,
-			"Action type '%s' is being executed.",
-			action._type
-		)
+		Task.new(action._type, action:when() - ping, timing.punishable, timing.after, self.handle, self, timing, action)
 	)
 
 	-- Log.

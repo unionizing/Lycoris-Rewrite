@@ -102,20 +102,6 @@ local addSoundDefender = LPH_NO_VIRTUALIZE(function(sound)
 	defenderObjects[sound] = SoundDefender.new(sound, part)
 end)
 
----Add part defender.
----@param part BasePart
-local addPartDefender = LPH_NO_VIRTUALIZE(function(part)
-	-- Get part defender.
-	local partDefender = PartDefender.new(part)
-	if not partDefender then
-		return
-	end
-
-	-- Link to list.
-	defenderObjects[part] = partDefender
-	defenderPartObjects[part] = partDefender
-end)
-
 ---On game descendant added.
 ---@param descendant Instance
 local onGameDescendantAdded = LPH_NO_VIRTUALIZE(function(descendant)
@@ -128,7 +114,7 @@ local onGameDescendantAdded = LPH_NO_VIRTUALIZE(function(descendant)
 	end
 
 	if descendant:IsA("BasePart") then
-		return addPartDefender(descendant)
+		return Defense.cdpo(descendant)
 	end
 end)
 
@@ -285,6 +271,21 @@ local updateDefenders = LPH_NO_VIRTUALIZE(function()
 	for _, object in next, defenderPartObjects do
 		object:update()
 	end
+end)
+
+---Create a defender part object.
+---@param part BasePart
+---@return PartDefender?
+Defense.cdpo = LPH_NO_VIRTUALIZE(function(part)
+	local partDefender = PartDefender.new(part, nil)
+	if not partDefender then
+		return nil
+	end
+
+	defenderObjects[part] = partDefender
+	defenderPartObjects[part] = partDefender
+
+	return partDefender
 end)
 
 ---Check if objects have blocking tasks.

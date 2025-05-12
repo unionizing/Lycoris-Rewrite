@@ -23,8 +23,20 @@ local TaskSpawner = require("Utility/TaskSpawner")
 ---@module Utility.Entitites
 local Entitites = require("Utility/Entitites")
 
+---@module Features.Combat.Defense
+local Defense = require("Features/Combat/Defense")
+
 ---@module Features.Combat.Targeting
 local Targeting = require("Features/Combat/Targeting")
+
+---@module Game.Timings.PartTiming
+local PartTiming = require("Game/Timings/PartTiming")
+
+---@module Utility.Maid
+local Maid = require("Utility/Maid")
+
+---@module Utility.Signal
+local Signal = require("Utility/Signal")
 
 -- Module filesystem.
 local fs = Filesystem.new("Lycoris-Rewrite-Modules")
@@ -51,9 +63,13 @@ function ModuleManager.load(tfs, global)
 		end
 
 		-- Set function environment to allow for internal modules.
+		getfenv(lf).PartTiming = PartTiming
+		getfenv(lf).Defense = Defense
 		getfenv(lf).Action = Action
 		getfenv(lf).InputClient = InputClient
 		getfenv(lf).Task = Task
+		getfenv(lf).Maid = Maid
+		getfenv(lf).Signal = Signal
 		getfenv(lf).TaskSpawner = TaskSpawner
 		getfenv(lf).Entitites = Entitites
 		getfenv(lf).Targeting = Targeting

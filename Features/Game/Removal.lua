@@ -313,7 +313,7 @@ return LPH_NO_VIRTUALIZE(function()
 			local serverSlideStop = KeyHandling.getRemote("ServerSlideStop")
 
 			if not serverSlide or not serverSlideStop then
-				return
+				return Logger.warn("ServerSlide or ServerSlideStop not found.")
 			end
 
 			serverSlide:FireServer(true)

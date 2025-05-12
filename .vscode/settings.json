@@ -57,7 +57,8 @@
         "Content",
         "firesignal",
         "should_queue_on_teleport",
-        "no_queue_on_teleport"
+        "no_queue_on_teleport",
+        "Entitites"
     ],
     "robloxLsp.suggestedImports.importIgnore": [
         "**/_Index/**",

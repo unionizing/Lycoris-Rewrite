@@ -8,7 +8,6 @@ local SaveManager = require("Game/Timings/SaveManager")
 ---@field part BasePart
 ---@field timing PartTiming
 ---@field touched boolean Determines whether if we touched the timing in the past.
----@field finished boolean Determines whether if we finished the timing. This is used when we're doing timing delay instead of delay until in hitbox.
 local PartDefender = setmetatable({}, { __index = Defender })
 PartDefender.__index = PartDefender
 PartDefender.__type = "Part"
@@ -38,7 +37,7 @@ PartDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No character found.")
 	end
 
-	if not self:hc(self:cframe(), timing, action, { character }) then
+	if not self.timing.duih and not self:hc(self:cframe(), timing, action, { character }) then
 		return false
 	end
 
@@ -47,27 +46,8 @@ end)
 
 ---Update PartDefender object.
 PartDefender.update = LPH_NO_VIRTUALIZE(function(self)
-	-- Check if we're finished.
-	if self.finished then
-		return
-	end
-
-	-- Handle no hitbox delay.
+	-- Skip if we're not handling delay until in hitbox.
 	if not self.timing.duih then
-		-- Clean all previous tasks.
-		self:clean()
-
-		-- Use module if we need to, else add actions.
-		if self.timing.umoa then
-			self:module(self.timing)
-		else
-			self:actions(self.timing)
-		end
-
-		-- Set that we're finished so we don't have to do this again.
-		self.finished = true
-
-		-- Return.
 		return
 	end
 
@@ -106,25 +86,30 @@ PartDefender.update = LPH_NO_VIRTUALIZE(function(self)
 	-- Clean all previous tasks. Just to be safe. We already check if it's empty... so.
 	self:clean()
 
-	-- Use module if we need to.
-	if self.timing.umoa then
-		return self:module(self.timing)
-	end
-
 	-- Add actions.
 	return self:actions(self.timing)
 end)
 
 ---Create new PartDefender object.
 ---@param part BasePart
+---@param timing PartTiming?
 ---@return PartDefender?
-function PartDefender.new(part)
+function PartDefender.new(part, timing)
 	local self = setmetatable(Defender.new(), PartDefender)
 
 	self.part = part
-	self.timing = self:initial(part, SaveManager.ps, nil, part.Name)
+	self.timing = timing or self:initial(part, SaveManager.ps, nil, part.Name)
 	self.touched = false
-	self.finished = false
+
+	-- Handle module.
+	if self.timing.umoa then
+		self:module(self.timing)
+	end
+
+	-- Handle no hitbox delay with no module.
+	if not self.timing.umoa and self.timing.duih then
+		self:actions(self.timing)
+	end
 
 	return self.timing and self or nil
 end
