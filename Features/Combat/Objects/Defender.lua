@@ -433,10 +433,11 @@ function Defender:ping()
 end
 
 ---Repeat conditional.
----@param timing Timing
+---@param timing AnimationTiming
 ---@param start number
+---@param track AnimationTrack?
 ---@return boolean
-Defender.rc = LPH_NO_VIRTUALIZE(function(_, timing, start)
+Defender.rc = LPH_NO_VIRTUALIZE(function(_, timing, start, track)
 	if os.clock() - start >= MAX_DUIH_WAIT then
 		return false
 	end
