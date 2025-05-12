@@ -108,10 +108,17 @@ end
 ---@param timing Timing
 ---@param index number
 Defender.crpue = LPH_NO_VIRTUALIZE(function(self, entity, track, timing, index)
+	-- Check if we're in the initial condition.
+	local initial = index == 0
+
+	-- Fetch delay depending on if we're on the initial condition or not.
+	local tdelay = initial and timing:rsd() or timing:rpd()
+
+	-- Spawn task.
 	self:mark(
 		Task.new(
 			string.format("RPUE_%s_%i", timing.name, index),
-			timing:rpd() - self:ping(),
+			tdelay - self:ping(),
 			timing.punishable,
 			timing.after,
 			self.rpue,
@@ -123,6 +130,12 @@ Defender.crpue = LPH_NO_VIRTUALIZE(function(self, entity, track, timing, index)
 		)
 	)
 
+	-- Don't notify if we're not on the initial condition.
+	if not initial then
+		return
+	end
+
+	-- Notify.
 	self:notify(
 		timing,
 		"Added RPUE '%s' (%.2fs, then every %.2fs) with relevant ping subtracted.",
