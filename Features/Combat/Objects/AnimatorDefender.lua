@@ -160,41 +160,6 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	return true
 end)
 
----Repeat until parry end.
----@param track AnimationTrack?
----@param timing AnimationTiming
----@param index number
-AnimatorDefender.rpue = LPH_NO_VIRTUALIZE(function(self, track, timing, index)
-	local distance = self:distance(self.entity)
-	if not distance then
-		return Logger.warn("Stopping RPUE '%s' because the distance is not valid.", timing.name)
-	end
-
-	if timing and (distance < timing.imdd or distance > timing.imxd) then
-		return self:notify(timing, "Distance is out of range.")
-	end
-
-	if not self:rc(timing, track, index) then
-		return Logger.warn("Stopping RPUE '%s' because the repeat condition is not valid.", timing.name)
-	end
-
-	self:crpue(track, timing, index + 1)
-
-	local target = Targeting.find(self.entity)
-
-	if not target then
-		return Logger.warn("Skipping RPUE '%s' because the target is not valid.", timing.name)
-	end
-
-	if not self:hc(target.root.CFrame, timing, nil, { players.LocalPlayer.Character }) then
-		return Logger.warn("Skipping RPUE '%s' because we are not in the hitbox.", timing.name)
-	end
-
-	self:notify(timing, "(%i) Action 'RPUE Parry' is being executed.", index)
-
-	InputClient.parry()
-end)
-
 ---Update keyframe handling.
 ---@param self AnimatorDefender
 AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
@@ -296,34 +261,6 @@ function AnimatorDefender:pvalidate(track)
 	return true
 end
 
----Call RPUE function.
----@param track AnimationTrack?
----@param timing AnimationTiming
----@param index number
-AnimatorDefender.crpue = LPH_NO_VIRTUALIZE(function(self, track, timing, index)
-	self:mark(
-		Task.new(
-			string.format("RPUE_%s_%i", timing.name, index),
-			timing:rpd() - self:ping(),
-			timing.punishable,
-			timing.after,
-			self.rpue,
-			self,
-			track,
-			timing,
-			index
-		)
-	)
-
-	self:notify(
-		timing,
-		"Added RPUE '%s' (%.2fs, then every %.2fs) with relevant ping subtracted.",
-		timing.name,
-		timing:rsd(),
-		timing:rpd()
-	)
-end)
-
 ---Process animation track.
 ---@todo: AP telemetry - aswell as tracking effects that are added with timestamps and current ping to that list.
 ---@param track AnimationTrack
@@ -407,7 +344,7 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 		return self:actions(timing)
 	end
 
-	self:crpue(track, timing, 0)
+	self:crpue(self.entity, track, timing, 0)
 end)
 
 ---Clean up the defender.

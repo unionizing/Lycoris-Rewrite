@@ -22,6 +22,9 @@ local ModuleManager = require("Game/Timings/ModuleManager")
 ---@module Utility.TaskSpawner
 local TaskSpawner = require("Utility/TaskSpawner")
 
+---@module Features.Combat.Targeting
+local Targeting = require("Features/Combat/Targeting")
+
 ---@class Defender
 ---@field tasks Task[]
 ---@field tmaid Maid Cleaned up every clean cycle.
@@ -98,6 +101,71 @@ function Defender:distance(from)
 
 	return (entRootPart.Position - localRootPart.Position).Magnitude
 end
+
+---Call RPUE function.
+---@param entity Model
+---@param track AnimationTrack?
+---@param timing AnimationTiming
+---@param index number
+Defender.crpue = LPH_NO_VIRTUALIZE(function(self, entity, track, timing, index)
+	self:mark(
+		Task.new(
+			string.format("RPUE_%s_%i", timing.name, index),
+			timing:rpd() - self:ping(),
+			timing.punishable,
+			timing.after,
+			self.rpue,
+			self,
+			entity,
+			track,
+			timing,
+			index
+		)
+	)
+
+	self:notify(
+		timing,
+		"Added RPUE '%s' (%.2fs, then every %.2fs) with relevant ping subtracted.",
+		timing.name,
+		timing:rsd(),
+		timing:rpd()
+	)
+end)
+
+---Repeat until parry end.
+---@param entity Model
+---@param track AnimationTrack?
+---@param timing AnimationTiming
+---@param index number
+Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, track, timing, index)
+	local distance = self:distance(entity)
+	if not distance then
+		return Logger.warn("Stopping RPUE '%s' because the distance is not valid.", timing.name)
+	end
+
+	if timing and (distance < timing.imdd or distance > timing.imxd) then
+		return self:notify(timing, "Distance is out of range.")
+	end
+
+	if not self:rc(timing, track, index) then
+		return Logger.warn("Stopping RPUE '%s' because the repeat condition is not valid.", timing.name)
+	end
+
+	self:crpue(track, timing, index + 1)
+
+	local target = Targeting.find(entity)
+	if not target then
+		return Logger.warn("Skipping RPUE '%s' because the target is not valid.", timing.name)
+	end
+
+	if not self:hc(target.root.CFrame, timing, nil, { players.LocalPlayer.Character }) then
+		return Logger.warn("Skipping RPUE '%s' because we are not in the hitbox.", timing.name)
+	end
+
+	self:notify(timing, "(%i) Action 'RPUE Parry' is being executed.", index)
+
+	InputClient.parry()
+end)
 
 ---Check if we're in a valid state to proceed with action handling. Extend me.
 ---@param timing Timing
