@@ -163,7 +163,7 @@ Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, track, timing, index, s
 		return self:notify(timing, "Distance is out of range.")
 	end
 
-	if not self:rc(timing, index, start, track) then
+	if not self:rc(timing, start, track) then
 		return Logger.warn("Stopping RPUE '%s' because the repeat condition is not valid.", timing.name)
 	end
 
