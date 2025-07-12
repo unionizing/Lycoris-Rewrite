@@ -54,19 +54,20 @@ end
 ---Initialize PersistentData module.
 function PersistentData.init()
 	local hasSuccess, hasResult = pcall(memStorageService.HasItem, memStorageService, "LYCORIS_PERSISTENT_DATA")
-
 	if not hasSuccess then
 		return hasResult and Logger.warn("(%s) Failed to check for PersistentData snapshot.", tostring(hasResult))
 	end
 
 	local itemSuccess, itemResult = pcall(memStorageService.GetItem, memStorageService, "LYCORIS_PERSISTENT_DATA")
-
 	if not itemSuccess then
 		return Logger.warn("(%s) Failed to get PersistentData snapshot", tostring(itemResult))
 	end
 
-	local success, result = pcall(Deserializer.unmarshal_one, String.tba(itemResult))
+	if itemResult == nil or itemResult == "" then
+		return Logger.warn("PersistentData snapshot is missing or empty.")
+	end
 
+	local success, result = pcall(Deserializer.unmarshal_one, String.tba(itemResult))
 	if not success then
 		return Logger.warn("(%s) Failed to deserialize PersistentData snapshot.", tostring(result))
 	end

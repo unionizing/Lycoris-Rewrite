@@ -9,10 +9,14 @@ end
 
 ---String to byte array.
 ---@param str string
----@return string
+---@return table
 function String.tba(str)
 	local chars = {}
 	local idx = 1
+
+	if #str == 0 then
+		return {}
+	end
 
 	repeat
 		chars[idx] = charByteMap[str:sub(idx, idx)]

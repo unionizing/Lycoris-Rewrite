@@ -795,6 +795,9 @@ return LPH_NO_VIRTUALIZE(function()
 		-- Set saved data.
 		savedData = PersistentData.get("best") or {}
 
+		-- Set reference.
+		PersistentData.set("best", savedData)
+
 		-- Fetch instances.
 		local live = workspace:WaitForChild("Live")
 
