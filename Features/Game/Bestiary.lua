@@ -793,7 +793,15 @@ return LPH_NO_VIRTUALIZE(function()
 	---Initialize the Bestiary module.
 	function Bestiary.init()
 		-- Set saved data.
-		savedData = PersistentData.get("best") or {}
+		savedData = PersistentData.get("best") or { mobs = {}, players = {} }
+
+		if not savedData.mobs then
+			savedData.mobs = {}
+		end
+
+		if not savedData.players then
+			savedData.players = {}
+		end
 
 		-- Set reference.
 		PersistentData.set("best", savedData)
