@@ -46,6 +46,7 @@ end)
 
 ---Update PartDefender object.
 PartDefender.update = LPH_NO_VIRTUALIZE(function(self)
+	print("PartDefender: Update called.")
 	-- Skip if we're not handling delay until in hitbox.
 	if not self.timing.duih then
 		return
@@ -112,7 +113,7 @@ function PartDefender.new(part, timing)
 	end
 
 	-- Handle no hitbox delay with no module.
-	if not self.timing.umoa and self.timing.duih then
+	if not self.timing.umoa and not self.timing.duih then
 		self:actions(self.timing)
 	end
 

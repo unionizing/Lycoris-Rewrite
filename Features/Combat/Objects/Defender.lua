@@ -488,7 +488,6 @@ Defender.hc = LPH_NO_VIRTUALIZE(function(self, cframe, timing, action, filter, t
 
 	---@note: We check for 'fhb' here even though the base timing may not have it.
 	while timing.duih and not timing.rpue and not self:hitbox(cframe, timing.fhb, timing.hitbox, filter) do
-		print(cframe)
 		if not self:rc(timing, start, track) then
 			return false
 		end
