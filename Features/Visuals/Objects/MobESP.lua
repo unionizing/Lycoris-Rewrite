@@ -10,6 +10,7 @@ MobESP.__type = "MobESP"
 local ESP_HEALTH = "[%i/%i]"
 
 ---Update MobESP.
+---@param self MobESP
 MobESP.update = LPH_NO_VIRTUALIZE(function(self)
 	local humanoid = self.model:FindFirstChildOfClass("Humanoid")
 	if not humanoid then

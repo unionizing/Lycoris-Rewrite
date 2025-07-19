@@ -60,9 +60,6 @@ local playersService = game:GetService("Players")
 local startTimestamp = os.clock()
 
 ---Initialize instance.
----@note: AWP & Wave have this weird issue where some threads will not have their security level properly set to 8.
---- This means that anything related to CoreGUI will fail in those threads (e.g sounds & notifications).
---- This breaks detaching and modules, why? We need to get this solved soon.
 function Lycoris.init()
 	local localPlayer = nil
 
@@ -193,6 +190,8 @@ end
 ---Detach instance.
 function Lycoris.detach()
 	lycorisMaid:clean()
+
+	ModuleManager.detach()
 
 	EchoFarm.stop(true)
 

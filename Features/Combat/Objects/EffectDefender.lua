@@ -19,6 +19,7 @@ EffectDefender.__type = "Effect"
 local players = game:GetService("Players")
 
 ---Check if we're in a valid state to proceed with the action.
+---@param self EffectDefender
 ---@param timing PartTiming
 ---@param action Action
 ---@return boolean
@@ -41,7 +42,7 @@ EffectDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No character found.")
 	end
 
-	if not self:hc(humanoidRootPart.CFrame, timing, action, { players.LocalPlayer.Character }, nil) then
+	if not self:hc(humanoidRootPart, timing, action, { players.LocalPlayer.Character }, nil) then
 		return false
 	end
 
@@ -49,6 +50,7 @@ EffectDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 end)
 
 ---Process effect.
+---@param self EffectDefender
 EffectDefender.process = LPH_NO_VIRTUALIZE(function(self)
 	---@type EffectTiming?
 	local timing = self:initial(self.owner, SaveManager.es, self.owner.Name, self.name)

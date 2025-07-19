@@ -45,6 +45,130 @@ local oldWarn = nil
 -- Ban remotes table.
 local banRemotes = {}
 
+-- Input types.
+local INPUT_LEFT_CLICK = 1
+local INPUT_RIGHT_CLICK = 2
+
+---On intercepted input.
+---@param type number
+---@param block boolean
+local function onInterceptedInput(type, block)
+	if not Configuration.expectToggleValue("AutoFlowState") then
+		return
+	end
+
+	if block then
+		return
+	end
+
+	local localPlayer = playersService.LocalPlayer
+	if not localPlayer then
+		return
+	end
+
+	local backpack = localPlayer:FindFirstChild("Backpack")
+	if not backpack then
+		return
+	end
+
+	local flowStateTool = backpack:FindFirstChild("Talent:Flow State")
+	if not flowStateTool then
+		return
+	end
+
+	local flowStateRemote = flowStateTool:FindFirstChild("ActivateRt")
+	if not flowStateRemote then
+		return
+	end
+
+	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
+	if not effectReplicator then
+		return
+	end
+
+	local effectReplicatorModule = require(effectReplicator)
+	if not effectReplicatorModule then
+		return
+	end
+
+	local flowStateCooldown = false
+	local shUpperCooldown = false
+	local shDashCooldown = false
+	local shGapCloserCooldown = false
+
+	for _, effect in next, effectReplicatorModule.Effects do
+		local index = rawget(effect, "index")
+		if not index then
+			continue
+		end
+
+		if index.Class == "ToolCD" and index.Value == "Talent: Flow State" then
+			flowStateCooldown = true
+		end
+
+		if index.Class:match("SHUpper") and index.Class:match("CD") then
+			shUpperCooldown = true
+		end
+
+		if index.Class:match("SHDash") and index.Class:match("CD") then
+			shDashCooldown = true
+		end
+
+		if index.Class:match("SHGap") and index.Class:match("CD") then
+			shGapCloserCooldown = true
+		end
+	end
+
+	if flowStateCooldown then
+		return Logger.warn("Flow state is on cooldown.")
+	end
+
+	Logger.warn("(%i) Attempting to detect Silentheart moves for input type.", type)
+
+	if
+		effectReplicatorModule:FindEffect("Sliding")
+		and not effectReplicatorModule:FindEffect("SlideAttackCD")
+		and type == INPUT_LEFT_CLICK
+	then
+		Logger.warn("Detected 'Ankle Cutter' move.")
+
+		flowStateRemote:FireServer()
+	end
+
+	if effectReplicatorModule:FindEffect("SHDash") and not shDashCooldown and type == INPUT_LEFT_CLICK then
+		Logger.warn("Detected 'Mayhem' move.")
+
+		flowStateRemote:FireServer()
+	end
+
+	-- If we've done an aerial attack -- (aerial cooldown effect)
+	-- If we've attacked also -- (light attack effect)
+	if
+		effectReplicatorModule:FindEffect("AerialCD")
+		and effectReplicatorModule:FindEffect("LightAttack")
+		and not shGapCloserCooldown
+		and type == INPUT_LEFT_CLICK
+	then
+		Logger.warn("Detected 'Relentless Hunt' move.")
+
+		flowStateRemote:FireServer()
+	end
+
+	if
+		(
+			effectReplicatorModule:FindEffect("Sliding")
+			or effectReplicatorModule:FindEffect("ClientCrouch")
+			or effectReplicatorModule:FindEffect("Crouching")
+		)
+		and not shUpperCooldown
+		and type == INPUT_RIGHT_CLICK
+	then
+		Logger.warn("Detected 'Rising Star' move.")
+
+		flowStateRemote:FireServer()
+	end
+end
+
 ---Recursively find first valid InputClient stack.
 ---@return table?
 local findInputClientStack = LPH_NO_VIRTUALIZE(function()
@@ -440,10 +564,16 @@ local onUnreliableFireServer = LPH_NO_VIRTUALIZE(function(...)
 
 	local leftClickRemote = KeyHandling.getRemote("LeftClick")
 	local criticalClickRemote = KeyHandling.getRemote("CriticalClick")
+	local rightClickRemote = KeyHandling.getRemote("RightClick")
 	local blockInputOptions = Configuration.expectOptionValue("BlockInputOptions") or {}
+
+	if rightClickRemote and self == rightClickRemote then
+		onInterceptedInput(INPUT_RIGHT_CLICK, false)
+	end
 
 	if leftClickRemote and self == leftClickRemote then
 		local block = (blockInputOptions["Punishable M1s"] and Defense.blocking())
+		onInterceptedInput(INPUT_LEFT_CLICK, block)
 		return (not block) and oldUnreliableFireServer(...)
 	end
 

@@ -39,6 +39,7 @@ local replicatedStorage = game:GetService("ReplicatedStorage")
 local MAX_REPEAT_TIME = 5.0
 
 ---Is animation stopped? Made into a function for de-duplication.
+---@param self AnimatorDefender
 ---@param track AnimationTrack
 ---@param timing AnimationTiming
 ---@return boolean
@@ -80,6 +81,7 @@ AnimatorDefender.rc = LPH_NO_VIRTUALIZE(function(self, timing, start, track)
 end)
 
 ---Check if we're in a valid state to proceed with the action.
+---@param self AnimatorDefender
 ---@param timing AnimationTiming
 ---@param action Action
 ---@return boolean
@@ -143,7 +145,7 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return false
 	end
 
-	if not self:hc(root.CFrame, timing, action, { character }, self.track) then
+	if not self:hc(root, timing, action, { character }, self.track) then
 		return self:notify(timing, "Not in hitbox.")
 	end
 
@@ -186,6 +188,7 @@ function AnimatorDefender:pvalidate(track)
 	local isComingFromPlayer = players:GetPlayerFromCharacter(self.entity)
 
 	if isComingFromPlayer and track.WeightTarget <= 0.05 then
+		--[[
 		Logger.warn(
 			"Animation %s is being skipped from player %s with speed %.2f and weight-target %.2f. It is hidden.",
 			track.Animation.AnimationId,
@@ -193,6 +196,8 @@ function AnimatorDefender:pvalidate(track)
 			track.WeightTarget,
 			track.Speed
 		)
+		]]
+		--
 
 		return false
 	end
@@ -213,6 +218,7 @@ end
 
 ---Process animation track.
 ---@todo: AP telemetry - aswell as tracking effects that are added with timestamps and current ping to that list.
+---@param self AnimatorDefender
 ---@param track AnimationTrack
 AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 	if players.LocalPlayer.Character and self.entity == players.LocalPlayer.Character then

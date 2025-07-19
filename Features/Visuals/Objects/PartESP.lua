@@ -8,6 +8,7 @@ PartESP.__index = PartESP
 PartESP.__type = "PartESP"
 
 ---Update PartESP.
+---@param self PartESP
 ---@param tags string[]
 PartESP.update = LPH_NO_VIRTUALIZE(function(self, tags)
 	local part = self.part

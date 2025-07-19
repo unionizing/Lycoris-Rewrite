@@ -11,6 +11,7 @@ ModelESP.__index = ModelESP
 ModelESP.__type = "ModelESP"
 
 ---Update ModelESP.
+---@param self ModelESP
 ---@param tags string[]
 ModelESP.update = LPH_NO_VIRTUALIZE(function(self, tags)
 	local model = self.model

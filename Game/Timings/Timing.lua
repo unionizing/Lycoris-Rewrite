@@ -13,7 +13,10 @@ local ActionContainer = require("Game/Timings/ActionContainer")
 ---@field hitbox Vector3
 ---@field umoa boolean Use module over actions.
 ---@field smn boolean Skip module notification.
+---@field srpn boolean Skip repeat notification.
 ---@field smod string Selected module string.
+---@field aatk boolean Allow attacking.
+---@field fhb boolean Hitbox facing offset.
 local Timing = {}
 Timing.__index = Timing
 
@@ -76,8 +79,20 @@ function Timing:load(values)
 		self.umoa = values.umoa
 	end
 
+	if typeof(values.srpn) == "boolean" then
+		self.srpn = values.srpn
+	end
+
 	if typeof(values.smod) == "string" then
 		self.smod = values.smod
+	end
+
+	if typeof(values.aatk) == "boolean" then
+		self.aatk = values.aatk
+	end
+
+	if typeof(values.fhb) == "boolean" then
+		self.fhb = values.fhb
 	end
 end
 
@@ -97,7 +112,10 @@ function Timing:clone()
 	clone.actions = self.actions:clone()
 	clone.hitbox = self.hitbox
 	clone.umoa = self.umoa
+	clone.srpn = self.srpn
 	clone.smod = self.smod
+	clone.aatk = self.aatk
+	clone.fhb = self.fhb
 
 	return clone
 end
@@ -120,8 +138,11 @@ function Timing:serialize()
 			Y = self.hitbox.Y,
 			Z = self.hitbox.Z,
 		},
+		srpn = self.srpn,
 		umoa = self.umoa,
 		smod = self.smod,
+		aatk = self.aatk,
+		fhb = self.fhb,
 	}
 end
 
@@ -142,7 +163,10 @@ function Timing.new(values)
 	self.actions = ActionContainer.new()
 	self.hitbox = Vector3.zero
 	self.umoa = false
+	self.srpn = false
 	self.smod = "N/A"
+	self.aatk = false
+	self.fhb = false
 
 	if values then
 		self:load(values)

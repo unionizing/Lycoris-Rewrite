@@ -232,6 +232,12 @@ function CombatTab.initCombatAssistance(groupbox)
 		Tooltip = "Automatically cast your Wisp for you without pressing the buttons.",
 	})
 
+	groupbox:AddToggle("AutoFlowState", {
+		Text = "Auto Flow State",
+		Default = false,
+		Tooltip = "Detect what Silentheart moves would be thrown out and use flow-state beforehand.",
+	})
+
 	groupbox:AddToggle("PerfectMantraCast", {
 		Text = "Perfect Mantra Cast",
 		Default = false,

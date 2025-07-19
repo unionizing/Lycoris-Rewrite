@@ -45,7 +45,7 @@
         - Don't Show If There Is A Bone ❌
 
 - Automation ❌
-    - Maestro Farm  ❌
+    - Maestro Farm ❌
     - Fish Farm ❌
 
     Add Auto Loot and Account for Innate Stats
@@ -55,3 +55,14 @@
         - Pathfind Breaker ❌
     - Local Character Exploits ❌
         - Extended Item Pickup ❌
+        - Extended Job Board Interact ❌
+
+- How should we load internal timings?
+- What are the bugs related to the internal builder?
+- Work on all the ---@todo comments.
+- Figure out lag-compensation for PartDefenders.
+- Chaser tween to objective + tween to nearest instead
+- Figure out later how to match projectiles to users.
+
+# What moves do we need to add?
+https://docs.google.com/spreadsheets/d/1jcZFsSF5iSfbYryL9edl5B_r34tlMo0HPwoFqKiPps4/edit?gid=1386834576#gid=1386834576

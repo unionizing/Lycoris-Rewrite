@@ -796,6 +796,7 @@ InputClient.roll = LPH_NO_VIRTUALIZE(function(pivotStep, rollCancelTime)
 		loadedRollAnimation:Play()
 	end
 
+	---@todo: guyz this doesn't work .Sound
 	local robloxGlobalEnvironment = getrenv()._G
 
 	local arcSuitDash = effectReplicatorModule:HasEffect("ArcSuit") and hasTalent(character, "Arc Module: Dash")

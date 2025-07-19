@@ -2,6 +2,8 @@
 ---@field _type string
 ---@field _when number When the action will occur in miliseconds. Never access directly.
 ---@field hitbox Vector3 The hitbox of the action.
+---@field ihbc boolean Ignore hitbox check.
+---@field name string The name of the action.
 local Action = {}
 Action.__index = Action
 
@@ -29,6 +31,10 @@ function Action:load(values)
 	if typeof(values.hitbox) == "table" then
 		self.hitbox = Vector3.new(values.hitbox.X, values.hitbox.Y, values.hitbox.Z)
 	end
+
+	if typeof(values.ihbc) == "boolean" then
+		self.ihbc = values.ihbc
+	end
 end
 
 ---Clone action.
@@ -40,6 +46,7 @@ function Action:clone()
 	clone._when = self._when
 	clone.name = self.name
 	clone.hitbox = self.hitbox
+	clone.ihbc = self.ihbc
 
 	return clone
 end
@@ -56,6 +63,7 @@ function Action:serialize()
 			Y = self.hitbox.Y,
 			Z = self.hitbox.Z,
 		},
+		ihbc = self.ihbc,
 	}
 end
 
@@ -69,6 +77,7 @@ function Action.new(values)
 	self._when = 0
 	self.name = ""
 	self.hitbox = Vector3.zero
+	self.ihbc = false
 
 	if values then
 		self:load(values)

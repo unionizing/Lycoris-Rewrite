@@ -49,7 +49,7 @@ local textChatService = game:GetService("TextChatService")
 
 -- Constants.
 local MAX_VISUALIZATION_TIME = 5.0
-local MAX_DUIH_WAIT = 10.0
+local MAX_REPEAT_WAIT = 10.0
 
 -- Enums.
 local HIT_DETECTION_MISS = 0
@@ -111,6 +111,7 @@ function Defender:distance(from)
 end
 
 ---Call RPUE function.
+---@param self Defender
 ---@param entity Model
 ---@param track AnimationTrack?
 ---@param timing Timing
@@ -164,6 +165,7 @@ Defender.target = LPH_NO_VIRTUALIZE(function(self, entity)
 end)
 
 ---Repeat until parry end.
+---@param self Defender
 ---@param entity Model
 ---@param track AnimationTrack?
 ---@param timing Timing
@@ -183,14 +185,16 @@ Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, track, timing, index, s
 		return Logger.warn("Stopping RPUE '%s' because the repeat condition is not valid.", timing.name)
 	end
 
+	local target = self:target(entity)
+	local success = target and self:hc(target.root, timing, nil, { players.LocalPlayer.Character }, nil)
+
 	self:crpue(entity, track, timing, index + 1, start)
 
-	local target = self:target(entity)
 	if not target then
 		return Logger.warn("Skipping RPUE '%s' because the target is not valid.", timing.name)
 	end
 
-	if not self:hc(target.root.CFrame, timing, nil, { players.LocalPlayer.Character }, nil) then
+	if not success then
 		return Logger.warn("Skipping RPUE '%s' because we are not in the hitbox.", timing.name)
 	end
 
@@ -200,6 +204,7 @@ Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, track, timing, index, s
 end)
 
 ---Check if we're in a valid state to proceed with action handling. Extend me.
+---@param self Defender
 ---@param timing Timing
 ---@param action Action
 ---@return boolean
@@ -253,10 +258,13 @@ Defender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 
 	---@note: SK Swing breaks this check and we cannot parry second move
 	if
-		effectReplicatorModule:FindEffect("LightAttack")
-		or effectReplicatorModule:FindEffect("MidAttack")
-		or effectReplicatorModule:FindEffect("Followup")
-		or effectReplicatorModule:FindEffect("CastingSpell")
+		not timing.aatk
+		and (
+			effectReplicatorModule:FindEffect("LightAttack")
+			or effectReplicatorModule:FindEffect("MidAttack")
+			or effectReplicatorModule:FindEffect("Followup")
+			or effectReplicatorModule:FindEffect("CastingSpell")
+		)
 	then
 		return self:notify(timing, "User is in a state where they are attacking.")
 	end
@@ -289,6 +297,7 @@ Defender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 end)
 
 ---Update visualizations.
+---@param self Defender
 Defender.vupdate = LPH_NO_VIRTUALIZE(function(self)
 	-- Calculate whether or not we should be showing visualizations.
 	local showVisualizations = Configuration.expectToggleValue("EnableVisualizations")
@@ -309,6 +318,7 @@ end)
 ---@todo: Add a check to see if the player was looking at us in the last 0.25 seconds aswell.
 --- An issue is that the player's current look vector will not be the same as when they attack due to a parry timing being seperate from the attack;
 --- causing this check to fail.
+---@param self Defender
 ---@param cframe CFrame
 ---@param fd boolean
 ---@param size Vector3
@@ -397,6 +407,7 @@ Defender.hitbox = LPH_NO_VIRTUALIZE(function(self, cframe, fd, size, filter)
 end)
 
 ---Check initial state.
+---@param self Defender
 ---@param from Model? | BasePart?
 ---@param pair TimingContainerPair
 ---@param name string
@@ -429,6 +440,7 @@ Defender.initial = LPH_NO_VIRTUALIZE(function(self, from, pair, name, key)
 end)
 
 ---Logger notify.
+---@param self Defender
 ---@param timing Timing
 ---@param str string
 Defender.notify = LPH_NO_VIRTUALIZE(function(self, timing, str, ...)
@@ -464,12 +476,11 @@ function Defender:ping()
 end
 
 ---Repeat conditional.
----@param timing AnimationTiming
+---@param timing Timing
 ---@param start number
----@param track AnimationTrack?
 ---@return boolean
-Defender.rc = LPH_NO_VIRTUALIZE(function(_, timing, start, track)
-	if os.clock() - start >= MAX_DUIH_WAIT then
+Defender.rc = LPH_NO_VIRTUALIZE(function(_, timing, start, _)
+	if os.clock() - start >= MAX_REPEAT_WAIT then
 		return false
 	end
 
@@ -477,19 +488,35 @@ Defender.rc = LPH_NO_VIRTUALIZE(function(_, timing, start, track)
 end)
 
 ---Handle hitbox check and delay until in hitbox.
----@param cframe CFrame
+---@param self Defender
+---@param partOrCframe Part|CFrame
 ---@param timing Timing|EffectTiming|AnimationTiming
 ---@param action Action?
 ---@param filter Instance[]
 ---@param track AnimationTrack?
 ---@return boolean
-Defender.hc = LPH_NO_VIRTUALIZE(function(self, cframe, timing, action, filter, track)
+Defender.hc = LPH_NO_VIRTUALIZE(function(self, partOrCframe, timing, action, filter, track)
 	local start = os.clock()
 
+	if action.ihbc then
+		return true
+	end
+
 	---@note: We check for 'fhb' here even though the base timing may not have it.
-	while timing.duih and not timing.rpue and not self:hitbox(cframe, timing.fhb, timing.hitbox, filter) do
+	while timing.duih and not timing.rpue do
 		if not self:rc(timing, start, track) then
 			return false
+		end
+
+		if
+			self:hitbox(
+				typeof(partOrCframe) == "Instance" and partOrCframe.CFrame or partOrCframe,
+				timing.fhb,
+				timing.hitbox,
+				filter
+			)
+		then
+			return true
 		end
 
 		task.wait()
@@ -500,7 +527,17 @@ Defender.hc = LPH_NO_VIRTUALIZE(function(self, cframe, timing, action, filter, t
 		return false
 	end
 
-	if not timing.duih and not self:hitbox(cframe, timing.fhb, uh, filter) then
+	local shouldUseHitboxCheck = (timing.duih and timing.rpue) or not timing.duih
+
+	if
+		shouldUseHitboxCheck
+		and not self:hitbox(
+			typeof(partOrCframe) == "Instance" and partOrCframe.CFrame or partOrCframe,
+			timing.fhb,
+			uh,
+			filter
+		)
+	then
 		return false
 	end
 
@@ -508,6 +545,7 @@ Defender.hc = LPH_NO_VIRTUALIZE(function(self, cframe, timing, action, filter, t
 end)
 
 ---Handle end block.
+---@param self Defender
 Defender.bend = LPH_NO_VIRTUALIZE(function(self)
 	-- Iterate for start block tasks.
 	for idx, task in next, self.tasks do
@@ -528,6 +566,7 @@ Defender.bend = LPH_NO_VIRTUALIZE(function(self)
 end)
 
 ---Handle action.
+---@param self Defender
 ---@param timing Timing
 ---@param action Action
 Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action)
@@ -592,7 +631,7 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action)
 			return self:notify(timing, "Action 'Teleport Up' blocked because there are players nearby.")
 		end
 
-		humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position + Vector3.new(0, 50, 0))
+		humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position + Vector3.new(0, 25, 0))
 	end
 
 	---@note: Okay, we'll assume that we're in the parry state. There's no other type.
@@ -608,6 +647,7 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action)
 end)
 
 ---Check if we have input blocking tasks.
+---@param self Defender
 ---@return boolean
 Defender.blocking = LPH_NO_VIRTUALIZE(function(self)
 	for _, marker in next, self.markers do
@@ -642,9 +682,12 @@ function Defender:clhook()
 
 		self[key] = old
 	end
+
+	self.rhook = {}
 end
 
 ---Clean up all tasks.
+---@param self Defender
 Defender.clean = LPH_NO_VIRTUALIZE(function(self)
 	-- Clean-up hooks.
 	self:clhook()
@@ -686,6 +729,7 @@ Defender.clean = LPH_NO_VIRTUALIZE(function(self)
 end)
 
 ---Process module.
+---@param self Defender
 ---@param timing Timing
 ---@varargs any
 Defender.module = LPH_NO_VIRTUALIZE(function(self, timing, ...)
@@ -708,6 +752,7 @@ Defender.module = LPH_NO_VIRTUALIZE(function(self, timing, ...)
 end)
 
 ---Add a action to the defender object.
+---@param self Defender
 ---@param timing Timing
 ---@param action Action
 Defender.action = LPH_NO_VIRTUALIZE(function(self, timing, action)
@@ -724,6 +769,7 @@ Defender.action = LPH_NO_VIRTUALIZE(function(self, timing, action)
 end)
 
 ---Add actions from timing to defender object.
+---@param self Defender
 ---@param timing Timing
 Defender.actions = LPH_NO_VIRTUALIZE(function(self, timing)
 	for _, action in next, timing.actions:get() do
@@ -738,6 +784,7 @@ end)
 function Defender:hook(key, new)
 	-- Check if we're already hooked.
 	if self.rhook[key] then
+		Logger.warn("Cannot hook '%s' because it is already hooked.", key)
 		return false, nil
 	end
 
@@ -746,6 +793,7 @@ function Defender:hook(key, new)
 
 	-- Check if function.
 	if typeof(old) ~= "function" then
+		Logger.warn("Cannot hook '%s' because it is not a function.", key)
 		return false, nil
 	end
 
@@ -754,6 +802,9 @@ function Defender:hook(key, new)
 
 	-- Add to hook table with the old function so we can restore it on clean-up.
 	self.rhook[key] = old
+
+	-- Log.
+	Logger.warn("Hooked '%s' with new function.", key)
 
 	return true, old
 end

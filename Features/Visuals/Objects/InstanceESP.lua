@@ -30,6 +30,7 @@ function InstanceESP:detach()
 end
 
 ---Build text.
+---@param self InstanceESP
 ---@param label string
 ---@param tags string[]
 ---@return string
@@ -60,6 +61,7 @@ InstanceESP.build = LPH_NO_VIRTUALIZE(function(self, label, tags)
 end)
 
 ---Update InstanceESP.
+---@param self InstanceESP
 ---@param position Vector3
 ---@param tags string[]
 InstanceESP.update = LPH_NO_VIRTUALIZE(function(self, position, tags)
