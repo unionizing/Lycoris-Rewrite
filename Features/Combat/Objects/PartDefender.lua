@@ -25,6 +25,7 @@ PartDefender.cframe = LPH_NO_VIRTUALIZE(function(self)
 end)
 
 ---Check if we're in a valid state to proceed with the action.
+---@param self PartDefender
 ---@param timing PartTiming
 ---@param action Action
 ---@return boolean
@@ -46,6 +47,7 @@ PartDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 end)
 
 ---Update PartDefender object.
+---@param self PartDefender
 PartDefender.update = LPH_NO_VIRTUALIZE(function(self)
 	-- Skip if we're not handling delay until in hitbox.
 	if not self.timing.duih then
@@ -69,7 +71,7 @@ PartDefender.update = LPH_NO_VIRTUALIZE(function(self)
 
 	-- Get current hitbox state.
 	---@note: If we're using PartDefender, why perserve rotation? It's likely wrong or gonna mess us up.
-	local touching = self:hitbox(self:cframe(), false, self.timing.hitbox, { character })
+	local touching = self:hitbox(self:cframe(), self.timing.fhb, self.timing.hitbox, { character })
 
 	-- Deny updates if we're not touching the part.
 	if not touching then

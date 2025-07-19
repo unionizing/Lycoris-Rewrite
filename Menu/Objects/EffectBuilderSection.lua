@@ -31,7 +31,6 @@ function EffectBuilderSection:exload(timing)
 	self.repeatStartDelay:SetRawValue(timing._rsd)
 	self.repeatUntilParryEnd:SetRawValue(timing.rpue)
 	self.repeatParryDelay:SetRawValue(timing._rpd)
-	self.hitboxFacingOffset:SetRawValue(timing.fhb)
 end
 
 ---Reset the elements. Extend me.
@@ -79,16 +78,7 @@ end
 
 ---Initialize extra tab.
 ---@param tab table
-function EffectBuilderSection:extra(tab)
-	self.hitboxFacingOffset = tab:AddToggle(nil, {
-		Text = "Hitbox Facing Offset",
-		Tooltip = "Should the hitbox be offset towards the facing direction?",
-		Default = true,
-		Callback = self:tnc(function(timing, value)
-			timing.fhb = value
-		end),
-	})
-end
+function EffectBuilderSection:extra(tab) end
 
 ---Initialize action tab.
 function EffectBuilderSection:action()

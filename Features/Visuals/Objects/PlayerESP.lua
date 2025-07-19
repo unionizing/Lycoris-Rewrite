@@ -32,6 +32,7 @@ local ESP_HEALTH_BARS = "[%.1f bars]"
 local ESP_DANGER_TIME = "[%s on timer]"
 
 ---Update PlayerESP.
+---@param self PlayerESP
 PlayerESP.update = LPH_NO_VIRTUALIZE(function(self)
 	local model = self.character
 	local player = self.player

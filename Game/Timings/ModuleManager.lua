@@ -17,6 +17,9 @@ local InputClient = require("Game/InputClient")
 ---@module Features.Combat.Objects.Task
 local Task = require("Features/Combat/Objects/Task")
 
+---@module Game.Timings.Timing
+local Timing = require("Game/Timings/Timing")
+
 ---@module Utility.TaskSpawner
 local TaskSpawner = require("Utility/TaskSpawner")
 
@@ -38,6 +41,9 @@ local Signal = require("Utility/Signal")
 -- Module filesystem.
 local fs = Filesystem.new("Lycoris-Rewrite-Modules")
 local gfs = Filesystem.new(fs:append("Globals"))
+
+-- Detach table.
+local tdetach = {}
 
 ---Load file modules from filesystem.
 ---@param tfs Filesystem The filesystem to load from.
@@ -64,6 +70,7 @@ function ModuleManager.load(tfs, global)
 		local Defense = require("Features/Combat/Defense")
 
 		-- Set function environment to allow for internal modules.
+		getfenv(lf).Timing = Timing
 		getfenv(lf).PartTiming = PartTiming
 		getfenv(lf).Defense = Defense
 		getfenv(lf).Action = Action
@@ -98,6 +105,11 @@ function ModuleManager.load(tfs, global)
 
 		-- Get the result as a function.
 		output[string.sub(file, 1, #file - 4)] = result
+
+		-- If this is a global, the result is a table, and it has a detach function, store it for later.
+		if typeof(result) == "table" and typeof(result.detach) == "function" then
+			tdetach[#tdetach + 1] = result.detach
+		end
 	end
 end
 
@@ -111,6 +123,16 @@ function ModuleManager.loaded()
 	end
 
 	return out
+end
+
+---Detach functions.
+function ModuleManager.detach()
+	for _, detach in next, tdetach do
+		detach()
+	end
+
+	-- Clear detach table.
+	tdetach = {}
 end
 
 ---Refresh ModuleManager.

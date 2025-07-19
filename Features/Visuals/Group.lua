@@ -19,6 +19,7 @@ local Group = setmetatable({}, ReferencedMap)
 Group.__index = Group
 
 ---Update ESP object.
+---@param self Group
 ---@param object ModelESP|PartESP|FilteredESP
 Group.object = LPH_NO_VIRTUALIZE(function(self, object)
 	self.count = self.count + 1
@@ -40,6 +41,7 @@ Group.object = LPH_NO_VIRTUALIZE(function(self, object)
 end)
 
 ---Update group.
+---@param self Group
 Group.update = LPH_NO_VIRTUALIZE(function(self)
 	local map = self:data()
 
@@ -80,6 +82,7 @@ Group.update = LPH_NO_VIRTUALIZE(function(self)
 end)
 
 ---Hide group.
+---@param self Group
 Group.hide = LPH_NO_VIRTUALIZE(function(self)
 	if not self.updated then
 		return
@@ -93,6 +96,7 @@ Group.hide = LPH_NO_VIRTUALIZE(function(self)
 end)
 
 ---Detach group.
+---@param self Group
 Group.detach = LPH_NO_VIRTUALIZE(function(self)
 	for _, object in next, self:data() do
 		object:detach()

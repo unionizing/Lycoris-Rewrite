@@ -127,7 +127,7 @@ return LPH_NO_VIRTUALIZE(function()
 	end
 
 	---Update freestyler band spoof.
-	local function updateFreestylerBandSpoof()
+	local function updateFreestylerBandSpoof(character)
 		local localPlayer = players.LocalPlayer
 		if not localPlayer then
 			return
@@ -138,11 +138,20 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
+		local ssvPassives = character:GetAttribute("ssv_Passives")
+		local passiveList = ssvPassives and ssvPassives:split(";") or {}
+
+		if table.find(passiveList, "Freestyler's Band") then
+			return
+		end
+
+		passiveList[#passiveList + 1] = "Freestyler's Band"
+		character:SetAttribute("ssv_Passives", table.concat(passiveList, ";"))
 		fakeFreestylerBand.Parent = backpack
 	end
 
 	---Update konga clutch ring spoof.
-	local function updateKongaClutchRingSpoof()
+	local function updateKongaClutchRingSpoof(character)
 		local localPlayer = players.LocalPlayer
 		if not localPlayer then
 			return
@@ -153,7 +162,52 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
+		local ssvPassives = character:GetAttribute("ssv_Passives")
+		local passiveList = ssvPassives and ssvPassives:split(";") or {}
+
+		if table.find(passiveList, "Konga's Clutch Ring") then
+			return
+		end
+
+		passiveList[#passiveList + 1] = "Konga's Clutch Ring"
+		character:SetAttribute("ssv_Passives", table.concat(passiveList, ";"))
 		fakeKongaClutchRing.Parent = backpack
+	end
+
+	---Reset freestyler band spoof.
+	local function resetFreestylerBandSpoof(character)
+		local ssvPassives = character:GetAttribute("ssv_Passives")
+		local passiveList = ssvPassives and ssvPassives:split(";") or {}
+
+		for idx, passive in next, passiveList do
+			if passive ~= "Freestyler's Band" then
+				continue
+			end
+
+			table.remove(passiveList, idx)
+			break
+		end
+
+		character:SetAttribute("ssv_Passives", table.concat(passiveList, ";"))
+		fakeFreestylerBand.Parent = nil
+	end
+
+	---Reset konga clutch ring spoof.
+	local function resetKongaClutchRingSpoof(character)
+		local ssvPassives = character:GetAttribute("ssv_Passives")
+		local passiveList = ssvPassives and ssvPassives:split(";") or {}
+
+		for idx, passive in next, passiveList do
+			if passive ~= "Konga's Clutch Ring" then
+				continue
+			end
+
+			table.remove(passiveList, idx)
+			break
+		end
+
+		character:SetAttribute("ssv_Passives", table.concat(passiveList, ";"))
+		fakeKongaClutchRing.Parent = nil
 	end
 
 	---On Player GUI descendant added.
@@ -215,23 +269,33 @@ return LPH_NO_VIRTUALIZE(function()
 			resetEmoteSpoofer()
 		end
 
-		if Configuration.expectToggleValue("FreestylersBandSpoof") then
-			updateFreestylerBandSpoof()
-		else
-			fakeFreestylerBand.Parent = nil
-		end
-
-		if Configuration.expectToggleValue("KongaClutchRingSpoof") then
-			updateKongaClutchRingSpoof()
-		else
-			fakeFreestylerBand.Parent = nil
-		end
-
 		if not Configuration.expectToggleValue("InfoSpoofing") then
 			infoSpoofMap:restore()
 		end
 
 		updateDeathInformationSpoof()
+
+		local player = players.LocalPlayer
+		if not player then
+			return
+		end
+
+		local character = player.Character
+		if not character then
+			return
+		end
+
+		if Configuration.expectToggleValue("FreestylersBandSpoof") then
+			updateFreestylerBandSpoof(character)
+		else
+			resetFreestylerBandSpoof(character)
+		end
+
+		if Configuration.expectToggleValue("KongaClutchRingSpoof") then
+			updateKongaClutchRingSpoof(character)
+		else
+			resetKongaClutchRingSpoof(character)
+		end
 	end
 
 	---Spoof game version.

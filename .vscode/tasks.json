@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Bundle Lua",
+            "label": "Build Lua",
             "type": "shell",
             "command": "luabundler bundle Main.lua -p \"./?.lua\" -o Output/Bundled.lua -l 5.1",
             "problemMatcher": [],

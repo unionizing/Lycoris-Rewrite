@@ -1,0 +1,28 @@
+---Module function.
+---@param self AnimatorDefender
+---@param timing AnimationTiming
+return function(self, timing)
+	self:hook("rc", function()
+		local center = self.entity:FindFirstChild("IceBladeCenter")
+		if not center then
+			return
+		end
+
+		if not center:FindFirstChild("IceSword") then
+			return
+		end
+
+		return true
+	end)
+
+	---@todo: Mantra modifiers.
+	timing.fhb = false
+	timing.ieae = true
+	timing.iae = true
+	timing.rpue = true
+	timing.imxd = 100
+	timing._rsd = 750
+	timing._rpd = 150
+	timing.hitbox = Vector3.new(20, 20, 20)
+	self:crpue(self.entity, nil, timing, 0, os.clock())
+end

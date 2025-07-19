@@ -35,6 +35,7 @@ function FilteredESP:detach()
 end
 
 ---Update FilteredESP.
+---@param self FilteredESP
 FilteredESP.update = LPH_NO_VIRTUALIZE(function(self)
 	local object = self.object
 	local identifier = self.identifier

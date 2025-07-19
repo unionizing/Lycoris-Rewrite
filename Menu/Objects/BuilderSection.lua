@@ -82,6 +82,7 @@ function BuilderSection:reset()
 	self.useModuleOverActions:SetRawValue(false)
 	self.skipModuleNotification:SetRawValue(false)
 	self.selectedModule:SetRawValue("")
+	self.skipRepeatNotification:SetRawValue(false)
 
 	-- Reset action list.
 	self:arefresh(nil)
@@ -503,6 +504,7 @@ function BuilderSection:timing()
 			self.useModuleOverActions:SetRawValue(found.umoa)
 			self.skipModuleNotification:SetRawValue(found.smn)
 			self.selectedModule:SetRawValue(found.smod)
+			self.skipRepeatNotification:SetRawValue(found.srpn)
 
 			-- Load extra elements.
 			self:exload(found)
@@ -764,6 +766,23 @@ function BuilderSection:builder()
 		Default = false,
 		Callback = self:tnc(function(timing, value)
 			timing.umoa = value
+		end),
+	})
+
+	self.skipRepeatNotification = tab:AddToggle(nil, {
+		Text = "Skip Repeat Notification",
+		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing.srpn = value
+		end),
+	})
+
+	self.hitboxFacingOffset = tab:AddToggle(nil, {
+		Text = "Hitbox Facing Offset",
+		Tooltip = "Should the hitbox be offset towards the facing direction?",
+		Default = true,
+		Callback = self:tnc(function(timing, value)
+			timing.fhb = value
 		end),
 	})
 

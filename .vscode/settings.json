@@ -65,7 +65,7 @@
         "Output/"
     ],
     "robloxLsp.diagnostics.disable": [
-        "duplicate-doc-class"
+        "duplicate-doc-class",
     ],
     "robloxLsp.hint.setType": true,
     "robloxLsp.hint.enable": true,

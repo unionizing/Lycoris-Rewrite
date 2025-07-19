@@ -187,6 +187,7 @@ end
 ---@param player Player
 ---@return boolean
 function PlayerScanning.isAlly(player)
+	---@note: bruh we can call ReputationSystem
 	local localPlayerGuild = players.LocalPlayer:GetAttribute("Guild")
 	return PlayerScanning.friendCache[player]
 		or ((localPlayerGuild and #localPlayerGuild >= 1) and player:GetAttribute("Guild") == localPlayerGuild)
