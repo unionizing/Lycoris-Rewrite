@@ -17,7 +17,7 @@ local plistener = ProjectileListener.new("FiringLine")
 ---@param self AnimatorDefender
 ---@param timing AnimationTiming
 return function(self, timing)
-	plistener:callback(function(child)
+	plistener:connect(function(child)
 		if child.Name ~= "MetalBullet" then
 			return
 		end

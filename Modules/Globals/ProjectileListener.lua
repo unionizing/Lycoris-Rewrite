@@ -12,40 +12,35 @@ local Signal = getfenv().Signal
 local Logger = getfenv().Logger
 
 ---@class ProjectileListener
+---@field maid Maid
+---@field identifier string
 local ProjectileListener = {}
 ProjectileListener.__index = ProjectileListener
 
--- Listener maid.
-local listenerMaid = Maid.new()
+-- Object list.
+local trackerObjects = {}
 
--- Global list of objects.
-local listenerObjects = {}
-
--- Initialize global signals.
-local thrown = workspace:WaitForChild("Thrown")
-local childAdded = Signal.new(thrown.ChildAdded)
-
-listenerMaid:mark(childAdded:connect("ProjectileListener_ThrownChildAdded", function(child)
-	for _, listener in next, listenerObjects do
-		Logger.warn("(%s) (%s) Running ProjectileListener callback.", listener.identifier, tostring(listener))
-
-		if not listener.callback then
+---Detach function.
+function ProjectileListener.detach()
+	for _, trackerObject in next, trackerObjects do
+		if not trackerObject.maid then
 			continue
 		end
 
-		listener.callback(child)
+		trackerObject.maid:clean()
 	end
-end))
-
----Detach function. Module function. It is not related to the object itself.
-function ProjectileListener.detach()
-	listenerMaid:clean()
 end
 
----Set a new callback for the projectile listener.
----@param callback fun(child: Instance): boolean
-function ProjectileListener:callback(callback)
-	self.callback = callback
+---Create connection.
+function ProjectileListener:connect(callback)
+	local thrown = workspace:WaitForChild("Thrown")
+	local childAdded = Signal.new(thrown.ChildAdded)
+
+	self.maid:clean()
+
+	self.maid:mark(
+		childAdded:connect(string.format("%s_ProjectileListener_ThrownChildAdded", self.identifier), callback)
+	)
 end
 
 ---Create a new ProjectileListener object.
@@ -53,9 +48,9 @@ end
 ---@return ProjectileListener
 function ProjectileListener.new(identifier)
 	local self = setmetatable({}, ProjectileListener)
-	self.callback = nil
+	self.maid = Maid.new()
 	self.identifier = identifier
-	listenerObjects[#listenerObjects + 1] = self
+	trackerObjects[#trackerObjects + 1] = self
 	return self
 end
 

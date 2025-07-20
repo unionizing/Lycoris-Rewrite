@@ -22,5 +22,8 @@ return function(self, timing)
 		action.hitbox = Vector3.new(action.hitbox.X * 2.0, action.hitbox.Y * 2.0, action.hitbox.Z)
 	end
 
+	timing.duih = true
+	timing.hitbox = action.hitbox
+
 	self:action(timing, action)
 end

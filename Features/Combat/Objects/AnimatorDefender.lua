@@ -16,6 +16,9 @@ local Configuration = require("Utility/Configuration")
 ---@module Game.Timings.PlaybackData
 local PlaybackData = require("Game/Timings/PlaybackData")
 
+---@module Game.InputClient
+local InputClient = require("Game/InputClient")
+
 ---@class AnimatorDefender: Defender
 ---@field animator Animator
 ---@field entity Model
@@ -260,6 +263,26 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 	local effectReplicatorModule = require(effectReplicator)
 	if not effectReplicatorModule then
 		return
+	end
+
+	local midAttackEffect = effectReplicatorModule:FindEffect("MidAttack")
+	local midAttackData = midAttackEffect and midAttackEffect.index
+	local midAttackExpiry = midAttackData and midAttackData.Expiration
+	local midAttackCanFeint = midAttackExpiry and (os.clock() - midAttackExpiry) <= 0.45
+
+	-- Stop! We need to feint if we're currently attacking. Input block will handle the rest.
+	-- Assume, we cannot react in time. Example: we attacked just right before this process call.
+	---@note: Replicate to other types. Improve me or move me.
+	local shouldFeintAttack = midAttackCanFeint and Configuration.expectToggleValue("FeintM1WhileDefending")
+	local shouldFeintMantra = effectReplicatorModule:FindEffect("CastingSpell")
+		and Configuration.expectToggleValue("FeintMantrasWhileDefending")
+
+	if not effectReplicatorModule:FindEffect("FeintCool") and (shouldFeintAttack or shouldFeintMantra) then
+		-- Log.
+		self:notify(timing, "Automatically feinting attack.")
+
+		-- Feint.
+		InputClient.feint()
 	end
 
 	---@note: Clean up previous tasks that are still waiting or suspended because they're in a different track.

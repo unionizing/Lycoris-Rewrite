@@ -26,7 +26,7 @@ return function(self, timing)
 	endAction.ihbc = true
 	self:action(timing, endAction)
 
-	plistener:callback(function(child)
+	plistener:connect(function(child)
 		if child.Name ~= "StaticBall" then
 			return
 		end

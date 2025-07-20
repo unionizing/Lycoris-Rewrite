@@ -17,7 +17,7 @@ local plistener = ProjectileListener.new("MetalRain")
 ---@param self AnimatorDefender
 ---@param timing AnimationTiming
 return function(self, timing)
-	plistener:callback(function(child)
+	plistener:connect(function(child)
 		if child.Name ~= "RodMetalRain2" then
 			return
 		end

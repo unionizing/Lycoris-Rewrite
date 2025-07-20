@@ -21,8 +21,6 @@ return function(self, timing)
 	end
 
 	local tracker = ProjectileTracker.new(function(candidate)
-		print(candidate.Name)
-		candidate:Clone().Parent = thrown
 		return candidate.Name == "IntBangs"
 	end)
 
