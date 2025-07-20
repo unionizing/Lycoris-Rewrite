@@ -27,6 +27,8 @@ return LPH_NO_VIRTUALIZE(function()
 	local Tooltips = {}
 	local ModeSelectFrames = {}
 	local UpdateTimestamp = os.clock()
+	local Toggled = false
+	local NeedsRefresh = false
 
 	pcall(function()
 		getgenv().Toggles = Toggles
@@ -92,6 +94,16 @@ return LPH_NO_VIRTUALIZE(function()
 						ColorPicker:Display()
 					end
 				end
+			end
+
+			local LocalPlayer = game:GetService("Players").LocalPlayer
+			local PlayerGui = LocalPlayer and LocalPlayer.PlayerGui
+			local CursorGui = PlayerGui and PlayerGui:FindFirstChild("CursorGui")
+			local Cursor = CursorGui and CursorGui:FindFirstChild("Cursor")
+
+			if Cursor then
+				Cursor.Visible = false
+				game:GetService("UserInputService").MouseIconEnabled = true
 			end
 		end)
 	)
@@ -4145,7 +4157,6 @@ return LPH_NO_VIRTUALIZE(function()
 		})
 
 		local TransparencyCache = {}
-		local Toggled = false
 		local Fading = false
 		local FirstTime = false
 

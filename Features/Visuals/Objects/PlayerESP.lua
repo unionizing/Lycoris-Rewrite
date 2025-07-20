@@ -95,12 +95,12 @@ PlayerESP.update = LPH_NO_VIRTUALIZE(function(self)
 		tags[#tags + 1] = ESP_HEALTH_BARS:format(healthInBars)
 	end
 
-	local modelPosition = model:GetPivot().Position
+	local humanoidRootPart = model:FindFirstChild("HumanoidRootPart")
+	local modelPosition = humanoidRootPart and humanoidRootPart.Position or model:GetPivot().Position
+
 	local predictedPosition = nil
 	local usedPosition = nil
-
 	local mapPosition = model:GetAttribute("MapPos")
-	local humanoidRootPart = model:FindFirstChild("HumanoidRootPart")
 
 	if not humanoidRootPart then
 		predictedPosition = mapPosition and Vector3.new(mapPosition.X, modelPosition.Y, mapPosition.Z) or nil

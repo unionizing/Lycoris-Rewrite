@@ -15,6 +15,9 @@ local InstanceESP = {}
 InstanceESP.__index = InstanceESP
 InstanceESP.__type = "InstanceESP"
 
+-- Services.
+local playersService = game:GetService("Players")
+
 -- Formats.
 local ESP_DISTANCE_FORMAT = "%s [%i]"
 
@@ -72,8 +75,19 @@ InstanceESP.update = LPH_NO_VIRTUALIZE(function(self, position, tags)
 		return self:visible(false)
 	end
 
-	local camera = workspace.CurrentCamera
-	local distance = (camera.CFrame.Position - position).Magnitude
+	local localPlayer = playersService.LocalPlayer
+	local localCharacter = localPlayer and localPlayer.Character
+
+	if not localCharacter then
+		return self:visible(false)
+	end
+
+	local localRoot = localCharacter:FindFirstChild("HumanoidRootPart")
+	if not localRoot then
+		return self:visible(false)
+	end
+
+	local distance = (localRoot.Position - position).Magnitude
 
 	if distance > Configuration.idOptionValue(identifier, "MaxDistance") then
 		return self:visible(false)
