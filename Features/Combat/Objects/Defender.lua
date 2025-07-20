@@ -498,7 +498,7 @@ end)
 Defender.hc = LPH_NO_VIRTUALIZE(function(self, partOrCframe, timing, action, filter, track)
 	local start = os.clock()
 
-	if action.ihbc then
+	if action and action.ihbc then
 		return true
 	end
 

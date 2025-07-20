@@ -1,9 +1,6 @@
 ---@class Action
 local Action = getfenv().Action
 
----@module Modules.Globals.Waiter
-local Waiter = getfenv().Waiter
-
 ---@class Timing
 local Timing = getfenv().Timing
 
@@ -21,41 +18,38 @@ return function(self, timing)
 		return
 	end
 
-	task.wait(0.35 - self:ping())
+	task.wait(0.4 - self:ping())
 
 	if self:distance(self.entity) <= 10 then
 		local firstPartTiming = Timing.new()
 		firstPartTiming.fhb = true
 		firstPartTiming.duih = false
 		firstPartTiming.rpue = false
-		firstPartTiming.name = "ShoulderBashWindup"
+		firstPartTiming.name = "IceLunge"
 
 		local action = Action.new()
 		action._when = 0
 		action._type = "Parry"
 		action.ihbc = true
-		action.name = "Shoulder Bash Close"
+		action.name = "Ice Lunge Close"
 		return self:action(firstPartTiming, action)
 	end
 
-	local track = Waiter.fet("rbxassetid://9400896040", animator)
-	if not track then
-		return
-	end
+	local timestamp = os.clock()
 
 	timing.fhb = true
 	timing.duih = true
 	timing.rpue = false
-	timing.hitbox = Vector3.new(10, 10, 17.5)
+	timing.hitbox = Vector3.new(10, 10, 20)
 
 	self:hook("stopped", function(...)
-		return not track.IsPlaying
+		return os.clock() - timestamp >= 2.0
 	end)
 
 	local action = Action.new()
 	action._when = 0
 	action._type = "Parry"
-	action.hitbox = Vector3.new(10, 10, 17.5)
-	action.name = "Shoulder Bash Far"
+	action.hitbox = Vector3.new(10, 10, 20)
+	action.name = "Ice Lunge Far"
 	self:action(timing, action)
 end

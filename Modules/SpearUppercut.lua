@@ -5,12 +5,12 @@ local Weapon = getfenv().Weapon
 ---@param self AnimatorDefender
 ---@param timing AnimationTiming
 return function(self, timing)
-	local action = Weapon.action(self.entity, 400 * 1.25, true)
+	local action = Weapon.action(self.entity, 400 * 0.96, true)
 	if not action then
 		return
 	end
 
-	action.hitbox += Vector3.new(0.0, 0.0, 2.5)
-	action.name = "Dynamic Dagger Critical"
+	action.name = "Dynamic Spear Uppercut"
+
 	return self:action(timing, action)
 end

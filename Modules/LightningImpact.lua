@@ -11,7 +11,7 @@ local Defense = getfenv().Defense
 local PartTiming = getfenv().PartTiming
 
 -- Listener object.
-local plistener = ProjectileListener.new()
+local plistener = ProjectileListener.new("LightningImpact")
 
 ---Module function.
 ---@param self AnimatorDefender

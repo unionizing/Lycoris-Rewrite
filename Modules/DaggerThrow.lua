@@ -11,28 +11,39 @@ local Defense = getfenv().Defense
 local PartTiming = getfenv().PartTiming
 
 -- Listener object.
-local plistener = ProjectileListener.new("MetalRain")
+local plistener = ProjectileListener.new("DaggerThrow")
 
 ---Module function.
 ---@param self AnimatorDefender
 ---@param timing AnimationTiming
 return function(self, timing)
+	task.wait(0.45 - self:ping())
+
+	if self:distance(self.entity) <= 10 then
+		local action = Action.new()
+		action._when = 0
+		action._type = "Parry"
+		action.ihbc = true
+		action.name = "Ice Daggers Close"
+		return self:action(timing, action)
+	end
+
 	plistener:callback(function(child)
-		if child.Name ~= "RodMetalRain2" then
+		if child.Name ~= "IceDagger" then
 			return
 		end
 
 		local action = Action.new()
-		action._when = 200
+		action._when = 0
 		action._type = "Parry"
-		action.name = "Metal Rod Part"
+		action.name = "Ice Dagger Part"
 
 		local pt = PartTiming.new()
 		pt.uhc = true
-		pt.duih = false
+		pt.duih = true
 		pt.fhb = true
-		pt.name = "MetalRodProjectile"
-		pt.hitbox = Vector3.new(100, 100, 100)
+		pt.name = "IceDaggerProjectile"
+		pt.hitbox = Vector3.new(10, 10, 20)
 		pt.actions:push(action)
 
 		Defense.cdpo(child, pt)

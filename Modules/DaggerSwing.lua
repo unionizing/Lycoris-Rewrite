@@ -10,7 +10,7 @@ return function(self, timing)
 		return
 	end
 
-	action.hitbox += 2.5
+	action.hitbox += Vector3.new(0.0, 0.0, 2.5)
 	action.name = "Dynamic Dagger Swing"
 	return self:action(timing, action)
 end

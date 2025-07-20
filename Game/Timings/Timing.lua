@@ -166,7 +166,7 @@ function Timing.new(values)
 	self.srpn = false
 	self.smod = "N/A"
 	self.aatk = false
-	self.fhb = false
+	self.fhb = true
 
 	if values then
 		self:load(values)

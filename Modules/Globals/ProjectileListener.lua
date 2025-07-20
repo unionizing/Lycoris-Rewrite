@@ -8,6 +8,9 @@ local Maid = getfenv().Maid
 ---@class Signal
 local Signal = getfenv().Signal
 
+---@class Logger
+local Logger = getfenv().Logger
+
 ---@class ProjectileListener
 local ProjectileListener = {}
 ProjectileListener.__index = ProjectileListener
@@ -22,8 +25,10 @@ local listenerObjects = {}
 local thrown = workspace:WaitForChild("Thrown")
 local childAdded = Signal.new(thrown.ChildAdded)
 
-listenerMaid:mark(childAdded:connect("ProjectileTracker_ThrownChildAdded", function(child)
+listenerMaid:mark(childAdded:connect("ProjectileListener_ThrownChildAdded", function(child)
 	for _, listener in next, listenerObjects do
+		Logger.warn("(%s) (%s) Running ProjectileListener callback.", listener.identifier, tostring(listener))
+
 		if not listener.callback then
 			continue
 		end
@@ -37,17 +42,19 @@ function ProjectileListener.detach()
 	listenerMaid:clean()
 end
 
----Set a new handler for the projectile listener.
+---Set a new callback for the projectile listener.
 ---@param callback fun(child: Instance): boolean
-function ProjectileListener:handler(callback)
+function ProjectileListener:callback(callback)
 	self.callback = callback
 end
 
 ---Create a new ProjectileListener object.
+---@param identifier string
 ---@return ProjectileListener
-function ProjectileListener.new()
+function ProjectileListener.new(identifier)
 	local self = setmetatable({}, ProjectileListener)
 	self.callback = nil
+	self.identifier = identifier
 	listenerObjects[#listenerObjects + 1] = self
 	return self
 end

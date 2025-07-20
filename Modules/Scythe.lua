@@ -1,0 +1,28 @@
+---@class Action
+local Action = getfenv().Action
+
+---Module function.
+---@param self AnimatorDefender
+---@param timing AnimationTiming
+return function(self, timing)
+	local hrp = self.entity:FindFirstChild("HumanoidRootPart")
+	if not hrp then
+		return
+	end
+
+	if hrp:WaitForChild("REP_SOUND_15776883341", 0.1) then
+		local action = Action.new()
+		action._when = 350
+		action._type = "Parry"
+		action.hitbox = Vector3.new(10, 10, 10)
+		action.name = "Blood Scythe Timing"
+		return self:action(timing, action)
+	else
+		local action = Action.new()
+		action._when = 500
+		action._type = "Parry"
+		action.hitbox = Vector3.new(10, 10, 10)
+		action.name = "Scythe Timing"
+		return self:action(timing, action)
+	end
+end

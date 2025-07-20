@@ -63,6 +63,7 @@
 - Figure out lag-compensation for PartDefenders.
 - Chaser tween to objective + tween to nearest instead
 - Figure out later how to match projectiles to users.
+- Config data shuffling + encoding
 
 # What moves do we need to add?
 https://docs.google.com/spreadsheets/d/1jcZFsSF5iSfbYryL9edl5B_r34tlMo0HPwoFqKiPps4/edit?gid=1386834576#gid=1386834576

@@ -18,7 +18,6 @@ return function(self, timing)
 		return
 	end
 
-	-- Storm Blades
 	if hrp:FindFirstChild("REP_SOUND_15214335898") then
 		local stormBladesTiming = Timing.new()
 		stormBladesTiming.name = "StormBlades"
