@@ -10,10 +10,21 @@ return function(self, timing)
 		return
 	end
 
+	local root = self.entity:FindFirstChild("HumanoidRootPart")
+	if not root then
+		return
+	end
+
 	local action = Action.new()
 	action._type = "Parry"
 
-	if thrown:FindFirstChild("ChainPortalShadow") then
+	if root:FindFirstChild("REP_SOUND_5188185503") then
+		action._when = 1250
+		action.hitbox = Vector3.new(10, 10, 15)
+		action.name = "Ice Chains Timing"
+		timing.iae = true
+		timing.fhb = true
+	elseif thrown:FindFirstChild("ChainPortalShadow") then
 		action._when = 250
 		action.hitbox = Vector3.new(10, 10, 15)
 		action.name = "Shadow Chains Timing"

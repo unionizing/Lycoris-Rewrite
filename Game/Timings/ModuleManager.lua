@@ -137,6 +137,9 @@ end
 
 ---Refresh ModuleManager.
 function ModuleManager.refresh()
+	-- Detach all modules.
+	ModuleManager.detach()
+
 	-- Reset current list.
 	ModuleManager.modules = {}
 	ModuleManager.globals = {}

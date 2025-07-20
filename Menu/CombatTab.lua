@@ -192,6 +192,18 @@ function CombatTab.initFeintDetectionSection(groupbox) end
 -- Initialize attack assistance section.
 ---@param groupbox table
 function CombatTab.initAttackAssistanceSection(groupbox)
+	groupbox:AddToggle("FeintM1WhileDefending", {
+		Text = "Feint M1 While Defending",
+		Default = false,
+		Tooltip = "If you are attacking while attempting to defend, feint your M1s so you can perform actions.",
+	})
+
+	groupbox:AddToggle("FeintMantrasWhileDefending", {
+		Text = "Feint Mantras While Defending",
+		Default = false,
+		Tooltip = "If you are attacking while attempting to defend, feint your mantras so you can perform actions.",
+	})
+
 	groupbox:AddDropdown("BlockInputOptions", {
 		Text = "Block Input Options",
 		Values = {

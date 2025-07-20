@@ -17,6 +17,20 @@ local Logger = getfenv().Logger
 local ProjectileListener = {}
 ProjectileListener.__index = ProjectileListener
 
+-- Object list.
+local trackerObjects = {}
+
+---Detach function.
+function ProjectileListener.detach()
+	for _, trackerObject in next, trackerObjects do
+		if not trackerObject.maid then
+			continue
+		end
+
+		trackerObject.maid:clean()
+	end
+end
+
 ---Create connection.
 function ProjectileListener:connect(callback)
 	local thrown = workspace:WaitForChild("Thrown")
@@ -36,6 +50,7 @@ function ProjectileListener.new(identifier)
 	local self = setmetatable({}, ProjectileListener)
 	self.maid = Maid.new()
 	self.identifier = identifier
+	trackerObjects[#trackerObjects + 1] = self
 	return self
 end
 
