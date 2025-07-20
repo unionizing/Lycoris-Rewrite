@@ -256,23 +256,6 @@ Defender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No effect replicator module found.")
 	end
 
-	---@note: SK Swing breaks this check and we cannot parry second move
-	if
-		not timing.aatk
-		and (
-			effectReplicatorModule:FindEffect("LightAttack")
-			or effectReplicatorModule:FindEffect("MidAttack")
-			or effectReplicatorModule:FindEffect("Followup")
-			or effectReplicatorModule:FindEffect("CastingSpell")
-		)
-	then
-		return self:notify(timing, "User is in a state where they are attacking.")
-	end
-
-	if effectReplicatorModule:FindEffect("HitAnim") and effectReplicatorModule:FindEffect("Stun") then
-		return self:notify(timing, "User is stunned.")
-	end
-
 	if effectReplicatorModule:FindEffect("Knocked") then
 		return self:notify(timing, "User is knocked.")
 	end
@@ -634,16 +617,28 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position + Vector3.new(0, 25, 0))
 	end
 
-	---@note: Okay, we'll assume that we're in the parry state. There's no other type.
-	if
-		(not effectReplicatorModule:FindEffect("Equipped") or effectReplicatorModule:FindEffect("ParryCool"))
-		and Configuration.expectToggleValue("RollOnParryCooldown")
-	then
-		self:notify(timing, "Action type 'Parry' overrided to 'Dodge' type.")
-		return InputClient.dodge()
+	-- Parry if possible.
+	-- We'll assume that we're in the parry state. There's no other type.
+	if not effectReplicatorModule:FindEffect("ParryCool") and effectReplicatorModule:FindEffect("Equipped") then
+		return InputClient.parry()
 	end
 
-	InputClient.parry()
+	-- Dodge fallback.
+	if not Configuration.expectToggleValue("RollOnParryCooldown") then
+		return
+	end
+
+	if effectReplicatorModule:FindEffect("Stun") then
+		return self:notify(timing, "Action fallback 'Dodge' blocked because of 'Stun' effect.")
+	end
+
+	if effectReplicatorModule:FindEffect("DodgeCool") then
+		return self:notify(timing, "Action fallback 'Dodge' blocked because of 'DodgeCool' effect.")
+	end
+
+	self:notify(timing, "Action type 'Parry' overrided to 'Dodge' type.")
+
+	return InputClient.dodge()
 end)
 
 ---Check if we have input blocking tasks.
