@@ -10,7 +10,7 @@ return function(self, timing)
 		return
 	end
 
-	local base = 600
+	local base = 400
 	local name = data.hw and data.hw:GetAttribute("WeaponName") or ""
 
 	-- Bloodfouler uppercut
