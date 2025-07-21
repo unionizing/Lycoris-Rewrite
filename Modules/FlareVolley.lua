@@ -7,21 +7,24 @@ local Action = getfenv().Action
 return function(self, timing)
 	local distance = self:distance(self.entity)
 	local action = Action.new()
-	action._when = 500
+	action._when = 100
 	if distance >= 12 then
-		action._when = 550
+		action._when = 150
 	end
-	if distance >= 15 then
-		action._when = 660
+	if distance >= 18 then
+		action._when = 200
 	end
-	if distance >= 20 then
-		action._when = 680
+	if distance >= 26 then
+		action._when = 250
 	end
-	if distance >= 22 then
-		action._when = 730
+	if distance >= 34 then
+		action._when = 300
+	end
+	if distance >= 43 then
+		action._when = 350
 	end
 	action._type = "Parry"
-	action.hitbox = Vector3.new(26, 15, 32)
-	action.name = string.format("(%.2f) Dynamic Rocket Lance Timing", distance)
+	action.hitbox = Vector3.new(15, 10, 50)
+	action.name = string.format("(%.2f) Dynamic Flare Volley Timing", distance)
 	return self:action(timing, action)
 end
