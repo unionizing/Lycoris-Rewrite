@@ -169,7 +169,21 @@ function Lycoris.init()
 		end
 
 		-- Auto-save.
-		SaveManager.autosave()
+		local success, result = SaveManager.autosave()
+
+		-- Make a marker to show that we were able to autosave properly.
+		pcall(function()
+			writefile(
+				"Lycoris_LastAutoSaveTimestamp.txt",
+				string.format(
+					"%s : %s the config file '%s' with result %i after player removal.",
+					DateTime.now():FormatLocalTime("LLLL", "en-us"),
+					success and "Successfully saved" or "Failed to save",
+					SaveManager.llcn or "N/A",
+					result
+				)
+			)
+		end)
 
 		-- Clear BloxstrapRPC.
 		bloxstrapRPCModule.SetRichPresence({
