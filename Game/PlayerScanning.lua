@@ -49,17 +49,20 @@ local function fetchName(player)
 	return spoofName and "[REDACTED]" or string.format("(%s) %s", player:GetAttribute("CharacterName"), player.Name)
 end
 
----Partial look for string in list.
+---Partial look for string in list. Returns the string that got matched.
+---@param list table<string, any>
+---@param value string
+---@return string?
 local partialStringFind = LPH_NO_VIRTUALIZE(function(list, value)
 	for str, _ in next, list do
 		if not value:match(str) then
 			continue
 		end
 
-		return true
+		return str
 	end
 
-	return false
+	return nil
 end)
 
 ---Run player scans.
@@ -127,24 +130,6 @@ local runPlayerScans = LPH_NO_VIRTUALIZE(function()
 			Logger.longNotify("%s has the Voidwalker Contract talent.", fetchName(player))
 		end
 
-		if Configuration.expectToggleValue("NotifyItems") then
-			for _, tool in next, backpack:GetChildren() do
-				local itemName = tool:GetAttribute("ItemName")
-
-				if typeof(itemName) ~= "string" or itemName == "" then
-					continue
-				end
-
-				local notifyItemsList = Configuration.expectOptionValue("NotifyItemsList") or {}
-
-				if not partialStringFind(notifyItemsList, itemName) then
-					continue
-				end
-
-				Logger.longNotify("%s has item '%s' in their inventory.", fetchName(player), itemName)
-			end
-		end
-
 		PlayerScanning.scanQueue[player] = nil
 
 		PlayerScanning.friendCache[player] = localPlayer:GetFriendStatus(player) == Enum.FriendStatus.Friend
@@ -152,7 +137,7 @@ local runPlayerScans = LPH_NO_VIRTUALIZE(function()
 		Logger.warn("Player scanning finished scanning %s in queue.", fetchName(player))
 	end
 
-	for _, player in next, players:GetPlayers() do
+	for player, _ in next, players:GetPlayers() do
 		if not Configuration.expectToggleValue("NotifyItems") then
 			continue
 		end
@@ -162,6 +147,12 @@ local runPlayerScans = LPH_NO_VIRTUALIZE(function()
 			continue
 		end
 
+		local notifyItemsList = Configuration.expectOptionValue("NotifyItemsList") or {}
+		if not notifyItemsList or #notifyItemsList <= 0 then
+			continue
+		end
+
+		-- Check if the player has any items that match the notify items list.
 		for _, tool in next, backpack:GetChildren() do
 			if seenTools[tool] then
 				continue
@@ -173,15 +164,23 @@ local runPlayerScans = LPH_NO_VIRTUALIZE(function()
 				continue
 			end
 
-			local notifyItemsList = Configuration.expectOptionValue("NotifyItemsList") or {}
-
-			if not partialStringFind(notifyItemsList, itemName) then
+			local matchedString = partialStringFind(notifyItemsList, itemName)
+			if not matchedString then
 				continue
 			end
 
-			seenTools[tool] = true
+			seenTools[tool] = matchedString
 
 			Logger.longNotify("%s has item '%s' in their inventory.", fetchName(player), itemName)
+		end
+
+		-- If the matched string that filtered this item is no longer in the list, remove it.
+		for tool, matched in next, seenTools do
+			if notifyItemsList[matched] then
+				continue
+			end
+
+			seenTools[tool] = nil
 		end
 	end
 end)
