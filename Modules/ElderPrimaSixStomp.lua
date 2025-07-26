@@ -6,9 +6,12 @@ local Action = getfenv().Action
 ---@param timing AnimationTiming
 return function(self, timing)
 	local timings = {
-		[1] = 800,
-		[2] = 1400,
-		[3] = 2050,
+		[1] = 600,
+		[2] = 1000,
+		[3] = 1470,
+		[4] = 1850,
+		[5] = 2280,
+		[6] = 2750,
 	}
 
 	local humanoid = self.entity:FindFirstChildOfClass("Humanoid")
@@ -16,7 +19,7 @@ return function(self, timing)
 		return
 	end
 
-	for idx = 1, 3 do
+	for idx = 1, 6 do
 		local action = Action.new()
 		action._when = timings[idx] or 0
 		action._type = "Parry"
