@@ -565,6 +565,11 @@ function GameTab.initDebuggingSection(groupbox)
 		{ irlToggle, true },
 	})
 
+	groupbox:AddToggle("ShowDebugInformation", {
+		Text = "Show Debug Information",
+		Default = false,
+	})
+
 	groupbox:AddToggle("EffectLogging", {
 		Text = "Effect Logging",
 		Default = false,

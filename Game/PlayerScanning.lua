@@ -37,6 +37,7 @@ local playerScanningMaid = Maid.new()
 
 -- Timestamp.
 local lastRateLimit = nil
+local lastCheckedTimestamp = os.clock()
 
 -- Seen tools.
 local seenTools = {}
@@ -55,7 +56,7 @@ end
 ---@param value string
 ---@return string?
 local partialStringFind = LPH_NO_VIRTUALIZE(function(list, value)
-	for str, _ in next, list do
+	for _, str in next, list do
 		if not value:match(str) then
 			continue
 		end
@@ -136,53 +137,6 @@ local runPlayerScans = LPH_NO_VIRTUALIZE(function()
 		PlayerScanning.friendCache[player] = localPlayer:GetFriendStatus(player) == Enum.FriendStatus.Friend
 
 		Logger.warn("Player scanning finished scanning %s in queue.", fetchName(player))
-	end
-
-	for player, _ in next, players:GetPlayers() do
-		if not Configuration.expectToggleValue("NotifyItems") then
-			continue
-		end
-
-		local backpack = player:FindFirstChild("Backpack")
-		if not backpack then
-			continue
-		end
-
-		local notifyItemsList = Configuration.expectOptionValue("NotifyItemsList") or {}
-		if not notifyItemsList or #notifyItemsList <= 0 then
-			continue
-		end
-
-		-- Check if the player has any items that match the notify items list.
-		for _, tool in next, backpack:GetChildren() do
-			if seenTools[tool] then
-				continue
-			end
-
-			local itemName = tool:GetAttribute("ItemName")
-
-			if typeof(itemName) ~= "string" or itemName == "" then
-				continue
-			end
-
-			local matchedString = partialStringFind(notifyItemsList, itemName)
-			if not matchedString then
-				continue
-			end
-
-			seenTools[tool] = matchedString
-
-			Logger.longNotify("%s has item '%s' in their inventory.", fetchName(player), itemName)
-		end
-
-		-- If the matched string that filtered this item is no longer in the list, remove it.
-		for tool, matched in next, seenTools do
-			if notifyItemsList[matched] then
-				continue
-			end
-
-			seenTools[tool] = nil
-		end
 	end
 end)
 
@@ -274,10 +228,69 @@ function PlayerScanning.getStaffRank(player)
 	return nil
 end
 
+---Check inventories for tools.
+local function checkInventoriesForTools()
+	for _, player in next, players:GetPlayers() do
+		if not Configuration.expectToggleValue("NotifyItems") then
+			continue
+		end
+
+		if player == players.LocalPlayer then
+			continue
+		end
+
+		local backpack = player:FindFirstChild("Backpack")
+		if not backpack then
+			continue
+		end
+
+		local notifyItemsList = Options.NotifyItemsList and Options.NotifyItemsList.Values
+		if not notifyItemsList then
+			continue
+		end
+
+		-- Check if the player has any items that match the notify items list.
+		for _, tool in next, backpack:GetChildren() do
+			if seenTools[tool] then
+				continue
+			end
+
+			local itemName = tool:GetAttribute("ItemName")
+			if typeof(itemName) ~= "string" or itemName == "" then
+				continue
+			end
+
+			local matchedString = partialStringFind(notifyItemsList, itemName)
+			if not matchedString then
+				continue
+			end
+
+			seenTools[tool] = matchedString
+
+			Logger.longNotify("%s has item '%s' in their inventory.", fetchName(player), itemName)
+		end
+
+		-- If the matched string that filtered this item is no longer in the list, remove it.
+		for tool, matched in next, seenTools do
+			if table.find(notifyItemsList, matched) then
+				continue
+			end
+
+			seenTools[tool] = nil
+		end
+	end
+
+	lastCheckedTimestamp = os.clock()
+end
+
 ---Update player scanning.
 ---@note: Request will yield - so we need a debounce to prevent multiple scan loops.
 ---@note: We must defer the error back to the caller and reset the scanning debounce so errors will not break the scanning loop.
 function PlayerScanning.update()
+	if os.clock() - lastCheckedTimestamp >= 5.0 then
+		checkInventoriesForTools()
+	end
+
 	if PlayerScanning.scanning then
 		return
 	end

@@ -257,7 +257,10 @@ Defender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No effect replicator module found.")
 	end
 
-	if effectReplicatorModule:FindEffect("LightAttack") then
+	local lightAttack = effectReplicatorModule:FindEffect("LightAttack")
+	local lightAttackData = lightAttack and lightAttack.index
+
+	if lightAttackData and os.clock() - lightAttackData.Timestamp <= 0.25 - self:ping() then
 		return self:notify(timing, "User has the 'LightAttack' effect.")
 	end
 

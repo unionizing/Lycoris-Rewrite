@@ -55,6 +55,9 @@ local mobAnimations = {}
 local cws = nil
 local cwp = nil
 
+-- State.
+local leftClickState = false
+
 -- Update.
 local lastVisualizationUpdate = os.clock()
 local lastAutoWispUpdate = nil
@@ -166,7 +169,23 @@ local onEffectReplicated = LPH_NO_VIRTUALIZE(function(effect)
 		print(string.format("%s", tostring(effect)))
 	end
 
+	---@note: Set a timestamp for light attack effects.
+	--- This is a hack.
+	if effect.Class == "LightAttack" then
+		effect.index.Timestamp = os.clock()
+	end
+
 	if not Configuration.expectToggleValue("PerfectMantraCast") or effect.Class ~= "UsingSpell" then
+		return
+	end
+
+	local localPlayer = players.LocalPlayer
+	local backpack = localPlayer:FindFirstChild("Backpack")
+	if not backpack then
+		return
+	end
+
+	if not backpack:FindFirstChild("Talent:Eureka") then
 		return
 	end
 
@@ -293,11 +312,7 @@ end)
 
 ---Update defenders.
 local updateDefenders = LPH_NO_VIRTUALIZE(function()
-	if
-		Configuration.expectToggleValue("M1Hold")
-		and userInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
-		and not Defense.blocking()
-	then
+	if Configuration.expectToggleValue("M1Hold") and leftClickState then
 		InputClient.left()
 	end
 
@@ -442,12 +457,40 @@ function Defense.init()
 	-- Signals.
 	local gameDescendantAdded = Signal.new(game.DescendantAdded)
 	local gameDescendantRemoved = Signal.new(game.DescendantRemoving)
+	local inputBegan = Signal.new(userInputService.InputBegan)
+	local inputEnded = Signal.new(userInputService.InputEnded)
 	local renderStepped = Signal.new(runService.RenderStepped)
 	local postSimulation = Signal.new(runService.PostSimulation)
 	local clientEffectEvent = Signal.new(clientEffect.OnClientEvent)
 	local clientEffectLargeEvent = Signal.new(clientEffectLarge.OnClientEvent)
 	local cientEffectDirect = Signal.new(clientEffectDirect.Event)
 	local spellEvent = Signal.new(spell.OnClientEvent)
+
+	---@note: Need this to detect UI presses / game processed inputs.
+	defenseMaid:mark(inputBegan:connect("Defense_OnInputBegan", function(input, gameProcessed)
+		if gameProcessed then
+			return
+		end
+
+		if input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+			return
+		end
+
+		leftClickState = true
+	end))
+
+	defenseMaid:mark(inputEnded:connect("Defense_OnInputEnded", function(input, gameProcessed)
+		---@note: Need this to detect UI
+		if gameProcessed then
+			return
+		end
+
+		if input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+			return
+		end
+
+		leftClickState = false
+	end))
 
 	defenseMaid:mark(gameDescendantAdded:connect("Defense_OnDescendantAdded", onGameDescendantAdded))
 	defenseMaid:mark(gameDescendantRemoved:connect("Defense_OnDescendantRemoved", onGameDescendantRemoved))
