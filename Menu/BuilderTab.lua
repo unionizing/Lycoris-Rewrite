@@ -118,6 +118,11 @@ function BuilderTab.initSaveManagerSection(groupbox)
 
 	groupbox:AddButton("Refresh List", function()
 		SaveManager.refresh(configList)
+
+		if Options.MergeConfigList then
+			SaveManager.refresh(Options.MergeConfigList)
+		end
+
 		BuilderTab.refresh()
 	end)
 
@@ -129,7 +134,7 @@ end
 ---Initialize merge manager section.
 ---@param groupbox table
 function BuilderTab.initMergeManagerSection(groupbox)
-	local configList = groupbox:AddDropdown("ConfigList", {
+	local configList = groupbox:AddDropdown("MergeConfigList", {
 		Text = "Config List",
 		Values = SaveManager.list(),
 		AllowNull = true,
