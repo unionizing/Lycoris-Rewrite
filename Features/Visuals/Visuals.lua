@@ -390,8 +390,8 @@ local onThrownChildAdded = LPH_NO_VIRTUALIZE(function(child)
 		return emplaceObject(child, PartESP.new("MinistryCacheIndicator", child, "Ministry Cache Indicator"))
 	end
 
-	if name == "BigArtifact" and child:IsA("BasePart") then
-		return emplaceObject(child, PartESP.new("Artifact", child, "Artifact"))
+	if name == "BigArtifact" and child:IsA("Model") then
+		return emplaceObject(child, ModelESP.new("Artifact", child, "Artifact"))
 	end
 
 	if name == "BellMeteor" then
@@ -463,8 +463,8 @@ onWorkspaceChildAdded = LPH_NO_VIRTUALIZE(function(child)
 		return emplaceObject(child, ModelESP.new("JobBoard", child, "Job Board"))
 	end
 
-	if name == "BigArtifact" and child:IsA("BasePart") then
-		return emplaceObject(child, PartESP.new("Artifact", child, "Artifact"))
+	if name == "BigArtifact" and child:IsA("Model") then
+		return emplaceObject(child, ModelESP.new("Artifact", child, "Artifact"))
 	end
 
 	if name == "WindrunnerOrb" and child:IsA("BasePart") then

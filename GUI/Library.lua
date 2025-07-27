@@ -1307,7 +1307,7 @@ return LPH_NO_VIRTUALIZE(function()
 					ToggleLabel.AbsolutePosition.X + ToggleLabel.AbsoluteSize.X + 4,
 					ToggleLabel.AbsolutePosition.Y + 1
 				),
-				Size = UDim2.new(0, 60, 0, 45 + 2),
+				Size = UDim2.new(0, 60, 0, 60 + 2),
 				Visible = false,
 				ZIndex = 14,
 				Parent = ScreenGui,
@@ -1354,6 +1354,15 @@ return LPH_NO_VIRTUALIZE(function()
 			local Modes = Info.Modes or { "Always", "Toggle", "Hold", "Off" }
 			local ModeButtons = {}
 
+			function KeyPicker:DoClick()
+				if ParentObj.Type == "Toggle" and KeyPicker.SyncToggleState then
+					ParentObj:SetValue(not ParentObj.Value)
+				end
+
+				Library:SafeCallback("KeyPicker_Callback" .. "_" .. (Idx or ""), KeyPicker.Callback, KeyPicker.Toggled)
+				Library:SafeCallback("KeyPicker_Clicked" .. "_" .. (Idx or ""), KeyPicker.Clicked, KeyPicker.Toggled)
+			end
+
 			for Idx, Mode in next, Modes do
 				local ModeButton = {}
 
@@ -1371,12 +1380,12 @@ return LPH_NO_VIRTUALIZE(function()
 						Button:Deselect()
 					end
 
-					if Info.Mode == "Always" and KeyPicker.DoClick then
+					if Mode == "Always" then
 						KeyPicker.Toggled = true
 						KeyPicker:DoClick()
 					end
 
-					if Info.Mode == "Off" and KeyPicker.DoClick then
+					if Mode == "Off" then
 						KeyPicker.Toggled = false
 						KeyPicker:DoClick()
 					end
@@ -1481,15 +1490,6 @@ return LPH_NO_VIRTUALIZE(function()
 
 			if ParentObj.Addons then
 				table.insert(ParentObj.Addons, KeyPicker)
-			end
-
-			function KeyPicker:DoClick()
-				if ParentObj.Type == "Toggle" and KeyPicker.SyncToggleState then
-					ParentObj:SetValue(not ParentObj.Value)
-				end
-
-				Library:SafeCallback("KeyPicker_Callback" .. "_" .. (Idx or ""), KeyPicker.Callback, KeyPicker.Toggled)
-				Library:SafeCallback("KeyPicker_Clicked" .. "_" .. (Idx or ""), KeyPicker.Clicked, KeyPicker.Toggled)
 			end
 
 			local Picking = false

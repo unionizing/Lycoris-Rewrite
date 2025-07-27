@@ -40,9 +40,13 @@ local Maid = require("Utility/Maid")
 ---@module Utility.Signal
 local Signal = require("Utility/Signal")
 
+---@module Utility.Configuration
+local Configuration = require("Utility/Configuration")
+
 -- Services.
 local runService = game:GetService("RunService")
 local stats = game:GetService("Stats")
+local players = game:GetService("Players")
 
 -- Signals.
 local renderStepped = Signal.new(runService.RenderStepped)
@@ -116,10 +120,24 @@ function Menu.init()
 			local cpu = cpuData and cpuData:GetValue() or 0.0
 			local gpu = gpuData and gpuData:GetValue() or 0.0
 
+			-- Character data.
+			local character = players.LocalPlayer and players.LocalPlayer.Character
+			local mouse = players.LocalPlayer and players.LocalPlayer:GetMouse()
+			local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+			local position = humanoidRootPart and humanoidRootPart.Position or nil
+			local positionFormat = position and string.format("(%.2f, %.2f, %.2f)", position.X, position.Y, position.Z)
+				or "N/A"
+
+			-- String.
+			local str = string.format("%s | %.2fms | %.1f/s | %.1fms | %.1fms", MENU_TITLE, ping, fps, cpu, gpu)
+
+			if Configuration.expectToggleValue("ShowDebugInformation") then
+				str = str .. string.format(" | %s", positionFormat)
+				str = str .. string.format(" | %s", mouse and mouse.Target and mouse.Target:GetFullName() or "N/A")
+			end
+
 			-- Set watermark.
-			Library:SetWatermark(
-				string.format("%s | %.2fms | %.1f/s | %.1fms | %.1fms", MENU_TITLE, ping, fps, cpu, gpu)
-			)
+			Library:SetWatermark(str)
 		end)
 	))
 
