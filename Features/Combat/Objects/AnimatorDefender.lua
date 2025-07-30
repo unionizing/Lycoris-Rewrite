@@ -159,7 +159,7 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return false
 	end
 
-	local options = HitboxOptions.new(root, timing, { character })
+	local options = HitboxOptions.new(root, timing)
 	options.spredict = true
 	options.action = action
 

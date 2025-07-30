@@ -36,16 +36,16 @@ EffectDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No humanoid root part found.")
 	end
 
-	if not self:target(self.owner) then
-		return self:notify(timing, "Not a viable target.")
-	end
-
 	local character = players.LocalPlayer.Character
 	if not character then
 		return self:notify(timing, "No character found.")
 	end
 
-	local options = HitboxOptions.new(humanoidRootPart, timing, { character })
+	if not self:target(self.owner) then
+		return self:notify(timing, "Not a viable target.")
+	end
+
+	local options = HitboxOptions.new(humanoidRootPart, timing)
 	options.spredict = false
 	options.action = action
 

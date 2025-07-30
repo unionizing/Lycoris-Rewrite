@@ -46,7 +46,7 @@ SoundDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No character found.")
 	end
 
-	local options = HitboxOptions.new(self.part, timing, { character })
+	local options = HitboxOptions.new(self.part, timing)
 	options.spredict = false
 	options.action = action
 

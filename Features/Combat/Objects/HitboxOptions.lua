@@ -9,6 +9,10 @@
 local HitboxOptions = {}
 HitboxOptions.__index = HitboxOptions
 
+-- Services.
+local collectionService = game:GetService("CollectionService")
+local players = game:GetService("Players")
+
 ---Get extrapolated position.
 ---@param fsecs number
 ---@return CFrame
@@ -37,7 +41,7 @@ end)
 ---Create new HitboxOptions object.
 ---@param target Instance|CFrame
 ---@param timing Timing|EffectTiming|AnimationTiming|SoundTiming
----@param filter Instance[]
+---@param filter Instance[]?
 ---@return HitboxOptions
 HitboxOptions.new = LPH_NO_VIRTUALIZE(function(target, timing, filter)
 	local self = setmetatable({}, HitboxOptions)
@@ -45,11 +49,29 @@ HitboxOptions.new = LPH_NO_VIRTUALIZE(function(target, timing, filter)
 	self.cframe = typeof(target) == "CFrame" and target
 	self.timing = timing
 	self.action = nil
-	self.filter = filter
+	self.filter = filter or {}
 	self.spredict = false
 
 	if not self.part and not self.cframe then
 		return error("HitboxOptions: No part or CFrame specified.")
+	end
+
+	if filter then
+		return self
+	end
+
+	local character = players.LocalPlayer.Character
+	if not character then
+		return self
+	end
+
+	for _, instance in next, collectionService:GetTagged("CanHit") do
+		local model = instance:FindFirstAncestorWhichIsA("Model")
+		if not model or model ~= character then
+			continue
+		end
+
+		table.insert(self.filter, instance)
 	end
 
 	return self

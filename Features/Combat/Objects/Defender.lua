@@ -141,7 +141,7 @@ Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, timing, info)
 
 	local target = self:target(entity)
 
-	local options = HitboxOptions.new(CFrame.zero, timing, { players.LocalPlayer.Character })
+	local options = HitboxOptions.new(CFrame.zero, timing)
 	options.spredict = true
 	options.part = target and target.root
 
@@ -517,8 +517,8 @@ Defender.hc = LPH_NO_VIRTUALIZE(function(self, options, info)
 		return false
 	end
 
-	self.vpart.Color = Color3.new(255, 0, 255)
-	self.ppart.Color = Color3.new(255, 0, 255)
+	self.vpart.Color = Color3.fromRGB(255, 0, 255)
+	self.ppart.Color = Color3.fromRGB(255, 0, 255)
 
 	return true
 end)

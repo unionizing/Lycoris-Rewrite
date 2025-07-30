@@ -43,7 +43,7 @@ PartDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No character found.")
 	end
 
-	local options = HitboxOptions.new(self:cframe(), timing, { character })
+	local options = HitboxOptions.new(self:cframe(), timing)
 	options.spredict = false
 	options.action = action
 
