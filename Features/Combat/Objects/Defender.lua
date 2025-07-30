@@ -141,11 +141,11 @@ Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, timing, info)
 
 	local target = self:target(entity)
 
-	local options = HitboxOptions.new(CFrame.zero, timing)
+	local options = HitboxOptions.new(CFrame.new(), timing)
 	options.spredict = true
 	options.part = target and target.root
 
-	local success = target and self:hc(options, timing.rpue and RepeatInfo.new(timing) or nil)
+	local success = target and self:hc(options, timing.rpue and info or nil)
 
 	info.index = info.index + 1
 

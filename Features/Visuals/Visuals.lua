@@ -366,6 +366,11 @@ local onLiveChildrenAdded = LPH_NO_VIRTUALIZE(function(child)
 		return
 	end
 
+	-- safeguard lol
+	if players:FindFirstChild(child.Name) then
+		return
+	end
+
 	return emplaceObject(child, MobESP.new("Mob", child, child:GetAttribute("MOB_rich_name") or child.Name))
 end)
 
