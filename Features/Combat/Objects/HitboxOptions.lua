@@ -10,9 +10,6 @@
 local HitboxOptions = {}
 HitboxOptions.__index = HitboxOptions
 
----@module Features.Combat.Objects.Defender
-local Defender = require("Features/Combat/Objects/Defender")
-
 -- Services.
 local collectionService = game:GetService("CollectionService")
 local players = game:GetService("Players")
@@ -31,6 +28,10 @@ HitboxOptions.extrapolate = LPH_NO_VIRTUALIZE(function(self)
 	-- Calculate send delay for the target entity.
 	local player = players:GetPlayerFromCharacter(self.entity)
 	local sd = player and player:GetAttribute("AveragePing") or 0.0
+
+	---@module Features.Combat.Objects.Defender
+	---@note: Another stupid bug. Don't know why this happens.
+	local Defender = require("Features/Combat/Objects/Defender")
 
 	-- Finally, calculate the final replication position delay by adding our receive delay onto their send delay.
 	local fsecs = sd + Defender.rdelay()
