@@ -162,6 +162,7 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	local options = HitboxOptions.new(root, timing)
 	options.spredict = true
 	options.action = action
+	options.entity = self.entity
 
 	local info = RepeatInfo.new(timing)
 	info.track = self.track
@@ -279,11 +280,11 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 
 	-- Stop! We need to feint if we're currently attacking. Input block will handle the rest.
 	-- Assume, we cannot react in time. Example: we attacked just right before this process call.
-	---@note: Replicate to other types. Improve me or move me.
 	local shouldFeintAttack = midAttackCanFeint and Configuration.expectToggleValue("FeintM1WhileDefending")
 	local shouldFeintMantra = effectReplicatorModule:FindEffect("CastingSpell")
 		and Configuration.expectToggleValue("FeintMantrasWhileDefending")
 
+	---@todo: Auto-feint should work on all types and should try to be feinting during every waiting period.
 	if not effectReplicatorModule:FindEffect("FeintCool") and (shouldFeintAttack or shouldFeintMantra) then
 		-- Log.
 		self:notify(timing, "Automatically feinting attack.")
@@ -316,7 +317,7 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 	self:mark(
 		Task.new(
 			string.format("RPUE_%s_%i", timing.name, 0),
-			timing:rsd() - self.ping(),
+			timing:rsd() - self.rtt(),
 			timing.punishable,
 			timing.after,
 			self.rpue,

@@ -53,6 +53,10 @@ Targeting.viable = LPH_NO_VIRTUALIZE(function()
 			continue
 		end
 
+		if playerFromCharacter and Configuration.expectToggleValue("IgnorePlayers") then
+			continue
+		end
+
 		local humanoid = entity:FindFirstChildWhichIsA("Humanoid")
 		if not humanoid then
 			continue
@@ -67,11 +71,12 @@ Targeting.viable = LPH_NO_VIRTUALIZE(function()
 			continue
 		end
 
-		local displayNameFound = playerFromCharacter
-			and table.find(Configuration.expectOptionValue("UsernameList"), playerFromCharacter.DisplayName)
+		local usernameList = Options["UsernameList"]
 
-		local usernameFound = playerFromCharacter
-			and table.find(Configuration.expectOptionValue("UsernameList"), playerFromCharacter.Name)
+		local displayNameFound = playerFromCharacter
+			and table.find(usernameList.Values, playerFromCharacter.DisplayName)
+
+		local usernameFound = playerFromCharacter and table.find(usernameList.Values, playerFromCharacter.Name)
 
 		if displayNameFound or usernameFound then
 			continue

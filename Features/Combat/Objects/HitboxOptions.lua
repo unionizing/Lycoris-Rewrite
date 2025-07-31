@@ -6,22 +6,37 @@
 ---@field action Action?
 ---@field filter Instance[]
 ---@field spredict boolean If true, a check will run for predicted positions.
+---@field entity Model? The entity for extrapolation.
 local HitboxOptions = {}
 HitboxOptions.__index = HitboxOptions
+
+---@module Features.Combat.Objects.Defender
+local Defender = require("Features/Combat/Objects/Defender")
 
 -- Services.
 local collectionService = game:GetService("CollectionService")
 local players = game:GetService("Players")
 
 ---Get extrapolated position.
----@param fsecs number
 ---@return CFrame
-HitboxOptions.extrapolate = LPH_NO_VIRTUALIZE(function(self, fsecs)
+HitboxOptions.extrapolate = LPH_NO_VIRTUALIZE(function(self)
 	if not self.part then
 		return error("HitboxOptions.extrapolate - unimplemented for CFrame")
 	end
 
-	return self.part.CFrame * CFrame.new(self.part.Velocity * fsecs)
+	if not self.entity then
+		return error("HitboxOptions.extrapolate - no entity specified")
+	end
+
+	-- Calculate send delay for the target entity.
+	local player = players:GetPlayerFromCharacter(self.entity)
+	local sd = player and player:GetAttribute("AveragePing") or 0.0
+
+	-- Finally, calculate the final replication position delay by adding our receive delay onto their send delay.
+	local fsecs = sd + Defender.rdelay()
+
+	-- Return the extrapolated position.
+	return self.part.CFrame + (self.part.AssemblyLinearVelocity * fsecs)
 end)
 
 ---Get position.
@@ -51,6 +66,7 @@ HitboxOptions.new = LPH_NO_VIRTUALIZE(function(target, timing, filter)
 	self.action = nil
 	self.filter = filter or {}
 	self.spredict = false
+	self.entity = nil
 
 	if not self.part and not self.cframe then
 		return error("HitboxOptions: No part or CFrame specified.")

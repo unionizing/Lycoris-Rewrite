@@ -378,7 +378,7 @@ function BuilderSection:baction(base)
 			local dataPingItem = serverStatsItem and serverStatsItem:FindFirstChild("Data Ping")
 
 			if dataPingItem then
-				action.ping = dataPingItem:GetValue()
+				action = dataPingItem:GetValue()
 			end
 
 			-- Push action.

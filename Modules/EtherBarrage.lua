@@ -24,7 +24,7 @@ return function(self, timing)
 		return candidate.Name == "IntBangs"
 	end)
 
-	task.wait(0.7 - self.ping())
+	task.wait(0.7 - self.rtt())
 
 	local action = Action.new()
 	action._when = 0

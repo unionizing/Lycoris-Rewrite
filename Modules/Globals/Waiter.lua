@@ -39,7 +39,7 @@ end
 ---@param callback function The callback to run.
 function Waiter.stw(defender, time, callback)
 	local lastTimestamp = os.clock()
-	local initialPing = defender:ping()
+	local initialPing = defender.rtt()
 
 	while (os.clock() - lastTimestamp) <= (time - initialPing) do
 		-- Wait.

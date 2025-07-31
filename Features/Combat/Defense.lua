@@ -175,7 +175,7 @@ local onEffectReplicated = LPH_NO_VIRTUALIZE(function(effect)
 	---@note: Set a timestamp for light attack effects.
 	--- This is a hack.
 	if effect.Class == "LightAttack" then
-		effect.index.Timestamp = os.clock() - Defender.ping()
+		effect.index.Timestamp = os.clock() - Defender.rtt()
 	end
 
 	if effect.Class ~= "UsingSpell" then

@@ -60,7 +60,7 @@
 - How should we load internal timings?
 - What are the bugs related to the internal builder?
 - Work on all the ---@todo comments.
-- Figure out lag-compensation for PartDefenders.
+- Figure out lag-compensation for other defender types and projectiles.
 - Chaser tween to objective + tween to nearest instead
 - Ethiron tween to objective
 - Figure out later how to match projectiles to users.
@@ -99,10 +99,7 @@
 - Chaser Multi Player Support
 - Hide Obelisks That Are Already Turned On
 - PVP Safety
-- Fix FOV   
-- Fix Username Check + Add Ignore Players
-- Depths Cathedral TP
-
+- Fix FOV
 
 # What moves do we need to add?
 https://docs.google.com/spreadsheets/d/1jcZFsSF5iSfbYryL9edl5B_r34tlMo0HPwoFqKiPps4/edit?gid=1386834576#gid=1386834576
