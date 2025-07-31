@@ -144,6 +144,7 @@ Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, timing, info)
 	local options = HitboxOptions.new(CFrame.new(), timing)
 	options.spredict = true
 	options.part = target and target.root
+	options.entity = entity
 
 	local success = target and self:hc(options, timing.rpue and info or nil)
 
@@ -152,7 +153,7 @@ Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, timing, info)
 	self:mark(
 		Task.new(
 			string.format("RPUE_%s_%i", timing.name, info.index),
-			timing:rpd() - self.ping(),
+			timing:rpd() - self.rtt(),
 			timing.punishable,
 			timing.after,
 			self.rpue,
@@ -405,12 +406,26 @@ Defender.notify = LPH_NO_VIRTUALIZE(function(self, timing, str, ...)
 	Logger.notify("[%s] (%s) %s", timing.name, self.__type, string.format(str, ...))
 end)
 
----Get ping.
+---Get receiving delay.
+---@todo: Replace this average with the real RakNet receiving delay when we can do more reversing.
+---@return number
+function Defender.rdelay()
+	return players.LocalPlayer:GetNetworkPing()
+end
+
+---Get sending delay.
+---@return number
+function Defender.sdelay()
+	return math.max(Defender.rtt() - Defender.rdelay(), 0.0)
+end
+
+---Get data ping.
 ---@note: https://devforum.roblox.com/t/in-depth-information-about-robloxs-remoteevents-instance-replication-and-physics-replication-w-sources/1847340
 ---@note: The forum post above is misleading, not only is it the RTT time, please note that this also takes into account all delays like frame time.
 ---@note: This is our round-trip time (e.g double the ping) since we have a receiving delay (replication) and a sending delay when we send the input to the server.
+---@todo: For every usage, the sending delay needs to be continously updated. The receiving one must be calculated once at initial send for AP ping compensation.
 ---@return number
-function Defender.ping()
+function Defender.rtt()
 	local network = stats:FindFirstChild("Network")
 	if not network then
 		return
@@ -494,7 +509,7 @@ Defender.hc = LPH_NO_VIRTUALIZE(function(self, options, info)
 		return false
 	end
 
-	local closest = PositionHistory.closest(tick() - self.ping())
+	local closest = PositionHistory.closest(tick() - self.sdelay())
 	if not closest then
 		return false
 	end
@@ -504,7 +519,7 @@ Defender.hc = LPH_NO_VIRTUALIZE(function(self, options, info)
 	root.CFrame = closest
 
 	result = self:hitbox(
-		options:extrapolate(self.ping()),
+		options:extrapolate(),
 		timing.fhb,
 		action and action.hitbox or timing.hitbox,
 		options.filter,
@@ -762,7 +777,7 @@ end)
 ---@param action Action
 Defender.action = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	-- Get ping.
-	local ping = self.ping()
+	local ping = self.rtt()
 
 	-- Add action.
 	self:mark(

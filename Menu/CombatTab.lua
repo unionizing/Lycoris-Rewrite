@@ -47,9 +47,14 @@ function CombatTab.initCombatTargetingSection(tab)
 	})
 
 	tab:AddToggle("CheckTargetingValue", {
-		Text = "Check Targeting Value",
+		Text = "Check Mob Targeting Value",
 		Default = false,
-		Tooltip = "If found with a valid target, the script will check if we're currently being targeted.",
+		Tooltip = "If a mob is found with a valid target, the script will check if we're currently being targeted.",
+	})
+
+	tab:AddToggle("IgnorePlayers", {
+		Text = "Ignore Players",
+		Default = false,
 	})
 
 	tab:AddToggle("IgnoreMobs", {
