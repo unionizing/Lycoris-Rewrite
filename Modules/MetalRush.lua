@@ -7,9 +7,9 @@ local Action = getfenv().Action
 return function(self, timing)
 	local distance = self:distance(self.entity)
 	local action = Action.new()
-	action._when = math.min(350 + (distance * 30), 1000)
+	action._when = math.min(350 + (distance * 20), 700)
 	action._type = "Parry"
-	action.hitbox = Vector3.new(20, 15, 35)
+	action.hitbox = Vector3.new(15, 15, 20)
 	action.name = string.format("(%.2f) Dynamic Metal Rush Timing", distance)
 	return self:action(timing, action)
 end
