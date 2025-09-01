@@ -111,7 +111,7 @@ function GameTab.initLocalCharacterSection(groupbox)
 	atbDepBox:AddSlider("HeightOffset", {
 		Text = "Height Offset",
 		Default = 0,
-		Min = -30,
+		Min = -100,
 		Max = 30,
 		Suffix = "studs",
 		Rounding = 0,

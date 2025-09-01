@@ -1,9 +1,6 @@
 -- AutomationTab module.
 local AutomationTab = {}
 
----@module Features.Automation.EchoFarm
-local EchoFarm = require("Features/Automation/EchoFarm")
-
 ---Attribute section.
 ---@param groupbox table
 function AutomationTab.initAttributeSection(groupbox)
@@ -64,20 +61,6 @@ function AutomationTab.initFishFarmSection(groupbox)
 		})
 end
 
----Initialize Echo Farm section.
----@param groupbox table
-function AutomationTab.initEchoFarmSection(groupbox)
-	groupbox:AddButton({
-		Text = "Start Echo Farm",
-		Tooltip = "Quickly stop at any time with the '0' key on your keyboard.",
-		DoubleClick = true,
-		DoubleClickText = "Wipe the current slot?",
-		Func = EchoFarm.start,
-	})
-
-	groupbox:AddButton("Stop Echo Farm", EchoFarm.stop)
-end
-
 ---Initialize Effect Automation section.
 ---@param groupbox table
 function AutomationTab.initEffectAutomation(groupbox)
@@ -96,7 +79,6 @@ function AutomationTab.init(window)
 
 	-- Initialize sections.
 	AutomationTab.initFishFarmSection(tab:AddDynamicGroupbox("Fish Farm"))
-	AutomationTab.initEchoFarmSection(tab:AddDynamicGroupbox("Echo Farm"))
 	AutomationTab.initAttributeSection(tab:AddDynamicGroupbox("Attribute Farm"))
 	AutomationTab.initEffectAutomation(tab:AddDynamicGroupbox("Effect Automation"))
 end

@@ -19,9 +19,6 @@ local ControlModule = require("Utility/ControlModule")
 ---@module Game.InputClient
 local InputClient = require("Game/InputClient")
 
----@module Features.Automation.EchoFarm
-local EchoFarm = require("Features/Automation/EchoFarm")
-
 ---@module Game.PlayerScanning
 local PlayerScanning = require("Game/PlayerScanning")
 
@@ -116,10 +113,6 @@ function Lycoris.init()
 	CoreGuiManager.set()
 
 	PersistentData.init()
-
-	if PersistentData.get("aei") then
-		EchoFarm.start()
-	end
 
 	if game.PlaceId == LOBBY_PLACE_ID then
 		return Logger.warn("Script has initialized in the lobby.")
@@ -219,8 +212,6 @@ function Lycoris.detach()
 	lycorisMaid:clean()
 
 	ModuleManager.detach()
-
-	EchoFarm.stop(true)
 
 	SaveManager.autosave()
 
