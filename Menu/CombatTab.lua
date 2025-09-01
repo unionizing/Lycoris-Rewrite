@@ -4,9 +4,6 @@ local CombatTab = {}
 ---@module Utility.Logger
 local Logger = require("Utility/Logger")
 
----@module Game.InputClient
-local InputClient = require("Game/InputClient")
-
 -- Initialize combat targeting section.
 ---@param tab table
 function CombatTab.initCombatTargetingSection(tab)

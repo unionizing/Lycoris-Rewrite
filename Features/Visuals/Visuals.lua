@@ -255,11 +255,11 @@ local updateCardFrames = LPH_NO_VIRTUALIZE(function()
 end)
 
 ---Update power background.
----@param rframe Frame
-local updatePowerBackground = LPH_NO_VIRTUALIZE(function(rframe)
-	local panels = rframe and rframe:FindFirstChild("Panels")
-	local journalFrame = panels and panels:FindFirstChild("JournalFrame")
-	local sheets = journalFrame and journalFrame:FindFirstChild("Sheets")
+---@param jframe Frame
+local updatePowerBackground = LPH_NO_VIRTUALIZE(function(jframe)
+	local panels = jframe and jframe:FindFirstChild("Panels")
+	local infoFrame = panels and panels:FindFirstChild("InfoFrame")
+	local sheets = infoFrame and infoFrame:FindFirstChild("Sheets")
 	local power = sheets and sheets:FindFirstChild("Power")
 	local background = power and power:FindFirstChild("Background")
 	if not background then
@@ -290,9 +290,9 @@ local updatePowerBackground = LPH_NO_VIRTUALIZE(function(rframe)
 end)
 
 ---Update attribute frame.
----@param rframe Frame
-local updateAttributeFrame = LPH_NO_VIRTUALIZE(function(rframe)
-	local panels = rframe:FindFirstChild("Panels")
+---@param jframe Frame
+local updateAttributeFrame = LPH_NO_VIRTUALIZE(function(jframe)
+	local panels = jframe:FindFirstChild("Panels")
 	local attributeFrame = panels and panels:FindFirstChild("AttributeFrame")
 	local sheets = attributeFrame and attributeFrame:FindFirstChild("Sheets")
 	if not sheets then
@@ -373,11 +373,11 @@ local updateAttributeFrame = LPH_NO_VIRTUALIZE(function(rframe)
 end)
 
 ---Update traits.
----@param rframe Frame
-local updateTraits = LPH_NO_VIRTUALIZE(function(rframe)
-	local panels = rframe:FindFirstChild("Panels")
-	local journalFrame = panels and panels:FindFirstChild("JournalFrame")
-	local sheets = journalFrame and journalFrame:FindFirstChild("Sheets")
+---@param jframe Frame
+local updateTraits = LPH_NO_VIRTUALIZE(function(jframe)
+	local panels = jframe:FindFirstChild("Panels")
+	local infoFrame = panels and panels:FindFirstChild("InfoFrame")
+	local sheets = infoFrame and infoFrame:FindFirstChild("Sheets")
 	local traitSheet = sheets and sheets:FindFirstChild("TraitSheet")
 	local container = traitSheet and traitSheet:FindFirstChild("Container")
 	if not container then
@@ -438,9 +438,9 @@ local updateTraits = LPH_NO_VIRTUALIZE(function(rframe)
 end)
 
 ---Update talent sheet.
----@param rframe Frame
-local updateTalentSheet = LPH_NO_VIRTUALIZE(function(rframe)
-	local panels = rframe:FindFirstChild("TalentSheet")
+---@param jframe Frame
+local updateTalentSheet = LPH_NO_VIRTUALIZE(function(jframe)
+	local panels = jframe:FindFirstChild("TalentSheet")
 	local container = panels and panels:FindFirstChild("Container")
 	local talentScroll = container and container:FindFirstChild("TalentScroll")
 	if not talentScroll then
@@ -529,13 +529,13 @@ local updateTalentSheet = LPH_NO_VIRTUALIZE(function(rframe)
 	end
 end)
 
----Update rest gui.
----@param rframe Frame
-local updateRestGui = LPH_NO_VIRTUALIZE(function(rframe)
-	local attrFrame = rframe:FindFirstChild("AttrFrame")
-	local attrSheet = attrFrame and attrFrame:FindFirstChild("AttrSheet")
-	local container = attrSheet and attrSheet:FindFirstChild("Container")
-	if not container then
+---Update train.
+---@param jframe Frame
+local updateTrain = LPH_NO_VIRTUALIZE(function(jframe)
+	local panels = jframe:FindFirstChild("Panels")
+	local attributeFrame = panels and panels:FindFirstChild("AttributeFrame")
+	local sheets = attributeFrame and attributeFrame:FindFirstChild("Sheets")
+	if not sheets then
 		return
 	end
 
@@ -570,7 +570,7 @@ local updateRestGui = LPH_NO_VIRTUALIZE(function(rframe)
 		["WeaponLight"] = attributes.weapon["Light Wep."],
 	}
 
-	for _, instance in next, container:GetDescendants() do
+	for _, instance in next, sheets:GetDescendants() do
 		if not instance:IsA("TextLabel") then
 			continue
 		end
@@ -580,8 +580,12 @@ local updateRestGui = LPH_NO_VIRTUALIZE(function(rframe)
 			continue
 		end
 
-		local increase = instance:FindFirstChild("Increase")
-		if not increase then
+		local train = instance:FindFirstChild("Train")
+		if not train then
+			continue
+		end
+
+		if not train.Visible then
 			continue
 		end
 
@@ -601,9 +605,7 @@ local updateRestGui = LPH_NO_VIRTUALIZE(function(rframe)
 			color = Color3.fromRGB(128, 128, 128)
 		end
 
-		buildAssistanceMap:add(increase, "BackgroundColor3", color)
-		buildAssistanceMap:add(instance, "TextColor3", color)
-		buildAssistanceMap:add(valueLabel, "TextColor3", color)
+		buildAssistanceMap:add(train, "BackgroundColor3", color)
 	end
 end)
 
@@ -618,26 +620,16 @@ local updateBuildAssistance = LPH_NO_VIRTUALIZE(function()
 		return
 	end
 
-	local restGui = playerGui and playerGui:FindFirstChild("RestGui")
-	if not restGui then
+	local bpJournalFrame = backpackGui and backpackGui:FindFirstChild("JournalFrame")
+	if not bpJournalFrame then
 		return
 	end
 
-	local bpRightFrame = backpackGui and backpackGui:FindFirstChild("RightFrame")
-	if not bpRightFrame then
-		return
-	end
-
-	local restRightFrame = restGui and restGui:FindFirstChild("RightFrame")
-	if not restRightFrame then
-		return
-	end
-
-	updateAttributeFrame(bpRightFrame)
-	updateTraits(bpRightFrame)
-	updatePowerBackground(bpRightFrame)
-	updateTalentSheet(bpRightFrame)
-	updateRestGui(restRightFrame)
+	updateAttributeFrame(bpJournalFrame)
+	updateTraits(bpJournalFrame)
+	updatePowerBackground(bpJournalFrame)
+	updateTalentSheet(bpJournalFrame)
+	updateTrain(bpJournalFrame)
 end)
 
 ---Update no persistence.
