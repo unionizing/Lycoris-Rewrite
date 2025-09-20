@@ -175,6 +175,7 @@ function CombatTab.initAutoDefenseSection(groupbox)
 		{ rollCancelToggle, true },
 	})
 
+	--[[
 	local afToggle = autoDefenseDepBox:AddToggle("AllowFailure", {
 		Text = "Allow Failure",
 		Default = false,
@@ -222,6 +223,8 @@ function CombatTab.initAutoDefenseSection(groupbox)
 	afDepBox:SetupDependencies({
 		{ afToggle, true },
 	})
+	]]
+	--
 
 	autoDefenseDepBox:AddDropdown("AutoDefenseFilters", {
 		Text = "Auto Defense Filters",
