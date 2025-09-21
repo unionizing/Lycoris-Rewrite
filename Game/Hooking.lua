@@ -476,7 +476,7 @@ local onNameCall = LPH_NO_VIRTUALIZE(function(...)
 	end
 
 	if Configuration.expectToggleValue("InfoSpoofing") then
-		if typeof(args[2]) == "string" and getnamecallmethod() == "GetAttribute" and not Spoofing.force then
+		if typeof(args[2]) == "string" and method == "GetAttribute" and not Spoofing.force then
 			local character = playersService.LocalPlayer.Character
 			local humanoid = game.FindFirstChild(character, "Humanoid")
 			local foreign = true
@@ -515,16 +515,8 @@ local onNameCall = LPH_NO_VIRTUALIZE(function(...)
 		end
 	end
 
-	if not game.IsA(self, "BaseRemoteEvent") then
-		return oldNameCall(...)
-	end
-
 	if name == "ActivateMantra" then
 		Defense.lastMantraActivate = args[2]
-	end
-
-	if name == "AcidCheck" and Configuration.expectToggleValue("NoAcidWater") then
-		return
 	end
 
 	if name == "Gesture" and Configuration.expectToggleValue("EmoteSpoofer") and typeof(args[2]) == "string" then
@@ -598,8 +590,6 @@ local onNewIndex = LPH_NO_VIRTUALIZE(function(...)
 		return oldNewIndex(...)
 	end
 
-	local name = self.Name
-
 	if Configuration.expectToggleValue("InfoSpoofing") then
 		if game.IsA(self, "TextLabel") and index == "Text" and not Spoofing.force then
 			if self.Name == "Slot" and self.Parent.Name == "CharacterInfo" then
@@ -616,12 +606,6 @@ local onNewIndex = LPH_NO_VIRTUALIZE(function(...)
 		end
 	end
 
-	if Configuration.expectToggleValue("NoBlur") then
-		if (name == "GenericBlur" or name == "UnderwaterBlur") and index == "Size" then
-			return
-		end
-	end
-
 	if Configuration.expectToggleValue("NoClip") and Configuration.expectToggleValue("Fly") then
 		if index == "ActiveController" then
 			if self.Parent then
@@ -635,18 +619,6 @@ local onNewIndex = LPH_NO_VIRTUALIZE(function(...)
 		if self == lighting and Configuration.expectToggleValue("ModifyAmbience") then
 			return oldNewIndex(self, index, modifyAmbienceColor(value))
 		end
-	end
-
-	if self ~= workspace.CurrentCamera then
-		return oldNewIndex(...)
-	end
-
-	if index == "FieldOfView" and Configuration.expectToggleValue("ModifyFieldOfView") then
-		return
-	end
-
-	if index == "CameraSubject" and Monitoring.subject then
-		return
 	end
 
 	return oldNewIndex(...)

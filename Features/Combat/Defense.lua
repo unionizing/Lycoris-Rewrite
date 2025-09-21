@@ -173,7 +173,7 @@ end)
 
 ---Update history.
 local updateHistory = LPH_NO_VIRTUALIZE(function()
-	if os.clock() - lastHistoryUpdate <= 0.05 then
+	if os.clock() - lastHistoryUpdate <= 0.1 then
 		return
 	end
 

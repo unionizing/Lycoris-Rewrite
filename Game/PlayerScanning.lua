@@ -38,6 +38,7 @@ local playerScanningMaid = Maid.new()
 -- Timestamp.
 local lastRateLimit = nil
 local lastCheckedTimestamp = os.clock()
+local lastPlayerScanTimestamp = os.clock()
 
 -- Seen tools.
 local seenTools = {}
@@ -302,6 +303,12 @@ function PlayerScanning.update()
 	if os.clock() - lastCheckedTimestamp >= 5.0 then
 		checkInventoriesForTools()
 	end
+
+	if os.clock() - lastPlayerScanTimestamp <= 1.0 then
+		return
+	end
+
+	lastPlayerScanTimestamp = os.clock()
 
 	if PlayerScanning.scanning then
 		return
