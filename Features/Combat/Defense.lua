@@ -397,18 +397,6 @@ Defense.cdpo = LPH_NO_VIRTUALIZE(function(part, timing)
 	return partDefender
 end)
 
----Check if objects have blocking tasks.
----@return boolean
-Defense.blocking = LPH_NO_VIRTUALIZE(function()
-	for _, object in next, defenderObjects do
-		if not object:blocking() then
-			continue
-		end
-
-		return true
-	end
-end)
-
 ---Return the defender animation object for an entity.
 ---@param entity Instance
 ---@return AnimatorDefender?

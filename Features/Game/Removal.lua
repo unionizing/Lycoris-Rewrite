@@ -33,6 +33,9 @@ return LPH_NO_VIRTUALIZE(function()
 	-- Maids.
 	local removalMaid = Maid.new()
 
+	-- Original.
+	local originalEffectsHash = nil
+
 	-- Original stores.
 	local noShadows = removalMaid:mark(OriginalStore.new())
 	local noBlur = removalMaid:mark(OriginalStore.new())
@@ -198,7 +201,7 @@ return LPH_NO_VIRTUALIZE(function()
 
 	---Update removal.
 	local function updateRemoval()
-		if os.clock() - lastUpdate <= 2.0 then
+		if os.clock() - lastUpdate <= 3.0 then
 			return
 		end
 
