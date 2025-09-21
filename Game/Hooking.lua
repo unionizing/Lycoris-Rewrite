@@ -755,7 +755,9 @@ function Hooking.init()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 
-	oldHasEffect = hookfunction(effectReplicatorModule.HasEffect, onHasEffect)
+	oldHasEffect = effectReplicatorModule.HasEffect
+
+	effectReplicatorModule.HasEffect = onHasEffect
 
 	-- Okay, we're done.
 	Logger.warn("Client-side anticheat has been penetrated.")
@@ -809,7 +811,8 @@ function Hooking.detach()
 	local effectReplicatorModule = effectReplicator and require(effectReplicator)
 
 	if oldHasEffect and effectReplicatorModule then
-		hookfunction(effectReplicatorModule.HasEffect, oldHasEffect)
+		effectReplicatorModule.HasEffect = oldHasEffect
+		oldHasEffect = nil
 	end
 
 	local playerScripts = localPlayer:FindFirstChild("PlayerScripts")

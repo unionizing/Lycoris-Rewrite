@@ -934,7 +934,7 @@ end)
 
 ---Update ESP.
 local updateESP = LPH_NO_VIRTUALIZE(function()
-	if os.clock() - lastESPUpdate <= (1 / Configuration.expectOptionValue("ESPRefreshRate")) then
+	if os.clock() - lastESPUpdate <= (1 / (Configuration.expectOptionValue("ESPRefreshRate") or 30)) then
 		return
 	end
 
