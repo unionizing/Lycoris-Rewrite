@@ -1,0 +1,34 @@
+{
+  "patch_id": "467cd39b-3a16-4dc8-99e3-b8b97055e1c9",
+  "timestamp": "2025-09-21T22:03:45.144897",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://11876148070": {
+        "status": "modified",
+        "changes": {
+          "duih": {
+            "from": true,
+            "to": false
+          },
+          "ieae": {
+            "from": true,
+            "to": false
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "iae": {
+            "from": true,
+            "to": false
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "EthironBeam"
+          }
+        }
+      }
+    }
+  }
+}

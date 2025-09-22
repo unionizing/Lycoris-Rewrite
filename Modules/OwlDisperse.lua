@@ -18,16 +18,13 @@ return function(self, timing)
 		return
 	end
 
-	self:hook("rc", function(info)
-		if os.clock() - info.start >= (duration + 0.2) then
+	self:hook("rc", function(_, info)
+		if os.clock() - info.start >= (duration + 0.4) then
 			return Logger.warn("(%.2f) Stopping RPUE '%s' because we've went past the duration.", duration, timing.name)
 		end
 
 		return true
 	end)
-
-	local info = RepeatInfo.new(timing, self.rdelay(), self:uid(10))
-	info.track = self.track
 
 	timing.fhb = false
 	timing.duih = true
@@ -36,5 +33,7 @@ return function(self, timing)
 	timing._rsd = (duration / 2.5) * 1000
 	timing._rpd = 250
 	timing.hitbox = Vector3.new(100, 100, 100)
-	self:rpue(self.entity, timing, info)
+
+	local info = RepeatInfo.new(timing, self.rdelay(), self:uid(10))
+	self:srpue(owner, timing, info)
 end

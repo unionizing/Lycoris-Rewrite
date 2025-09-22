@@ -15,6 +15,7 @@ local Timing = require("Game/Timings/Timing")
 ---@field ieae boolean Flag to see whether or not this timing should ignore early animation end.
 ---@field mat number Max animation timeout in milliseconds.
 ---@field dp boolean Disable prediction.
+---@field imb boolean Ignore megalodaunt block. Hidden option.
 local AnimationTiming = setmetatable({}, { __index = Timing })
 AnimationTiming.__index = AnimationTiming
 
@@ -91,6 +92,10 @@ function AnimationTiming:equals(other)
 		return false
 	end
 
+	if self.imb ~= other.imb then
+		return false
+	end
+
 	return true
 end
 
@@ -158,6 +163,10 @@ function AnimationTiming:load(values)
 	if typeof(values.dp) == "boolean" then
 		self.dp = values.dp
 	end
+
+	if typeof(values.imb) == "boolean" then
+		self.imb = values.imb
+	end
 end
 
 ---Clone timing.
@@ -178,6 +187,7 @@ function AnimationTiming:clone()
 	clone.phds = self.phds
 	clone.pfht = self.pfht
 	clone.dp = self.dp
+	clone.imb = self.imb
 
 	return clone
 end
@@ -200,6 +210,7 @@ function AnimationTiming:serialize()
 	serializable.phds = self.phds
 	serializable.pfht = self.pfht
 	serializable.dp = self.dp
+	serializable.imb = self.imb
 
 	return serializable
 end
@@ -223,6 +234,7 @@ function AnimationTiming.new(values)
 	self.pfh = false
 	self.phds = 0
 	self.pfht = 0.15
+	self.imb = false
 
 	if values then
 		self:load(values)

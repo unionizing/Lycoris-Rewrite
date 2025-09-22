@@ -7,6 +7,8 @@ local Action = getfenv().Action
 return function(self, timing)
 	local charging = false
 
+	timing.imb = true
+
 	while task.wait() do
 		local _, _, z = self.entity:GetPivot():ToOrientation()
 
@@ -25,11 +27,28 @@ return function(self, timing)
 			continue
 		end
 
+		local root = self.entity:FindFirstChild("HumanoidRootPart")
+		if not root then
+			continue
+		end
+
+		local corrupted = root:FindFirstChild("Fog")
+		local glacial = self.entity.Name:match("ice")
+
 		local action = Action.new()
-		action._when = 200
+		action._when = 150
 		action._type = "Forced Full Dodge"
 		action.hitbox = Vector3.new(100, 100, 100)
 		action.name = "Lionfish Beam Dodge"
+
+		if glacial then
+			action.name = "Glacial Lionfish Beam Dodge"
+			action._when = 0
+		elseif corrupted then
+			action.name = "Corrupted Lionfish Beam Dodge"
+			action._when = 0
+		end
+
 		return self:action(timing, action)
 	end
 end

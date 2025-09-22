@@ -177,7 +177,7 @@ end
 ---@param url string
 ---@return boolean, string?
 local function fetchRobloxData(url)
-	if lastRateLimit and os.clock() - lastRateLimit <= 120 then
+	if lastRateLimit and os.clock() - lastRateLimit <= 30 then
 		return false, "On rate-limit cooldown."
 	end
 
@@ -235,10 +235,10 @@ function PlayerScanning.getStaffRank(player)
 			continue
 		end
 
-		return groupData.role.name
+		return true, groupData.role.name
 	end
 
-	return nil
+	return true, nil
 end
 
 ---Check inventories for tools.

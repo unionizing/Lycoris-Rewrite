@@ -85,6 +85,7 @@ function BuilderSection:reset()
 	self.skipRepeatNotification:SetRawValue(false)
 	self.noDashFallback:SetRawValue(false)
 	self.hitboxFacingOffset:SetRawValue(true)
+	self.hitboxShiftOffset:SetRawValue(0)
 
 	-- Reset action list.
 	self:arefresh(nil)
@@ -508,6 +509,7 @@ function BuilderSection:timing()
 			self.selectedModule:SetRawValue(found.smod)
 			self.skipRepeatNotification:SetRawValue(found.srpn)
 			self.hitboxFacingOffset:SetRawValue(found.fhb)
+			self.hitboxShiftOffset:SetRawValue(found.hso)
 			self.noDashFallback:SetRawValue(found.ndfb)
 
 			-- Load extra elements.
@@ -773,32 +775,6 @@ function BuilderSection:builder()
 		end),
 	})
 
-	self.skipRepeatNotification = tab:AddToggle(nil, {
-		Text = "Skip Repeat Notification",
-		Default = false,
-		Callback = self:tnc(function(timing, value)
-			timing.srpn = value
-		end),
-	})
-
-	self.hitboxFacingOffset = tab:AddToggle(nil, {
-		Text = "Hitbox Facing Offset",
-		Tooltip = "Should the hitbox be offset towards the facing direction?",
-		Default = true,
-		Callback = self:tnc(function(timing, value)
-			timing.fhb = value
-		end),
-	})
-
-	self.noDashFallback = tab:AddToggle(nil, {
-		Text = "No Dash Fallback",
-		Tooltip = "If enabled, the timing will not fallback to a dash if the parry action is not available.",
-		Default = false,
-		Callback = self:tnc(function(timing, value)
-			timing.ndfb = value
-		end),
-	})
-
 	local umoaDepBox = tab:AddDependencyBox()
 
 	self.skipModuleNotification = umoaDepBox:AddToggle(nil, {
@@ -819,6 +795,45 @@ function BuilderSection:builder()
 
 	umoaDepBox:SetupDependencies({
 		{ self.useModuleOverActions, true },
+	})
+
+	self.skipRepeatNotification = tab:AddToggle(nil, {
+		Text = "Skip Repeat Notification",
+		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing.srpn = value
+		end),
+	})
+
+	self.hitboxFacingOffset = tab:AddToggle(nil, {
+		Text = "Hitbox Facing Offset",
+		Tooltip = "Should the hitbox be offset towards the facing direction?",
+		Default = true,
+		Callback = self:tnc(function(timing, value)
+			timing.fhb = value
+		end),
+	})
+
+	self.hitboxShiftOffset = tab:AddSlider(nil, {
+		Text = "Hitbox Shift Offset",
+		Min = -25,
+		Max = 25,
+		Suffix = "s",
+		Default = 0,
+		Rounding = 0,
+		Tooltip = "At the end of everything, how much should the hitbox be shifted forwards / backwards?",
+		Callback = self:tnc(function(timing, value)
+			timing.hso = value
+		end),
+	})
+
+	self.noDashFallback = tab:AddToggle(nil, {
+		Text = "No Dash Fallback",
+		Tooltip = "If enabled, the timing will not fallback to a dash if the parry action is not available.",
+		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing.ndfb = value
+		end),
 	})
 
 	self:extra(tab)

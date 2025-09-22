@@ -13,18 +13,32 @@ return function(self, timing)
 		return
 	end
 
-	if hrp:WaitForChild("REP_SOUND_2019633907", 0.1) then
+	local rarm3 = self.entity:FindFirstChild("RArm3")
+	if not rarm3 then
+		return
+	end
+
+	-- Beam.
+	if rarm3:WaitForChild("Attach", 0.1) then
 		local info = RepeatInfo.new(timing, self.rdelay(), self:uid(10))
 		info.track = self.track
 
+		timing.mat = 3000
 		timing.fhb = false
 		timing.ieae = true
 		timing.iae = true
 		timing.rpue = true
 		timing.imxd = 600
-		timing._rsd = 1200
-		timing._rpd = 250
+		timing._rsd = 800
+		timing._rpd = 150
 		timing.hitbox = Vector3.new(800, 800, 800)
-		return self:rpue(self.entity, timing, info)
+		return self:srpue(self.entity, timing, info)
+	-- Blinding move
+	else
+		local action = Action.new()
+		action._when = 1400
+		action._type = "Parry"
+		action.hitbox = Vector3.new(800, 800, 800)
+		self:action(timing, action)
 	end
 end

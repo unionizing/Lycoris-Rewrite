@@ -30,6 +30,6 @@ return function(self, timing)
 		timing._rsd = 0
 		timing._rpd = 100
 		timing.hitbox = Vector3.new(50, 50, 50)
-		self:rpue(self.entity, timing, info)
+		self:srpue(self.entity, timing, info)
 	end
 end

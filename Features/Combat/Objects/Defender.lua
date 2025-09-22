@@ -134,6 +134,36 @@ Defender.fsecs = LPH_NO_VIRTUALIZE(function(self, timing)
 	return (timing.pfht or 0.15) + (sd + Defender.rdelay())
 end)
 
+---Start repeat until parry end.
+---@param self Defender
+---@param entity Model
+---@param timing Timing
+---@param info RepeatInfo
+Defender.srpue = LPH_NO_VIRTUALIZE(function(self, entity, timing, info)
+	self:mark(Task.new(string.format("RPUE_%s_%i", timing.name, 0), function()
+		return timing:rsd() - info.irdelay - self.sdelay()
+	end, timing.punishable, timing.after, self.rpue, self, entity, timing, info))
+
+	-- Notify.
+	if not LRM_UserNote or LRM_UserNote == "tester" then
+		self:notify(
+			timing,
+			"Added RPUE '%s' (%.2fs, then every %.2fs) with ping '%.2f' (changing) subtracted.",
+			PP_SCRAMBLE_STR(timing.name),
+			timing:rsd(),
+			timing:rpd(),
+			self.rtt()
+		)
+	else
+		self:notify(
+			timing,
+			"Added RPUE '%s' ([redacted], then every [redacted]) with ping '%.2f' (changing) subtracted.",
+			PP_SCRAMBLE_STR(timing.name),
+			self.rtt()
+		)
+	end
+end)
+
 ---Repeat until parry end.
 ---@param self Defender
 ---@param entity Model
@@ -143,10 +173,6 @@ Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, timing, info)
 	local distance = self:distance(entity)
 	if not distance then
 		return Logger.warn("Stopping RPUE '%s' because the distance is not valid.", PP_SCRAMBLE_STR(timing.name))
-	end
-
-	if timing and (distance < PP_SCRAMBLE_NUM(timing.imdd) or distance > PP_SCRAMBLE_NUM(timing.imxd)) then
-		return self:notify(timing, "Distance is out of range.")
 	end
 
 	if not self:rc(info) then
@@ -164,20 +190,32 @@ Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, timing, info)
 	options.entity = entity
 	options.hmid = info.hmid
 
-	local success = target and self:hc(options, timing.duih and info or nil)
+	local success = true
+
+	if timing.duih and target then
+		success = self:hc(options, info)
+	end
+
+	if timing and (distance < PP_SCRAMBLE_NUM(timing.imdd) or distance > PP_SCRAMBLE_NUM(timing.imxd)) then
+		success = false
+	end
 
 	info.index = info.index + 1
 
 	self:mark(Task.new(string.format("RPUE_%s_%i", PP_SCRAMBLE_STR(timing.name), info.index), function()
 		return timing:rpd() - info.irdelay - self.sdelay()
-	end, timing.punishable, timing.after, self.rpue, self, self.entity, timing, info))
+	end, timing.punishable, timing.after, self.rpue, self, entity, timing, info))
 
 	if not target then
 		return Logger.warn("Skipping RPUE '%s' because the target is not valid.", PP_SCRAMBLE_STR(timing.name))
 	end
 
 	if not success then
-		return Logger.warn("Skipping RPUE '%s' because we are not in the hitbox.", PP_SCRAMBLE_STR(timing.name))
+		return Logger.warn(
+			"Skipping RPUE '%s' because we are not in the %s.",
+			PP_SCRAMBLE_STR(timing.name),
+			timing.duih and "hitbox" or "distance range"
+		)
 	end
 
 	if not timing.srpn then
@@ -346,10 +384,11 @@ end)
 ---@param self Defender
 ---@param cframe CFrame
 ---@param fd boolean
+---@param soffset number
 ---@param size Vector3
 ---@param filter Instance[]
 ---@return boolean?, CFrame?
-Defender.hitbox = LPH_NO_VIRTUALIZE(function(self, cframe, fd, size, filter)
+Defender.hitbox = LPH_NO_VIRTUALIZE(function(self, cframe, fd, soffset, size, filter)
 	local shouldManualFilter = getexecutorname
 		and (getexecutorname():match("Solara") or getexecutorname():match("Xeno"))
 
@@ -372,6 +411,10 @@ Defender.hitbox = LPH_NO_VIRTUALIZE(function(self, cframe, fd, size, filter)
 
 	if fd then
 		usedCFrame = usedCFrame * CFrame.new(0, 0, -(size.Z / 2))
+	end
+
+	if soffset and soffset ~= 0 then
+		usedCFrame = usedCFrame * CFrame.new(0, 0, soffset)
 	end
 
 	-- Parts in bounds.
@@ -536,7 +579,7 @@ Defender.hc = LPH_NO_VIRTUALIZE(function(self, options, info)
 	local position = options:pos()
 
 	-- Run hitbox check.
-	local result, usedCFrame = self:hitbox(position, timing.fhb, hitbox, options.filter)
+	local result, usedCFrame = self:hitbox(position, timing.fhb, timing.hso, hitbox, options.filter)
 
 	if usedCFrame then
 		self:visualize(options.hmid, usedCFrame, hitbox, options:ghcolor(result))
@@ -557,7 +600,7 @@ Defender.hc = LPH_NO_VIRTUALIZE(function(self, options, info)
 
 	-- Run check.
 	store:run(root, "CFrame", closest, function()
-		result, usedCFrame = self:hitbox(eposition, timing.fhb, hitbox, options.filter)
+		result, usedCFrame = self:hitbox(eposition, timing.fhb, timing.hso, hitbox, options.filter)
 	end)
 
 	-- Visualize predicted hitbox.

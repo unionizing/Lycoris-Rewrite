@@ -64,5 +64,5 @@ return function(self, timing)
 		return os.clock() - startTimestamp >= 1.5
 	end)
 
-	self:rpue(self.entity, timing, info)
+	self:srpue(self.entity, timing, info)
 end

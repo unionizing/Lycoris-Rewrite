@@ -247,7 +247,11 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "Entity got attack cancelled.")
 	end
 
-	if root:FindFirstChild("MegalodauntBroken") and not players:GetPlayerFromCharacter(self.entity) then
+	if
+		not timing.imb
+		and root:FindFirstChild("MegalodauntBroken")
+		and not players:GetPlayerFromCharacter(self.entity)
+	then
 		return self:notify(timing, "Entity is block broken.")
 	end
 
@@ -421,29 +425,7 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 	-- Start RPUE.
 	local info = RepeatInfo.new(timing, self.rdelay(), self:uid(10))
 	info.track = track
-
-	self:mark(Task.new(string.format("RPUE_%s_%i", timing.name, 0), function()
-		return timing:rsd() - info.irdelay - self.sdelay()
-	end, timing.punishable, timing.after, self.rpue, self, self.entity, timing, info))
-
-	-- Notify.
-	if not LRM_UserNote or LRM_UserNote == "tester" then
-		self:notify(
-			timing,
-			"Added RPUE '%s' (%.2fs, then every %.2fs) with ping '%.2f' (changing) subtracted.",
-			PP_SCRAMBLE_STR(timing.name),
-			timing:rsd(),
-			timing:rpd(),
-			self.rtt()
-		)
-	else
-		self:notify(
-			timing,
-			"Added RPUE '%s' ([redacted], then every [redacted]) with ping '%.2f' (changing) subtracted.",
-			PP_SCRAMBLE_STR(timing.name),
-			self.rtt()
-		)
-	end
+	self:srpue(self.entity, timing, info)
 end)
 
 ---Clean up the defender.

@@ -17,6 +17,7 @@ local ActionContainer = require("Game/Timings/ActionContainer")
 ---@field smod string Selected module string.
 ---@field aatk boolean Allow attacking.
 ---@field fhb boolean Hitbox facing offset.
+---@field hso number Hitbox shift offset.
 ---@field ndfb boolean No dash fallback.
 ---@field scrambled boolean Scrambled?
 local Timing = {}
@@ -97,6 +98,10 @@ function Timing:load(values)
 		self.fhb = values.fhb
 	end
 
+	if typeof(values.hso) == "number" then
+		self.hso = values.hso
+	end
+
 	if typeof(values.ndfb) == "boolean" then
 		self.ndfb = values.ndfb
 	end
@@ -154,6 +159,10 @@ function Timing:equals(other)
 		return false
 	end
 
+	if self.hso ~= other.hso then
+		return false
+	end
+
 	if self.srpn ~= other.srpn then
 		return false
 	end
@@ -203,6 +212,7 @@ function Timing:clone()
 	clone.fhb = self.fhb
 	clone.ndfb = self.ndfb
 	clone.scrambled = self.scrambled
+	clone.hso = self.hso
 
 	return clone
 end
@@ -234,6 +244,7 @@ function Timing:serialize()
 		scrambled = self.scrambled,
 		phd = self.phd,
 		pfh = self.pfh,
+		hso = self.hso,
 	}
 end
 
@@ -260,6 +271,7 @@ function Timing.new(values)
 	self.fhb = true
 	self.ndfb = false
 	self.scrambled = false
+	self.hso = 0
 
 	if values then
 		self:load(values)
