@@ -64,11 +64,13 @@ local cwp = nil
 
 -- State.
 local leftClickState = false
+local autoWispLocked = false
 
 -- Update.
 local lastVisualizationUpdate = os.clock()
 local lastGoldenTongueUpdate = os.clock()
 local lastHistoryUpdate = os.clock()
+local lastAutoWispShift = nil
 local lastAutoWispUpdate = nil
 
 ---Iteratively find effect owner from effect data.
@@ -299,8 +301,22 @@ local hssp = LPH_NO_VIRTUALIZE(function(position, str)
 			os.clock(),
 			lastAutoWispUpdate,
 			os.clock() - lastAutoWispUpdate,
-			Configuration.expectToggleValue("AutoWispDelay")
+			Configuration.expectOptionValue("AutoWispDelay") or 0
 		)
+	end
+
+	if lastAutoWispShift and os.clock() - lastAutoWispShift <= 0.15 then
+		return Logger.warn(
+			"(%.2f - %.2f = %.2f vs. %.2f) Auto Wisp shift is on forced cooldown.",
+			os.clock(),
+			lastAutoWispShift,
+			os.clock() - lastAutoWispShift,
+			0.15
+		)
+	end
+
+	if autoWispLocked then
+		return Logger.warn("Auto Wisp is locked.")
 	end
 
 	if position <= 0 or position > #str then
@@ -353,6 +369,7 @@ local hssp = LPH_NO_VIRTUALIZE(function(position, str)
 
 	Logger.warn("Sending event for character (%s) with position (%i) and string (%s).", character, position, str)
 
+	autoWispLocked = true
 	lastAutoWispUpdate = os.clock()
 
 	spellInput:FireServer(character)
@@ -444,6 +461,8 @@ local onSpellEvent = LPH_NO_VIRTUALIZE(function(name, data)
 		cws = nil
 		cwp = nil
 		lastAutoWispUpdate = nil
+		lastAutoWispShift = nil
+		autoWispLocked = false
 	end
 
 	-- Set the current position & string.
@@ -451,11 +470,15 @@ local onSpellEvent = LPH_NO_VIRTUALIZE(function(name, data)
 		cws = data
 		cwp = 1
 		lastAutoWispUpdate = os.clock()
+		lastAutoWispShift = nil
+		autoWispLocked = false
 	end
 
 	-- Shift our position if we were successful.
 	if cws and cwp and name == "shift" then
 		cwp = cwp + 1
+		lastAutoWispShift = os.clock()
+		autoWispLocked = false
 	end
 end)
 

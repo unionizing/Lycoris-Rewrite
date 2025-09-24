@@ -49,7 +49,7 @@ PartDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 
 	if
 		not self.timing.duih
-		and not self:hc(options, timing.duih and RepeatInfo.new(timing, self.rdelay(), self:uid(10)) or nil)
+		and not self:hc(options, timing.duih and RepeatInfo.new(timing, self.rdelay(), self.uid) or nil)
 	then
 		return self:notify(timing, "Not in hitbox.")
 	end
@@ -86,7 +86,11 @@ PartDefender.update = LPH_NO_VIRTUALIZE(function(self)
 
 	-- Get current hitbox state.
 	---@note: If we're using PartDefender, why perserve rotation? It's likely wrong or gonna mess us up.
-	local touching = self:hitbox(self:cframe(), self.timing.fhb, self.timing.hso, hb, { character })
+	local touching, cframe = self:hitbox(self:cframe(), self.timing.fhb, self.timing.hso, hb, { character })
+
+	if cframe then
+		self:visualize(self.uid, cframe, hb, touching and Color3.fromHex("#DDF527") or Color3.fromHex("#2765F5"))
+	end
 
 	-- Deny updates if we're not touching the part.
 	if not touching then
@@ -118,21 +122,22 @@ function PartDefender.new(part, timing)
 	self.part = part
 	self.timing = timing or self:initial(part, SaveManager.ps, nil, part.Name)
 	self.touched = false
+	self.uid = self:uid(10)
 
 	-- Handle no timing.
 	if not self.timing then
 		return nil
 	end
 
-	if timing.umoa then
-		timing["name"] = PP_SCRAMBLE_STR(timing["name"])
-		timing["pname"] = PP_SCRAMBLE_STR(timing["pname"])
-		timing["imxd"] = PP_SCRAMBLE_RE_NUM(timing["imxd"])
-		timing["imdd"] = PP_SCRAMBLE_RE_NUM(timing["imdd"])
-		timing["hitbox"] = Vector3.new(
-			PP_SCRAMBLE_RE_NUM(timing["hitbox"].X),
-			PP_SCRAMBLE_RE_NUM(timing["hitbox"].Y),
-			PP_SCRAMBLE_RE_NUM(timing["hitbox"].Z)
+	if self.timing.umoa then
+		self.timing["name"] = PP_SCRAMBLE_STR(self.timing["name"])
+		self.timing["pname"] = PP_SCRAMBLE_STR(self.timing["pname"])
+		self.timing["imxd"] = PP_SCRAMBLE_RE_NUM(self.timing["imxd"])
+		self.timing["imdd"] = PP_SCRAMBLE_RE_NUM(self.timing["imdd"])
+		self.timing["hitbox"] = Vector3.new(
+			PP_SCRAMBLE_RE_NUM(self.timing["hitbox"].X),
+			PP_SCRAMBLE_RE_NUM(self.timing["hitbox"].Y),
+			PP_SCRAMBLE_RE_NUM(self.timing["hitbox"].Z)
 		)
 	end
 

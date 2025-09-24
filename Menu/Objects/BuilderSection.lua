@@ -717,6 +717,19 @@ function BuilderSection:builder()
 		end),
 	})
 
+	self.hitboxShiftOffset = tab:AddSlider(nil, {
+		Text = "Hitbox Backwards Offset",
+		Min = -25,
+		Max = 25,
+		Suffix = "s",
+		Default = 0,
+		Rounding = 0,
+		Tooltip = "At the end of everything, how much should the hitbox be shifted forwards / backwards?",
+		Callback = self:tnc(function(timing, value)
+			timing.hso = value
+		end),
+	})
+
 	self.delayUntilInHitbox = tab:AddToggle(nil, {
 		Text = "Delay Until In Hitbox",
 		Default = false,
@@ -811,19 +824,6 @@ function BuilderSection:builder()
 		Default = true,
 		Callback = self:tnc(function(timing, value)
 			timing.fhb = value
-		end),
-	})
-
-	self.hitboxShiftOffset = tab:AddSlider(nil, {
-		Text = "Hitbox Shift Offset",
-		Min = -25,
-		Max = 25,
-		Suffix = "s",
-		Default = 0,
-		Rounding = 0,
-		Tooltip = "At the end of everything, how much should the hitbox be shifted forwards / backwards?",
-		Callback = self:tnc(function(timing, value)
-			timing.hso = value
 		end),
 	})
 

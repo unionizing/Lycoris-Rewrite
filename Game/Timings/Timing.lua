@@ -17,7 +17,7 @@ local ActionContainer = require("Game/Timings/ActionContainer")
 ---@field smod string Selected module string.
 ---@field aatk boolean Allow attacking.
 ---@field fhb boolean Hitbox facing offset.
----@field hso number Hitbox shift offset.
+---@field hso number Hitbox shift offset. This offset is applied backwards. Positive is backwards, negative is forwards.
 ---@field ndfb boolean No dash fallback.
 ---@field scrambled boolean Scrambled?
 local Timing = {}

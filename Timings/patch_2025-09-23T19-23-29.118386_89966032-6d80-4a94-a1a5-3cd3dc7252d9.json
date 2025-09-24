@@ -1,0 +1,356 @@
+{
+  "patch_id": "89966032-6d80-4a94-a1a5-3cd3dc7252d9",
+  "timestamp": "2025-09-23T19:23:29.118386",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://131597866888761": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 323,
+            "to": 344
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Dodge",
+                "name": "1",
+                "hitbox": {
+                  "Y": 203,
+                  "X": 72,
+                  "Z": 86
+                },
+                "when": 1000,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Dodge",
+                "name": "1",
+                "hitbox": {
+                  "Y": 203,
+                  "X": 103,
+                  "Z": 104
+                },
+                "when": 800,
+                "ihbc": false
+              }
+            ]
+          },
+          "hso": {
+            "from": 0,
+            "to": 25
+          }
+        }
+      },
+      "rbxassetid://18967389067": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 203,
+                  "X": 72,
+                  "Z": 78
+                },
+                "when": 750,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 203,
+                  "X": 72,
+                  "Z": 78
+                },
+                "when": 1950,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 203,
+                  "X": 102,
+                  "Z": 102
+                },
+                "when": 750,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 203,
+                  "X": 103,
+                  "Z": 102
+                },
+                "when": 1950,
+                "ihbc": false
+              }
+            ]
+          },
+          "hso": {
+            "from": 0,
+            "to": 25
+          }
+        }
+      },
+      "rbxassetid://18967392881": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 323,
+            "to": 840
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Dodge",
+                "name": "1",
+                "hitbox": {
+                  "Y": 203,
+                  "X": 130,
+                  "Z": 200
+                },
+                "when": 660,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Dodge",
+                "name": "1",
+                "hitbox": {
+                  "Y": 300,
+                  "X": 300,
+                  "Z": 300
+                },
+                "when": 660,
+                "ihbc": false
+              }
+            ]
+          },
+          "fhb": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://5827250000": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 18,
+              "X": 8.000000953674316,
+              "Z": 16.000001907348633
+            },
+            "to": {
+              "Y": 16,
+              "X": 14,
+              "Z": 20
+            }
+          }
+        }
+      },
+      "rbxassetid://6415085564": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 20,
+              "X": 20,
+              "Z": 20
+            },
+            "to": {
+              "Y": 22,
+              "X": 22,
+              "Z": 23
+            }
+          }
+        }
+      },
+      "rbxassetid://7960934455": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Start Block",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 71
+                },
+                "when": 900,
+                "ihbc": false
+              },
+              {
+                "_type": "End Block",
+                "name": "2",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 71
+                },
+                "when": 1400,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Start Block",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 71
+                },
+                "when": 900,
+                "ihbc": false
+              },
+              {
+                "_type": "End Block",
+                "name": "2",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 71
+                },
+                "when": 1800,
+                "ihbc": false
+              }
+            ]
+          },
+          "mat": {
+            "from": 1500,
+            "to": 2000
+          }
+        }
+      },
+      "rbxassetid://11363599835": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 17,
+              "X": 8.000000953674316,
+              "Z": 17
+            },
+            "to": {
+              "Y": 18,
+              "X": 8.000000953674316,
+              "Z": 18
+            }
+          }
+        }
+      },
+      "rbxassetid://18966790283": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 151,
+                  "X": 76,
+                  "Z": 78
+                },
+                "when": 900,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 151,
+                  "X": 76,
+                  "Z": 78
+                },
+                "when": 1900,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 151,
+                  "X": 107,
+                  "Z": 100
+                },
+                "when": 900,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 151,
+                  "X": 109,
+                  "Z": 104
+                },
+                "when": 1900,
+                "ihbc": false
+              }
+            ]
+          },
+          "hso": {
+            "from": 0,
+            "to": 25
+          }
+        }
+      },
+      "rbxassetid://18967397842": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Dodge",
+                "name": "1",
+                "hitbox": {
+                  "Y": 155,
+                  "X": 78,
+                  "Z": 77
+                },
+                "when": 530,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Dodge",
+                "name": "1",
+                "hitbox": {
+                  "Y": 155,
+                  "X": 100,
+                  "Z": 100
+                },
+                "when": 530,
+                "ihbc": false
+              }
+            ]
+          },
+          "hso": {
+            "from": 0,
+            "to": 25
+          }
+        }
+      }
+    }
+  }
+}

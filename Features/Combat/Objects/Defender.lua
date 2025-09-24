@@ -640,8 +640,10 @@ end)
 ---@param action Action
 ---@param notify boolean
 Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, notify)
-	if not self:valid(timing, action) then
-		return
+	if PP_SCRAMBLE_STR(action._type) ~= "End Block" then
+		if not self:valid(timing, action) then
+			return
+		end
 	end
 
 	if not notify then
