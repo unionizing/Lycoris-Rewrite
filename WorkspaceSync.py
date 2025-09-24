@@ -365,8 +365,7 @@ def main():
             else:
                 initial_diff = find_differences(local_truth_data, remote_truth_data)
                 if initial_diff:
-                    print("[!] Local truth is newer. Creating patch for remote changes.")
-                    write_patch_file(initial_diff, DEV_NAME)
+                    print("[!] Local truth is newer. Rebuilding patches to reflect local changes.")
                     # Rebuild again to include the new patch.
                     rebuild_truth_from_patches()
         except Exception as e:
