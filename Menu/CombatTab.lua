@@ -291,6 +291,33 @@ function CombatTab.initCombatAssistance(groupbox)
 		Tooltip = "Detect what Silentheart moves would be thrown out and use flow-state beforehand.",
 	})
 
+	local ascToggle = groupbox:AddToggle("AnimationSpeedChanger", {
+		Text = "Animation Speed Changer",
+		Default = false,
+		Tooltip = "Should we change the animation speed of animations when they play?",
+	})
+
+	local ascDepBox = groupbox:AddDependencyBox()
+
+	ascDepBox:AddToggle("LimitToAPAnimations", {
+		Text = "Limit To AP Animations",
+		Default = false,
+		Tooltip = "Only change the animation speed of animations that are inside of the 'Auto Parry' animations list.",
+	})
+
+	ascDepBox:AddSlider("AnimationSpeedMultiplier", {
+		Text = "Animation Speed Multiplier",
+		Default = 1.25,
+		Min = 0.1,
+		Max = 5,
+		Suffix = "x",
+		Rounding = 2,
+	})
+
+	ascDepBox:SetupDependencies({
+		{ ascToggle, true },
+	})
+
 	groupbox:AddToggle("M1Hold", {
 		Text = "M1 Hold",
 		Default = false,
