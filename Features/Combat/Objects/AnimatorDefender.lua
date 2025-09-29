@@ -334,13 +334,43 @@ function AnimatorDefender:pvalidate(track)
 	return true
 end
 
+---Animation speed changer.
+---@param self AnimatorDefender
+---@param track AnimationTrack
+AnimatorDefender.asc = LPH_NO_VIRTUALIZE(function(self, track)
+	if not Configuration.expectToggleValue("AnimationSpeedChanger") then
+		return
+	end
+
+	if
+		Configuration.expectToggleValue("LimitToAPAnimations")
+		and not SaveManager.as:index(tostring(track.Animation.AnimationId))
+	then
+		return Logger.warn(
+			"(%s) Animation %s is being skipped from speed changes because it's not in the animation list.",
+			self.entity.Name,
+			track.Animation.AnimationId
+		)
+	end
+
+	Logger.warn(
+		"(%s) Adjusting the track '%s' speed from %.2f to %.2f",
+		self.entity.Name,
+		track.Animation.AnimationId,
+		track.Speed,
+		track.Speed * (Configuration.expectOptionValue("AnimationSpeedMultiplier") or 1.0)
+	)
+
+	track:AdjustSpeed(track.Speed * (Configuration.expectOptionValue("AnimationSpeedMultiplier") or 1.0))
+end)
+
 ---Process animation track.
 ---@todo: AP telemetry - aswell as tracking effects that are added with timestamps and current ping to that list.
 ---@param self AnimatorDefender
 ---@param track AnimationTrack
 AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 	if players.LocalPlayer.Character and self.entity == players.LocalPlayer.Character then
-		return
+		return self:asc(track)
 	end
 
 	if not self:pvalidate(track) then
