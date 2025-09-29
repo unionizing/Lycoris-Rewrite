@@ -52,7 +52,7 @@ local INPUT_RIGHT_CLICK = 2
 
 ---On intercepted input.
 ---@param type number
-local function onInterceptedInput(type)
+local onInterceptedInput = LPH_NO_VIRTUALIZE(function(type)
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then
 		return
@@ -115,6 +115,15 @@ local function onInterceptedInput(type)
 		end
 	end
 
+	Logger.warn(
+		"(%s, %s, %s, %s, %s) Current cooldown state...",
+		shUpperCooldown and "SHUpperCD" or "SHUpperReady",
+		shDashCooldown and "SHDashCD" or "SHDashReady",
+		shGapCloserCooldown and "SHGapCloserCD" or "SHGapCloserReady",
+		effectReplicatorModule:FindEffect("SlideAttackCD") and "SlideAttackCD" or "SlideAttackReady",
+		flowStateCooldown and "FlowStateCD" or "FlowStateReady"
+	)
+
 	if flowStateCooldown then
 		return Logger.warn("Flow state is on cooldown.")
 	end
@@ -163,7 +172,7 @@ local function onInterceptedInput(type)
 
 		flowStateRemote:FireServer()
 	end
-end
+end)
 
 ---Recursively find first valid InputClient stack.
 ---@return table?
