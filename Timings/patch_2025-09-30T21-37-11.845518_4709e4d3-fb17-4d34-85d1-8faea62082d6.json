@@ -1,0 +1,37 @@
+{
+  "patch_id": "4709e4d3-fb17-4d34-85d1-8faea62082d6",
+  "timestamp": "2025-09-30T21:37:11.845518",
+  "author": "Blastbrean",
+  "diff": {
+    "part": {
+      "Bubble": {
+        "status": "added",
+        "data": {
+          "umoa": false,
+          "pname": "Bubble",
+          "smod": "N/A",
+          "hso": 0,
+          "actions": [],
+          "ndfb": false,
+          "after": 0,
+          "uhc": false,
+          "duih": false,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "Bubble",
+          "imxd": 64,
+          "smn": false,
+          "fhb": true,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

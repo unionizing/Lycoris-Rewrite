@@ -11,7 +11,6 @@ local RepeatInfo = require("Features/Combat/Objects/RepeatInfo")
 local HitboxOptions = require("Features/Combat/Objects/HitboxOptions")
 
 ---@class EffectDefender: Defender
----@field owner Model The owner of the effect.
 ---@field name string The name of the effect.
 ---@field data table The data of the effect.
 local EffectDefender = setmetatable({}, { __index = Defender })
@@ -20,6 +19,24 @@ EffectDefender.__type = "Effect"
 
 -- Services.
 local players = game:GetService("Players")
+
+---Iteratively find effect owner from effect data.
+---@param data table
+---@return Model?
+local findEffectOwner = LPH_NO_VIRTUALIZE(function(data)
+	local live = workspace:FindFirstChild("Live")
+	if not live then
+		return
+	end
+
+	for _, value in next, data do
+		if typeof(value) ~= "Instance" or value.Parent ~= live then
+			continue
+		end
+
+		return value
+	end
+end)
 
 ---Check if we're in a valid state to proceed with the action.
 ---@param self EffectDefender
@@ -59,13 +76,17 @@ end)
 ---Process effect.
 ---@param self EffectDefender
 EffectDefender.process = LPH_NO_VIRTUALIZE(function(self)
+	if not self.owner then
+		return
+	end
+
 	---@type EffectTiming?
 	local timing = self:initial(self.owner, SaveManager.es, self.owner.Name, self.name)
 	if not timing then
 		return
 	end
 
-	if players.LocalPlayer.Character and self.owner == players.LocalPlayer.Character then
+	if timing.ilp and self.owner == players.LocalPlayer.Character then
 		return
 	end
 
@@ -83,15 +104,14 @@ end)
 
 ---Create new EffectDefender object.
 ---@param name string
----@param owner Model
 ---@param data table
 ---@param dao table
 ---@return EffectDefender
-function EffectDefender.new(name, owner, data, dao)
+function EffectDefender.new(name, data, dao)
 	local self = setmetatable(Defender.new(), EffectDefender)
 	self.name = name
-	self.owner = owner
 	self.data = data or {}
+	self.owner = findEffectOwner(data)
 	self:process()
 	return self
 end

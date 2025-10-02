@@ -73,29 +73,6 @@ local lastHistoryUpdate = os.clock()
 local lastAutoWispShift = nil
 local lastAutoWispUpdate = nil
 
----Iteratively find effect owner from effect data.
----@param data table
----@return Model?
-local findEffectOwner = LPH_NO_VIRTUALIZE(function(data)
-	local live = workspace:FindFirstChild("Live")
-	if not live then
-		return
-	end
-
-	local character = players.LocalPlayer.Character
-	if not character then
-		return
-	end
-
-	for _, value in next, data do
-		if typeof(value) ~= "Instance" or value.Parent ~= live or value == character then
-			continue
-		end
-
-		return value
-	end
-end)
-
 ---Add animator defender.
 ---@param animator Animator
 local addAnimatorDefender = LPH_NO_VIRTUALIZE(function(animator)
@@ -161,16 +138,15 @@ end)
 ---@param name string?
 ---@param data table?
 local onClientEffectEvent = LPH_NO_VIRTUALIZE(function(name, data)
-	if not name or not data then
+	if not name then
 		return
 	end
 
-	local owner = findEffectOwner(data)
-	if not owner then
-		return
+	if not data or typeof(data) ~= "table" then
+		data = {}
 	end
 
-	defenderObjects[data] = EffectDefender.new(name, owner, data)
+	defenderObjects[data] = EffectDefender.new(name, data)
 end)
 
 ---Update history.

@@ -31,6 +31,7 @@ function EffectBuilderSection:exload(timing)
 	self.repeatStartDelay:SetRawValue(timing._rsd)
 	self.repeatUntilParryEnd:SetRawValue(timing.rpue)
 	self.repeatParryDelay:SetRawValue(timing._rpd)
+	self.ignoreLocalPlayer:SetRawValue(timing.ilp)
 end
 
 ---Reset the elements. Extend me.
@@ -41,6 +42,7 @@ function EffectBuilderSection:reset()
 	self.repeatStartDelay:SetRawValue(0)
 	self.repeatUntilParryEnd:SetRawValue(false)
 	self.hitboxFacingOffset:SetRawValue(true)
+	self.ignoreLocalPlayer:SetRawValue(false)
 end
 
 ---Check before creating new timing. Override me.
@@ -78,7 +80,16 @@ end
 
 ---Initialize extra tab.
 ---@param tab table
-function EffectBuilderSection:extra(tab) end
+function EffectBuilderSection:extra(tab)
+	self.ignoreLocalPlayer = tab:AddToggle(nil, {
+		Text = "Ignore Local Player",
+		Default = true,
+		Tooltip = "If enabled, the effect will not react when it is applied to the local player.",
+		Callback = self:tnc(function(timing, value)
+			timing.ilp = value
+		end),
+	})
+end
 
 ---Initialize action tab.
 function EffectBuilderSection:action()
