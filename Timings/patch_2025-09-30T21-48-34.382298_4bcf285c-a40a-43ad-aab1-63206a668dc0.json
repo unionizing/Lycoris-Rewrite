@@ -1,0 +1,26 @@
+{
+  "patch_id": "4bcf285c-a40a-43ad-aab1-63206a668dc0",
+  "timestamp": "2025-09-30T21:48:34.382298",
+  "author": "Blastbrean",
+  "diff": {
+    "part": {
+      "Bubble": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 7,
+              "X": 9,
+              "Z": 9
+            },
+            "to": {
+              "Y": 9,
+              "X": 9,
+              "Z": 9
+            }
+          }
+        }
+      }
+    }
+  }
+}

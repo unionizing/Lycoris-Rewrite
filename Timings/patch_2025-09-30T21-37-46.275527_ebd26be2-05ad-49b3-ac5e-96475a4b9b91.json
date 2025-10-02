@@ -1,0 +1,42 @@
+{
+  "patch_id": "ebd26be2-05ad-49b3-ac5e-96475a4b9b91",
+  "timestamp": "2025-09-30T21:37:46.275527",
+  "author": "Blastbrean",
+  "diff": {
+    "part": {
+      "Bubble": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "Contact",
+                "hitbox": {
+                  "Y": 21,
+                  "X": 21,
+                  "Z": 21
+                },
+                "when": 0,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "Contact",
+                "hitbox": {
+                  "Y": 7,
+                  "X": 7,
+                  "Z": 7
+                },
+                "when": 0,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

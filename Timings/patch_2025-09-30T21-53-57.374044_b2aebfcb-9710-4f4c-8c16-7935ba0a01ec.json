@@ -1,0 +1,61 @@
+{
+  "patch_id": "b2aebfcb-9710-4f4c-8c16-7935ba0a01ec",
+  "timestamp": "2025-09-30T21:53:57.374044",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://11889580367": {
+        "status": "added",
+        "data": {
+          "phd": false,
+          "umoa": false,
+          "imb": false,
+          "dp": false,
+          "rpd": 0,
+          "pfht": 0.15,
+          "smod": "N/A",
+          "hso": 0,
+          "aatk": false,
+          "rsd": 0,
+          "ieae": false,
+          "iae": false,
+          "ha": false,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "Release\r",
+              "hitbox": {
+                "Y": 10,
+                "X": 10,
+                "Z": 25
+              },
+              "when": 700,
+              "ihbc": false
+            }
+          ],
+          "pfh": false,
+          "ndfb": false,
+          "duih": false,
+          "after": 0,
+          "_id": "rbxassetid://11889580367",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "phds": 0,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "StormbreakerCrit",
+          "imxd": 53,
+          "smn": false,
+          "fhb": true,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

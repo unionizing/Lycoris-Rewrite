@@ -6,6 +6,7 @@ local Timing = require("Game/Timings/Timing")
 ---@field rpue boolean Repeat parry until end.
 ---@field _rsd number Repeat start delay in miliseconds. Never access directly.
 ---@field _rpd number Delay between each repeat parry in miliseconds. Never access directly.
+---@field ilp boolean Ignore local player.
 local EffectTiming = setmetatable({}, { __index = Timing })
 EffectTiming.__index = EffectTiming
 
@@ -36,6 +37,10 @@ function EffectTiming:equals(other)
 	end
 
 	if self.ename ~= other.ename then
+		return false
+	end
+
+	if self.ilp ~= other.ilp then
 		return false
 	end
 
@@ -74,6 +79,10 @@ function EffectTiming:load(values)
 	if typeof(values.rpd) == "number" then
 		self._rpd = values.rpd
 	end
+
+	if typeof(values.ilp) == "boolean" then
+		self.ilp = values.ilp
+	end
 end
 
 ---Clone timing.
@@ -85,6 +94,7 @@ function EffectTiming:clone()
 	clone._rpd = self._rpd
 	clone._rsd = self._rsd
 	clone.rpue = self.rpue
+	clone.ilp = self.ilp
 
 	return clone
 end
@@ -98,6 +108,7 @@ function EffectTiming:serialize()
 	serializable.rpue = self.rpue
 	serializable.rsd = self._rsd
 	serializable.rpd = self._rpd
+	serializable.ilp = self.ilp
 
 	return serializable
 end
@@ -112,6 +123,7 @@ function EffectTiming.new(values)
 	self.rpue = false
 	self._rsd = 0
 	self._rpd = 0
+	self.ilp = false
 
 	if values then
 		self:load(values)

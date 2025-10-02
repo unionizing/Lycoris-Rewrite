@@ -108,6 +108,10 @@ function EffectListener.cparry()
 	local effectReplicatorModule = require(effectReplicator)
 	local parryCooldownEffect = effectReplicatorModule:FindEffect("ParryCool")
 
+	if not effectReplicatorModule:FindEffect("Equipped") then
+		return false
+	end
+
 	if parryCooldownEffect and withinTime(parryCooldownEffect, nil) then
 		return false
 	end
