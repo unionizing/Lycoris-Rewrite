@@ -1,0 +1,37 @@
+{
+  "patch_id": "17381730-f70a-4a90-9f74-675dd8237201",
+  "timestamp": "2025-10-04T13:03:06.613375",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "TRACKER": {
+        "status": "added",
+        "data": {
+          "umoa": false,
+          "pname": "TRACKER",
+          "smod": "N/A",
+          "hso": 0,
+          "actions": [],
+          "ndfb": false,
+          "after": 0,
+          "uhc": true,
+          "duih": true,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 10,
+            "X": 10,
+            "Z": 10
+          },
+          "punishable": 0,
+          "name": "RisingShadow",
+          "imxd": 129,
+          "smn": false,
+          "fhb": false,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

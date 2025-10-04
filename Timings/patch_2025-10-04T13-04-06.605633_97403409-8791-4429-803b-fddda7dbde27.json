@@ -1,0 +1,26 @@
+{
+  "patch_id": "97403409-8791-4429-803b-fddda7dbde27",
+  "timestamp": "2025-10-04T13:04:06.605633",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "TRACKER": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 10,
+              "X": 10,
+              "Z": 10
+            },
+            "to": {
+              "Y": 16,
+              "X": 16,
+              "Z": 16
+            }
+          }
+        }
+      }
+    }
+  }
+}
