@@ -15,7 +15,7 @@
 
 - Game ❌
     - Local Character ❌
-        - Always Sprint ✅
+        - Always Sprint ❌
         - Remove "Loot All" CD ❌
     - Player Monitoring ❌
         - Show All Players in Map ❌
