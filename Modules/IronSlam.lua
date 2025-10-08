@@ -8,14 +8,13 @@ local Mantra = getfenv().Mantra
 ---@param self AnimatorDefender
 ---@param timing AnimationTiming
 return function(self, timing)
-	local data = Mantra.data(self.entity, "Mantra:RevengeAgility{{Revenge}}")
-	local range = data.rush * 12 + data.drift * 6
-	timing.pfh = true
+	local data = Mantra.data(self.entity, "Mantra:SmashMetal{{Iron Slam}}")
+	local range = data.stratus * 4 + data.cloud * 2
 
 	local action = Action.new()
-	action._when = 400
+	action._when = 530
 	action._type = "Parry"
-	action.hitbox = Vector3.new(20, 20, 30 + range)
-	action.name = "Dynamic Revenge Timing"
+	action.hitbox = Vector3.new(24 + range, 24, 24 + range)
+	action.name = "Dynamic Rapid Slashes Timing"
 	self:action(timing, action)
 end

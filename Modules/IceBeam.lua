@@ -8,16 +8,16 @@ local Mantra = getfenv().Mantra
 ---@param self AnimatorDefender
 ---@param timing AnimationTiming
 return function(self, timing)
-	local data = Mantra.data(self.entity, "Mantra:CarveWind{{Wind Carve}}")
-	local range = data.perfect * 2 + data.crystal * 1
-	local size = data.stratus * 2.5 + data.cloud * 1.5
+	local distance = self:distance(self.entity)
+	local data = Mantra.data(self.entity, "Mantra:BeamIce{{Ice Beam}}")
+	local range = data.stratus * 2 + data.cloud * 1
 
 	local action = Action.new()
-	action._when = 450
+	action._when = math.min(570 + distance * 5, 1000)
 	action._type = "Parry"
-	action.hitbox = Vector3.new(14 + size, 10 + size, 14 + range)
-	action.name = "Dynamic Wind Carve Timing"
-	timing.duih = true
+	action.hitbox = Vector3.new(15 + range, 15 + range, 85)
+	action.name = "Dynamic Ice Beam Timing"
+
 	timing.hitbox = action.hitbox
 
 	self:action(timing, action)

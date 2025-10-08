@@ -30,8 +30,8 @@ function Mantra.data(entity, name)
 		crystal = clc and tonumber(clc) or 0,
 		stratus = stc and tonumber(stc) or 0,
 		cloud = csc and tonumber(csc) or 0,
-		glass = gsc and tonumber(csc) or 0,
-		magnifying = msc and tonumber(csc) or 0,
+		glass = gsc and tonumber(gsc) or 0,
+		magnifying = msc and tonumber(msc) or 0,
 	}
 end
 
