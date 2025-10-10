@@ -259,12 +259,12 @@ return LPH_NO_VIRTUALIZE(function()
 		end, 200)
 
 		if not emptyAltars then
-			return
+			return Tweening.stop("TweenToObjective")
 		end
 
 		local closestEmptyAltar = emptyAltars[1]
 		if not closestEmptyAltar then
-			return
+			return Tweening.stop("TweenToObjective")
 		end
 
 		Tweening.goal("TweenToObjective", closestEmptyAltar)
@@ -276,12 +276,12 @@ return LPH_NO_VIRTUALIZE(function()
 	local function tweenToBloodJars(rootPart, chaser)
 		local hrp = chaser:FindFirstChild("HumanoidRootPart")
 		if not hrp then
-			return
+			return Tweening.stop("TweenToObjective")
 		end
 
 		local jar = hrp:FindFirstChild("BloodJar")
 		if not jar then
-			return
+			return Tweening.stop("TweenToObjective")
 		end
 
 		Tweening.goal("TweenToObjective", jar)
