@@ -41,7 +41,6 @@ local EffectListener = require("Features/Combat/EffectListener")
 ---@field animator Animator
 ---@field offset number?
 ---@field entity Model
----@field heffects Instance[]
 ---@field keyframes Action[]
 ---@field timing AnimationTiming?
 ---@field pbdata table<AnimationTrack, PlaybackData> Playback data to be recorded.
@@ -474,7 +473,6 @@ end)
 function AnimatorDefender:clean()
 	-- Empty data.
 	self.keyframes = {}
-	self.heffects = {}
 
 	-- Clean through base method.
 	Defender.clean(self)
