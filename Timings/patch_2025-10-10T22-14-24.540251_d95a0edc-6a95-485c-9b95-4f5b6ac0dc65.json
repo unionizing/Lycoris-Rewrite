@@ -1,0 +1,61 @@
+{
+  "patch_id": "d95a0edc-6a95-485c-9b95-4f5b6ac0dc65",
+  "timestamp": "2025-10-10T22:14:24.540251",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://125807467678893": {
+        "status": "added",
+        "data": {
+          "phd": false,
+          "umoa": false,
+          "imb": false,
+          "dp": false,
+          "rpd": 0,
+          "pfht": 0.207,
+          "smod": "WeaponTest",
+          "hso": 0,
+          "aatk": false,
+          "rsd": 0,
+          "ieae": false,
+          "iae": false,
+          "ha": false,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 10,
+                "X": 10,
+                "Z": 14
+              },
+              "when": 300,
+              "ihbc": false
+            }
+          ],
+          "pfh": false,
+          "ndfb": false,
+          "duih": false,
+          "after": 0,
+          "_id": "rbxassetid://125807467678893",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "phds": 0,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "ToonsCrit2",
+          "imxd": 64,
+          "smn": false,
+          "fhb": true,
+          "imdd": 0,
+          "tag": "Critical"
+        }
+      }
+    }
+  }
+}

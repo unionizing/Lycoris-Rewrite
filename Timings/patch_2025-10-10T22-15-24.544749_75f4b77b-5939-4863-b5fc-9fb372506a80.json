@@ -1,0 +1,104 @@
+{
+  "patch_id": "75f4b77b-5939-4863-b5fc-9fb372506a80",
+  "timestamp": "2025-10-10T22:15:24.544749",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://90021911048794": {
+        "status": "added",
+        "data": {
+          "phd": false,
+          "umoa": false,
+          "imb": false,
+          "dp": false,
+          "rpd": 0,
+          "pfht": 0.207,
+          "smod": "WeaponTest",
+          "hso": 0,
+          "aatk": false,
+          "rsd": 0,
+          "ieae": false,
+          "iae": false,
+          "ha": false,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 25,
+                "X": 10,
+                "Z": 14
+              },
+              "when": 300,
+              "ihbc": false
+            }
+          ],
+          "pfh": false,
+          "ndfb": false,
+          "duih": false,
+          "after": 0,
+          "_id": "rbxassetid://90021911048794",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "phds": 0,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "ToonsCritAerial",
+          "imxd": 64,
+          "smn": false,
+          "fhb": true,
+          "imdd": 0,
+          "tag": "Critical"
+        }
+      },
+      "rbxassetid://5067090007": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://5778357994": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 88,
+              "X": 88,
+              "Z": 88
+            },
+            "to": {
+              "Y": 128,
+              "X": 128,
+              "Z": 128
+            }
+          }
+        }
+      },
+      "rbxassetid://5953326460": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 25,
+              "X": 40,
+              "Z": 40
+            },
+            "to": {
+              "Y": 25,
+              "X": 45,
+              "Z": 45
+            }
+          }
+        }
+      }
+    }
+  }
+}

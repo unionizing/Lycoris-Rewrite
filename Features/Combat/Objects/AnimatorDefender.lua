@@ -244,14 +244,6 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	end
 
 	if
-		not timing.ha
-		and #self.heffects >= 1
-		and (players:GetPlayerFromCharacter(self.entity) or self.entity:FindFirstChild("HumanController"))
-	then
-		return self:notify(timing, "Entity got attack cancelled.")
-	end
-
-	if
 		not timing.imb
 		and root:FindFirstChild("MegalodauntBroken")
 		and not players:GetPlayerFromCharacter(self.entity)
@@ -500,7 +492,6 @@ function AnimatorDefender.new(animator, manimations)
 
 	local self = setmetatable(Defender.new(), AnimatorDefender)
 	local animationPlayed = Signal.new(animator.AnimationPlayed)
-	local entityDescendantAdded = Signal.new(entity.DescendantAdded)
 
 	self.animator = animator
 	self.manimations = manimations
@@ -510,30 +501,11 @@ function AnimatorDefender.new(animator, manimations)
 	self.timing = nil
 	self.offset = nil
 
-	self.heffects = {}
 	self.keyframes = {}
 	self.pbdata = {}
 	self.rpbdata = {}
 	self.sct = {}
 	self.tsc = {}
-
-	self.maid:mark(
-		entityDescendantAdded:connect(
-			"AnimatorDefender_OnDescendantAdded",
-			LPH_NO_VIRTUALIZE(function(descendant)
-				if
-					descendant.Name ~= "PunchBlood"
-					and descendant.Name ~= "PunchEffect"
-					and descendant.Name ~= "BloodSpray"
-					and not (descendant:IsA("ParticleEmitter") and descendant.Texture == "rbxassetid://7216855595")
-				then
-					return
-				end
-
-				self.heffects[#self.heffects + 1] = descendant
-			end)
-		)
-	)
 
 	self.maid:mark(animationPlayed:connect(
 		"AnimatorDefender_OnAnimationPlayed",

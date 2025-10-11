@@ -134,7 +134,9 @@ function Menu.init()
 
 			-- Character data.
 			local mouse = players.LocalPlayer and players.LocalPlayer:GetMouse()
-			local position = workspace.CurrentCamera and workspace.CurrentCamera.CFrame.Position
+			local character = players.LocalPlayer and players.LocalPlayer.Character
+			local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+			local position = humanoidRootPart and humanoidRootPart.Position
 			local positionFormat = position and string.format("(%.2f, %.2f, %.2f)", position.X, position.Y, position.Z)
 				or "N/A"
 

@@ -3188,6 +3188,23 @@ return LPH_NO_VIRTUALIZE(function()
 			Parent = ScreenGui,
 		})
 
+		WatermarkOuter.InputBegan:Connect(function(Input)
+			xpcall(function()
+				if Input.UserInputType == Enum.UserInputType.MouseButton2 and Toggles["ShowDebugInformation"].Value then
+					local Character = LocalPlayer and LocalPlayer.Character
+					local HumanoidRootPart = Character and Character:FindFirstChild("HumanoidRootPart")
+					local Position = HumanoidRootPart and HumanoidRootPart.Position
+					local PositionFormat = Position
+							and string.format("CFrame.new(%.2f, %.2f, %.2f)", Position.X, Position.Y, Position.Z)
+						or "N/A"
+
+					setclipboard(tostring(PositionFormat))
+
+					Library:Notify("Your current position has been copied to your clipboard.", 5)
+				end
+			end, warn)
+		end)
+
 		local WatermarkInner = Library:Create("Frame", {
 			BackgroundColor3 = Library.MainColor,
 			BorderColor3 = Library.OutlineColor,
