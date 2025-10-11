@@ -331,10 +331,8 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
-		if Configuration.expectToggleValue("TweenToBack") then
-			if not updateTweenToBack() then
-				cachedTarget = nil
-			end
+		if not Configuration.expectToggleValue("TweenToBack") or not updateTweenToBack() then
+			cachedTarget = nil
 		end
 
 		if Configuration.expectToggleValue("TweenToObjectives") then
