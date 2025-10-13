@@ -46,11 +46,21 @@ local ModuleManager = require("Game/Timings/ModuleManager")
 ---@module Utility.CoreGuiManager
 local CoreGuiManager = require("Utility/CoreGuiManager")
 
+---@module Game.ServerHop
+local ServerHop = require("Game/ServerHop")
+
+---@module Game.Wipe
+local Wipe = require("Game/Wipe")
+
+---@module Features.Automation.EchoFarm
+local EchoFarm = require("Features/Automation/EchoFarm")
+
 -- Lycoris maid.
 local lycorisMaid = Maid.new()
 
 -- Constants.
 local LOBBY_PLACE_ID = 4111023553
+local DEPTHS_PLACE_ID = 5735553160
 
 -- Services.
 local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -114,7 +124,38 @@ function Lycoris.init()
 	PersistentData.init()
 
 	if game.PlaceId == LOBBY_PLACE_ID then
-		return Logger.warn("Script has initialized in the lobby.")
+		Logger.warn("Script has initialized in the lobby.")
+	end
+
+	if game.PlaceId == LOBBY_PLACE_ID then
+		-- Handle lobby state for server hopping. This takes priority over everything else.
+		if PersistentData.get("shslot") then
+			return ServerHop.lobby()
+		end
+
+		-- Handle lobby state for wiping. This takes priority over every farm.
+		if PersistentData.get("wslot") then
+			return Wipe.lobby()
+		end
+	end
+
+	-- Okay, clear server hop slot.
+	PersistentData.set("shslot", nil)
+
+	if game.PlaceId == DEPTHS_PLACE_ID then
+		-- Handle depths state for wiping. This takes priority over every other farm.
+		if PersistentData.get("wslot") then
+			Wipe.depths()
+		end
+	end
+
+	-- Finally, handle Echo Farming.
+	if PersistentData.get("efdata") then
+		EchoFarm.start()
+	end
+
+	if game.PlaceId == LOBBY_PLACE_ID then
+		return
 	end
 
 	InputClient.cache()
@@ -137,10 +178,6 @@ function Lycoris.init()
 
 	if not PersistentData.get("fli") then
 		PersistentData.set("fli", os.time())
-	end
-
-	if not PersistentData.get("lus") then
-		PersistentData.set("lus", playersService.LocalPlayer:GetAttribute("DataSlot"))
 	end
 
 	local modules = replicatedStorage:FindFirstChild("Modules")

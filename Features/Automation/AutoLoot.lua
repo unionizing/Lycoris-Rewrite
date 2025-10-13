@@ -17,7 +17,7 @@ local Configuration = require("Utility/Configuration")
 local AutoLootOptions = require("Features/Automation/Objects/AutoLootOptions")
 
 -- AutoLoot module.
-local AutoLoot = {}
+local AutoLoot = { ignore = false }
 
 -- Maid.
 local autoLootMaid = Maid.new()
@@ -79,6 +79,14 @@ local function onPlayerGuiDescendantAdded(descendant)
 		return
 	end
 
+	if AutoLoot.ignore then
+		return
+	end
+
+	if not Configuration.expectToggleValue("AutoLoot") then
+		return
+	end
+
 	-- Wait for all the instances to replicate.
 	descendant:WaitForChild("ChoiceFrame"):WaitForChild("Options")
 
@@ -108,6 +116,12 @@ local function waitForPromptDeletion(prompt, remote, param)
 	until not prompt.Parent
 
 	resetAutoLoot()
+end
+
+---Is the auto loot active?
+---@return boolean
+function AutoLoot.active()
+	return choiceRemote ~= nil and currentPrompt ~= nil and #lootQueue > 0
 end
 
 ---Update the AutoLoot module.

@@ -55,6 +55,9 @@ return LPH_NO_VIRTUALIZE(function()
 	---@module Utility.Logger
 	local Logger = require("Utility/Logger")
 
+	---@module Features.Automation.EchoFarm
+	local EchoFarm = require("Features/Automation/EchoFarm")
+
 	-- Signals.
 	local renderStepped = Signal.new(runService.RenderStepped)
 
@@ -96,7 +99,11 @@ return LPH_NO_VIRTUALIZE(function()
 	---Update ownership.
 	local function updateOwnership()
 		---@optimization: Stop updating when we don't need it.
-		if not Configuration.expectToggleValue("ShowOwnership") and not Configuration.expectToggleValue("VoidMobs") then
+		if
+			not Configuration.expectToggleValue("ShowOwnership")
+			and not Configuration.expectToggleValue("VoidMobs")
+			and not EchoFarm.voiding
+		then
 			return cleanParts()
 		end
 

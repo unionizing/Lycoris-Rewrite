@@ -3,11 +3,31 @@ local Finder = {}
 
 -- Services.
 local players = game:GetService("Players")
+local replicatedStorage = game:GetService("ReplicatedStorage")
 
----Is a player within 200 studs of the specified position?
+---Check if we are near a position of a specified position.
 ---@param position Vector3
+---@param range number
+---@return boolean
+Finder.near = LPH_NO_VIRTUALIZE(function(position, range)
+	local localCharacter = players.LocalPlayer.Character
+	if not localCharacter then
+		return false
+	end
+
+	local localRootPart = localCharacter:FindFirstChild("HumanoidRootPart")
+	if not localRootPart then
+		return false
+	end
+
+	return (position - localRootPart.Position).Magnitude <= range
+end)
+
+---Is a player within X studs of the specified position?
+---@param position Vector3
+---@param range number
 ---@return Player|nil
-Finder.pnear = LPH_NO_VIRTUALIZE(function(position)
+Finder.pnear = LPH_NO_VIRTUALIZE(function(position, range)
 	for _, player in next, players:GetPlayers() do
 		if player == players.LocalPlayer then
 			continue
@@ -23,7 +43,7 @@ Finder.pnear = LPH_NO_VIRTUALIZE(function(position)
 			continue
 		end
 
-		if (position - rootPart.Position).Magnitude > 200 then
+		if (position - rootPart.Position).Magnitude > range then
 			continue
 		end
 
@@ -49,6 +69,124 @@ Finder.entity = LPH_NO_VIRTUALIZE(function(name)
 
 		return child
 	end
+end)
+
+---Get the nearest area marker.
+---@param position Vector3 The position to check from.
+---@return Model?
+Finder.marker = LPH_NO_VIRTUALIZE(function(position)
+	local markerWorkspace = replicatedStorage:FindFirstChild("MarkerWorkspace")
+	if not markerWorkspace then
+		return nil
+	end
+
+	local areaMarkers = markerWorkspace:WaitForChild("AreaMarkers")
+	if not areaMarkers then
+		return nil
+	end
+
+	local nearestAreaMarker = nil
+	local nearestDistance = nil
+
+	for _, marker in next, areaMarkers:GetDescendants() do
+		if not marker:IsA("Part") then
+			continue
+		end
+
+		local distance = (position - marker.Position).Magnitude
+
+		if nearestDistance and distance >= nearestDistance then
+			continue
+		end
+
+		nearestAreaMarker = marker
+		nearestDistance = distance
+	end
+
+	return nearestAreaMarker
+end)
+
+---Find the first tool equipped by a user by name.
+---@param name string The name of the tool to find. It is matched.
+---@return Tool?
+Finder.etool = LPH_NO_VIRTUALIZE(function(name)
+	local character = players.LocalPlayer.Character
+	if not character then
+		return nil
+	end
+
+	for _, item in next, character:GetChildren() do
+		if not item:IsA("Tool") then
+			continue
+		end
+
+		if not item.Name:match(name) then
+			continue
+		end
+
+		return item
+	end
+
+	return nil
+end)
+
+---Find the first tool in a backpack by name.
+---@param name string The name of the tool to find. It is matched.
+---@return Tool?
+Finder.tool = LPH_NO_VIRTUALIZE(function(name)
+	local backpack = players.LocalPlayer:FindFirstChild("Backpack")
+	if not backpack then
+		return nil
+	end
+
+	for _, item in next, backpack:GetChildren() do
+		if not item:IsA("Tool") then
+			continue
+		end
+
+		if not item.Name:match(name) then
+			continue
+		end
+
+		return item
+	end
+
+	return nil
+end)
+
+---Get the nearest chest from a position.
+---@param position Vector3 The position to check from.
+---@param range number The maximum distance to check.
+---@return Model?
+Finder.chest = LPH_NO_VIRTUALIZE(function(position, range)
+	local thrown = workspace:FindFirstChild("Thrown")
+	if not thrown then
+		return nil
+	end
+
+	local nearestChest = nil
+	local nearestDistance = nil
+
+	for _, chest in next, thrown:GetChildren() do
+		if not chest:IsA("Model") then
+			continue
+		end
+
+		local distance = (position - chest:GetPivot().Position).Magnitude
+
+		if range and distance > range then
+			continue
+		end
+
+		if nearestDistance and distance >= nearestDistance then
+			continue
+		end
+
+		nearestChest = chest
+		nearestDistance = distance
+	end
+
+	return nearestChest
 end)
 
 ---Give an instance & a filter & a distance, return a sorted-by-distance list of parts which pass the filter and are within the distance.

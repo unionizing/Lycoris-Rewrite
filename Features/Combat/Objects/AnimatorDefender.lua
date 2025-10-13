@@ -367,11 +367,7 @@ AnimatorDefender.asc = LPH_NO_VIRTUALIZE(function(self, track)
 		Configuration.expectToggleValue("LimitToAPAnimations")
 		and not SaveManager.as:index(tostring(track.Animation.AnimationId))
 	then
-		return Logger.warn(
-			"(%s) Animation %s is being skipped from speed changes because it's not in the animation list.",
-			self.entity.Name,
-			track.Animation.AnimationId
-		)
+		return
 	end
 
 	self.sct[track] = true

@@ -731,7 +731,7 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, notify)
 			return
 		end
 
-		if Finder.pnear(humanoidRootPart.Position) then
+		if Finder.pnear(humanoidRootPart.Position, 500) then
 			return self:notify(timing, "Action 'Teleport Up' blocked because there are players nearby.")
 		end
 

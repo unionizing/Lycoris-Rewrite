@@ -12,14 +12,14 @@ local players = game:GetService("Players")
 Tweening.update = LPH_NO_VIRTUALIZE(function(dt)
 	Tweening.active = false
 
-	local recent = Tweening.queue[#Tweening.queue]
-	if not recent then
+	local current = Tweening.current()
+	if not current then
 		return
 	end
 
-	local part = typeof(recent.goal) == "Instance" and recent.goal or nil
+	local part = typeof(current.goal) == "Instance" and current.goal or nil
 	if part and not part.Parent then
-		return Tweening.stop(recent.identifier)
+		return Tweening.stop(current.identifier)
 	end
 
 	local localPlayer = players.LocalPlayer
@@ -36,7 +36,7 @@ Tweening.update = LPH_NO_VIRTUALIZE(function(dt)
 	Tweening.active = true
 
 	local startPosition = humanoidRootPart.Position
-	local targetCFrame = typeof(recent.goal) == "Instance" and recent.goal.CFrame or recent.goal
+	local targetCFrame = typeof(current.goal) == "Instance" and current.goal.CFrame or current.goal
 	local targetPosition = targetCFrame.Position
 
 	local distanceToTarget = (targetPosition - startPosition).Magnitude
@@ -48,43 +48,49 @@ Tweening.update = LPH_NO_VIRTUALIZE(function(dt)
 	local direction = (targetPosition - startPosition) / distanceToTarget
 	local moveDistance = (Configuration.expectOptionValue("TweenStudsPerSecond") or 200) * dt
 
-	if moveDistance > distanceToTarget then
-		moveDistance = distanceToTarget
+	local newPosition = nil
+
+	if moveDistance >= distanceToTarget then
+		newPosition = targetPosition
+	else
+		newPosition = startPosition + (direction * moveDistance)
+		newPosition = Vector3.new(newPosition.X, targetPosition.Y, newPosition.Z)
 	end
 
-	local newPosition = startPosition + (direction * moveDistance)
 	local rotation = (targetCFrame - targetCFrame.Position)
 
 	local _, _, _, m00, m01, m02, m10, m11, m12, m20, m21, m22 = rotation:GetComponents()
 
-	-- We are never limited on the Y axis for tween studs.
-	newPosition = Vector3.new(newPosition.X, targetPosition.Y, newPosition.Z)
-
 	if
 		m00 == m00
-		or m01 == m01
-		or m02 == m02
-		or m10 == m10
-		or m11 == m11
-		or m12 == m12
-		or m20 == m20
-		or m21 == m21
-		or m22 == m22
+		and m01 == m01
+		and m02 == m02
+		and m10 == m10
+		and m11 == m11
+		and m12 == m12
+		and m20 == m20
+		and m21 == m21
+		and m22 == m22
 	then
 		humanoidRootPart.CFrame = CFrame.new(newPosition) * rotation
 	else
 		humanoidRootPart.CFrame = CFrame.new(newPosition)
 	end
 
-	if not recent.swc then
+	-- Check distance from NEW position to target.
+	local newDistanceToTarget = (targetPosition - newPosition).Magnitude
+
+	current.reached = false
+
+	if newDistanceToTarget >= 1.0 then
 		return
 	end
 
-	local newDistanceToTarget = (targetPosition - startPosition).Magnitude
-
-	if newDistanceToTarget <= 1.0 then
-		return Tweening.stop(recent.identifier)
+	if current.swc then
+		return Tweening.stop(current.identifier)
 	end
+
+	current.reached = true
 end)
 
 ---Get the tween data of an identifier.
@@ -102,18 +108,38 @@ function Tweening.get(identifier)
 	return nil
 end
 
----Set a goal to follow.
+---Wait until we reach the goal.
+---@param identifier string
+function Tweening.wait(identifier)
+	local _, data = Tweening.get(identifier)
+	if not data then
+		return
+	end
+
+	repeat
+		task.wait()
+	until data.reached
+end
+
+---Current target.
+---@return table?
+function Tweening.current()
+	return Tweening.queue[#Tweening.queue]
+end
+
+---Set a goal to follow. The most recent goal will be processed first.
 ---@param identifier string
 ---@param goal BasePart|CFrame
----@param swc boolean? Whether or not to stop when we reach the goal.
+---@param swc boolean Whether or not to stop when we reach the goal.
 function Tweening.goal(identifier, goal, swc)
 	local _, data = Tweening.get(identifier)
 
 	if data then
 		data.goal = goal
 		data.swc = swc
+		data.reached = false
 	else
-		Tweening.queue[#Tweening.queue + 1] = { identifier = identifier, goal = goal, swc = swc }
+		table.insert(Tweening.queue, 1, { identifier = identifier, goal = goal, swc = swc, reached = false })
 	end
 end
 

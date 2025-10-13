@@ -16,8 +16,17 @@ local PersistentData = {
 		-- First timestamp of when Lycoris was loaded.
 		fli = nil,
 
-		-- The last used slot.
-		lus = nil,
+		-- Server hop slot.
+		shslot = nil,
+
+		-- Servers to ignore when server hopping.
+		sblacklist = {},
+
+		-- Wipe slot.
+		wslot = nil,
+
+		-- Echo farm data.
+		efdata = nil,
 	},
 }
 
@@ -29,6 +38,22 @@ local memStorageService = game:GetService("MemStorageService")
 ---@return any
 function PersistentData.get(field)
 	return PersistentData._data[field]
+end
+
+---Set a field in a table that is in persistent data.
+---@param field string
+---@param key string
+---@param value any
+function PersistentData.stf(field, key, value)
+	local tbl = PersistentData.get(field)
+
+	if type(tbl) ~= "table" then
+		return error(string.format("PersistentData field '%s' is not a table.", tostring(field)))
+	end
+
+	tbl[key] = value
+
+	PersistentData.set(field, tbl)
 end
 
 ---Change a field in the persistent data.

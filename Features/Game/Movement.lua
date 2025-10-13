@@ -51,6 +51,7 @@ return LPH_NO_VIRTUALIZE(function()
 
 	-- Signals.
 	local preSimulation = Signal.new(runService.PreSimulation)
+	local heartbeat = Signal.new(runService.Heartbeat)
 
 	-- Instances.
 	local cachedTarget = nil
@@ -331,14 +332,6 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
-		if not Configuration.expectToggleValue("TweenToBack") or not updateTweenToBack() then
-			cachedTarget = nil
-		end
-
-		if Configuration.expectToggleValue("TweenToObjectives") then
-			updateTweenToObjectives(rootPart)
-		end
-
 		if Configuration.expectToggleValue("AgilitySpoof") then
 			updateAgilitySpoofer(character)
 		else
@@ -354,8 +347,6 @@ return LPH_NO_VIRTUALIZE(function()
 		else
 			noClipMap:restore()
 		end
-
-		Tweening.update(dt)
 
 		if Tweening.active then
 			return
@@ -380,6 +371,7 @@ return LPH_NO_VIRTUALIZE(function()
 	function Movement.init()
 		-- Attach.
 		movementMaid:add(preSimulation:connect("Movement_PreSimulation", updateMovement))
+		movementMaid:add(heartbeat:connect("Movement_Heartbeat", Tweening.update))
 
 		-- Log.
 		Logger.warn("Movement initialized.")
