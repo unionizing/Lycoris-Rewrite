@@ -50,7 +50,7 @@ function Wipe.pwait()
 			return ServerHop.hop(wdata.slot, true)
 		end
 
-		if Finder.near(FRAGMENTS_OF_SELF_POS, 500) then
+		if Finder.near(FRAGMENTS_OF_SELF_POS, 200) then
 			break
 		end
 	end

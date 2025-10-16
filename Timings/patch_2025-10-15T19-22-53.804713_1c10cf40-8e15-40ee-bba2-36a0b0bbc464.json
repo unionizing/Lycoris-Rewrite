@@ -1,0 +1,48 @@
+{
+  "patch_id": "1c10cf40-8e15-40ee-bba2-36a0b0bbc464",
+  "timestamp": "2025-10-15T19:22:53.804713",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://9832727905": {
+        "status": "modified",
+        "changes": {
+          "smod": {
+            "from": "N/A",
+            "to": "WeaponTest"
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://9832721746": {
+        "status": "modified",
+        "changes": {
+          "smod": {
+            "from": "N/A",
+            "to": "WeaponTest"
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://9832724876": {
+        "status": "modified",
+        "changes": {
+          "smod": {
+            "from": "N/A",
+            "to": "WeaponTest"
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    }
+  }
+}

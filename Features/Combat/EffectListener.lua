@@ -87,18 +87,36 @@ function EffectListener.csb()
 	return false
 end
 
----Are we in swinging stun? That small window after swinging where you can't do anything.
+---Are we in action stun? That small window after doing an action where you can't do anything.
 ---@return boolean
-function EffectListener.sstun()
+function EffectListener.astun()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	local lightAttackEffect = effectReplicatorModule:FindEffect("LightAttack")
+	local usingCriticalEffect = effectReplicatorModule:FindEffect("UsingCritical")
+	local usingSpellEffect = effectReplicatorModule:FindEffect("UsingSpell")
 
 	if lightAttackEffect and withinTime(lightAttackEffect, 0.5) then
 		return true
 	end
 
+	if usingCriticalEffect then
+		return true
+	end
+
+	if usingSpellEffect then
+		return true
+	end
+
 	return false
+end
+
+---Can we block?
+---@return boolean
+function EffectListener.cblock()
+	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
+	local effectReplicatorModule = require(effectReplicator)
+	return effectReplicatorModule:HasAny("ShakyBlock", "CancelBlock")
 end
 
 ---Can we parry?
@@ -112,7 +130,7 @@ function EffectListener.cparry()
 		return false
 	end
 
-	if parryCooldownEffect and withinTime(parryCooldownEffect, nil) then
+	if parryCooldownEffect then
 		return false
 	end
 

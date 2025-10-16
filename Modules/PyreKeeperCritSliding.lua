@@ -7,8 +7,8 @@ local Action = getfenv().Action
 return function(self, timing)
 	local distance = self:distance(self.entity)
 	local action = Action.new()
-	action._when = 330
-	if distance >= 24 then
+	action._when = 400
+	if distance >= 22 then
 		action._when = 550
 	end
 	if distance >= 28 then

@@ -323,8 +323,8 @@ Defender.valid = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return self:notify(timing, "No effect replicator module found.")
 	end
 
-	if EffectListener.sstun() then
-		return self:notify(timing, "User has the 'LightAttack' effect.")
+	if EffectListener.astun() then
+		return self:notify(timing, "User is action (e.g swinging / critical / mantra) stun.")
 	end
 
 	if effectReplicatorModule:FindEffect("Knocked") then
@@ -789,6 +789,10 @@ Defender.parry = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	local function blockFallback()
 		if not Configuration.expectToggleValue("DeflectBlockFallback") then
 			return false
+		end
+
+		if not EffectListener.cblock() then
+			return internalNotify(timing, "We are unable to do anything because we are unable to block.")
 		end
 
 		internalNotify(timing, "Action fallback 'Parry' is using block frames.")
