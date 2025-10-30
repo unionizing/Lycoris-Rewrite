@@ -1,0 +1,71 @@
+{
+  "patch_id": "3cd67691-65e7-4a0e-8396-1e04ec4a6d20",
+  "timestamp": "2025-10-25T18:37:55.293080",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://6675703249": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.35,
+            "to": 0.3
+          },
+          "phds": {
+            "from": 0.21,
+            "to": 1
+          }
+        }
+      },
+      "rbxassetid://5067090007": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 1,
+            "to": 0.21
+          }
+        }
+      },
+      "rbxassetid://5064195992": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 1,
+            "to": 0.21
+          }
+        }
+      },
+      "rbxassetid://6675698010": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.35,
+            "to": 0.3
+          },
+          "phds": {
+            "from": 0.21,
+            "to": 1
+          }
+        }
+      },
+      "rbxassetid://9484850093": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 0,
+            "to": 75
+          }
+        }
+      },
+      "rbxassetid://5067105317": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 1,
+            "to": 0.21
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "patch_id": "90e0359a-084d-4b5e-b39e-cfa89c477584",
+  "timestamp": "2025-10-27T23:53:29.660663",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://11887901212": {
+        "status": "modified",
+        "changes": {
+          "phd": {
+            "from": true,
+            "to": false
+          },
+          "phds": {
+            "from": 1,
+            "to": 0
+          }
+        }
+      },
+      "rbxassetid://14181944470": {
+        "status": "modified",
+        "changes": {
+          "smod": {
+            "from": "N/A",
+            "to": "CloseShave"
+          },
+          "hitbox": {
+            "from": {
+              "Y": 60,
+              "X": 60,
+              "Z": 60
+            },
+            "to": {
+              "Y": 68,
+              "X": 68,
+              "Z": 68
+            }
+          },
+          "duih": {
+            "from": false,
+            "to": true
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 15,
+                  "X": 31,
+                  "Z": 31
+                },
+                "when": 700,
+                "ihbc": false
+              }
+            ],
+            "to": []
+          }
+        }
+      },
+      "rbxassetid://92625055798566": {
+        "status": "modified",
+        "changes": {
+          "tag": {
+            "from": "Undefined",
+            "to": "M1"
+          }
+        }
+      },
+      "rbxassetid://14181029595": {
+        "status": "modified",
+        "changes": {
+          "iae": {
+            "from": false,
+            "to": true
+          },
+          "pfht": {
+            "from": 0.15,
+            "to": 0.25
+          },
+          "mat": {
+            "from": 2000,
+            "to": 1000
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 14,
+                  "X": 15,
+                  "Z": 16
+                },
+                "when": 300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "3",
+                "hitbox": {
+                  "Y": 14,
+                  "X": 15,
+                  "Z": 19
+                },
+                "when": 900,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 14,
+                  "X": 15,
+                  "Z": 18
+                },
+                "when": 600,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 14,
+                  "X": 15,
+                  "Z": 16
+                },
+                "when": 370,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "3",
+                "hitbox": {
+                  "Y": 14,
+                  "X": 15,
+                  "Z": 19
+                },
+                "when": 900,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 14,
+                  "X": 15,
+                  "Z": 18
+                },
+                "when": 645,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    },
+    "part": {
+      "StarHail": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 51,
+              "X": 23,
+              "Z": 23
+            },
+            "to": {
+              "Y": 28,
+              "X": 49,
+              "Z": 28
+            }
+          },
+          "duih": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    }
+  }
+}

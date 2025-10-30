@@ -10,7 +10,7 @@ return function(self, timing)
 	local action = Action.new()
 	action._when = math.min(400 + distance * 5, 800)
 	action._type = "Parry"
-	action.hitbox = Vector3.new(20, 20, 50)
+	action.hitbox = Vector3.new(30, 20, 50)
 	action.name = "Dynamic Titus Drive Timing"
 
 	if self.entity.Name:match(".titus") then

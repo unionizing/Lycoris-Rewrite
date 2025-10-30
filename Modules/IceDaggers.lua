@@ -27,12 +27,18 @@ return function(self, timing)
 	task.wait(0.5 - self.rtt())
 
 	if self:distance(self.entity) <= 15 then
-		local action = Action.new()
-		action._type = "Parry"
-		action._when = 0
-		action.name = "Ice Daggers Close Timing"
-		action.ihbc = true
-		return self:action(timing, action)
+		local actionclose = Action.new()
+		actionclose._type = "Start Block"
+		actionclose._when = 0
+		actionclose.name = "Ice Daggers Close Timing"
+		actionclose.ihbc = true
+		self:action(timing, actionclose)
+
+		local actioncloseTwo = Action.new()
+		actioncloseTwo._when = 1000
+		actioncloseTwo._type = "End Block"
+		actioncloseTwo.ihbc = true
+		self:action(timing, actioncloseTwo)
 	end
 
 	local action = Action.new()

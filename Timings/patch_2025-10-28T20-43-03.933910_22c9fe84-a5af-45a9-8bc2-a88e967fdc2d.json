@@ -1,0 +1,141 @@
+{
+  "patch_id": "22c9fe84-a5af-45a9-8bc2-a88e967fdc2d",
+  "timestamp": "2025-10-28T20:43:03.933910",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://5750353585": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 20,
+              "X": 22,
+              "Z": 24
+            },
+            "to": {
+              "Y": 32,
+              "X": 32,
+              "Z": 32
+            }
+          }
+        }
+      },
+      "rbxassetid://85186188251021": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.2,
+            "to": 1
+          }
+        }
+      },
+      "rbxassetid://11887901212": {
+        "status": "modified",
+        "changes": {
+          "phd": {
+            "from": false,
+            "to": true
+          },
+          "phds": {
+            "from": 0,
+            "to": 0.2
+          }
+        }
+      },
+      "rbxassetid://7761251007": {
+        "status": "modified",
+        "changes": {
+          "umoa": {
+            "from": true,
+            "to": false
+          },
+          "smod": {
+            "from": "LightningStream",
+            "to": "N/A"
+          }
+        }
+      },
+      "rbxassetid://110164806111956": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.2,
+            "to": 1
+          }
+        }
+      },
+      "rbxassetid://7627372304": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 1,
+            "to": 0.2
+          }
+        }
+      },
+      "rbxassetid://11363599835": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.5,
+            "to": 0.5000000596046448
+          }
+        }
+      }
+    },
+    "part": {
+      "STREAMPART": {
+        "status": "added",
+        "data": {
+          "umoa": false,
+          "pname": "STREAMPART",
+          "smod": "N/A",
+          "hso": 0,
+          "actions": [
+            {
+              "_type": "Start Block",
+              "name": "1",
+              "hitbox": {
+                "Y": 0,
+                "X": 0,
+                "Z": 0
+              },
+              "when": 0,
+              "ihbc": false
+            },
+            {
+              "_type": "End Block",
+              "name": "2",
+              "hitbox": {
+                "Y": 82,
+                "X": 81,
+                "Z": 84
+              },
+              "when": 400,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "after": 0,
+          "uhc": true,
+          "duih": true,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 100,
+            "X": 102,
+            "Z": 100
+          },
+          "punishable": 0,
+          "name": "LightningStreamPart",
+          "imxd": 301,
+          "smn": false,
+          "fhb": false,
+          "imdd": 15,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

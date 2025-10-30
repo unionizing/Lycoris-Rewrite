@@ -28,6 +28,9 @@ return function(self, timing)
 	elseif data.type == "Greatsword" then
 		windup = (0.160 / self.track.Speed) + 0.180
 		windup += 0.100 / data.ss
+	elseif data.type == "Greatcannon" then
+		windup = (0.160 / self.track.Speed) + 0.180
+		windup += 0.100 / data.ss
 	elseif data.type == "Spear" then
 		windup = (0.150 / self.track.Speed) + 0.170
 		windup += 0.100 / data.ss

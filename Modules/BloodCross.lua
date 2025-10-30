@@ -29,7 +29,7 @@ return function(self, timing)
 	pt.duih = true
 	pt.fhb = true
 	pt.name = "BloodCrossProjectile"
-	pt.hitbox = Vector3.new(10, 20, 20)
+	pt.hitbox = Vector3.new(20, 35, 15)
 	pt.actions:push(action)
 	pt.cbm = true
 

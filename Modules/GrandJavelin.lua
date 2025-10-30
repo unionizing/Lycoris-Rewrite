@@ -24,14 +24,16 @@ return function(self, timing)
 		return candidate.Name == "SpearPart"
 	end)
 
-	task.wait(0.5 - self.rtt())
+	task.wait(0.45 - self.rtt())
 
-	if self:distance(self.entity) <= 20 then
+	if self:distance(self.entity) <= 41 then
 		local action = Action.new()
 		action._type = "Parry"
 		action._when = 0
 		action.name = "Grand Javelin Close Timing"
-		action.ihbc = true
+		action.hitbox = Vector3.new(20, 20, 45)
+		action.fhb = true
+		action.ihbc = false
 		return self:action(timing, action)
 	end
 

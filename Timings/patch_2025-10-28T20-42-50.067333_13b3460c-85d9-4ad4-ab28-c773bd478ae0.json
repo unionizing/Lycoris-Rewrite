@@ -1,0 +1,13 @@
+{
+  "patch_id": "13b3460c-85d9-4ad4-ab28-c773bd478ae0",
+  "timestamp": "2025-10-28T20:42:50.067333",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "STREAMPART": {
+        "status": "removed",
+        "name": "LightningStreamPart"
+      }
+    }
+  }
+}

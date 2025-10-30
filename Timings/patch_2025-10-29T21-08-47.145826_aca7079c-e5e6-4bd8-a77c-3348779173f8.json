@@ -1,0 +1,13 @@
+{
+  "patch_id": "aca7079c-e5e6-4bd8-a77c-3348779173f8",
+  "timestamp": "2025-10-29T21:08:47.145826",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "Shard": {
+        "status": "removed",
+        "name": "Shard"
+      }
+    }
+  }
+}

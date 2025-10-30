@@ -31,7 +31,7 @@ return function(self, timing)
 		timing.fhb = true
 	else
 		action._when = 50
-		action.hitbox = Vector3.new(25, 25, 25)
+		action.hitbox = Vector3.new(30, 30, 30)
 		action.name = "Shadow Eruption Timing"
 		timing.fhb = false
 	end

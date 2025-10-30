@@ -1,0 +1,69 @@
+{
+  "patch_id": "f928e0af-140c-4177-9aeb-54cef146b0b0",
+  "timestamp": "2025-10-26T00:12:21.467333",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://15160255894": {
+        "status": "modified",
+        "changes": {
+          "mat": {
+            "from": 1500,
+            "to": 2000
+          },
+          "iae": {
+            "from": true,
+            "to": false
+          },
+          "fhb": {
+            "from": true,
+            "to": false
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Start Block",
+                "name": "1",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 25,
+                  "Z": 25
+                },
+                "when": 200,
+                "ihbc": false
+              },
+              {
+                "_type": "End Block",
+                "name": "2",
+                "hitbox": {
+                  "Y": 0,
+                  "X": 0,
+                  "Z": 0
+                },
+                "when": 1000,
+                "ihbc": false
+              }
+            ],
+            "to": []
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "name": {
+            "from": "PotionThrow\r",
+            "to": "PumpkinThrow"
+          },
+          "imxd": {
+            "from": 129,
+            "to": 204
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "PumpkinThrow"
+          }
+        }
+      }
+    }
+  }
+}

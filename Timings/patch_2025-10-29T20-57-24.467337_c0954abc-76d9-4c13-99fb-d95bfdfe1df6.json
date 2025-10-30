@@ -1,0 +1,61 @@
+{
+  "patch_id": "c0954abc-76d9-4c13-99fb-d95bfdfe1df6",
+  "timestamp": "2025-10-29T20:57:24.467337",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://7774139807": {
+        "status": "added",
+        "data": {
+          "phd": false,
+          "umoa": false,
+          "imb": false,
+          "dp": false,
+          "rpd": 0,
+          "pfht": 0.15,
+          "smod": "N/A",
+          "hso": 0,
+          "aatk": false,
+          "rsd": 0,
+          "ieae": false,
+          "iae": false,
+          "ha": false,
+          "actions": [
+            {
+              "_type": "Dodge",
+              "name": "1",
+              "hitbox": {
+                "Y": 15,
+                "X": 15,
+                "Z": 15
+              },
+              "when": 0,
+              "ihbc": false
+            }
+          ],
+          "pfh": false,
+          "ndfb": false,
+          "duih": false,
+          "after": 0,
+          "_id": "rbxassetid://7774139807",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "phds": 0,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "PortalsKick",
+          "imxd": 64,
+          "smn": false,
+          "fhb": false,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

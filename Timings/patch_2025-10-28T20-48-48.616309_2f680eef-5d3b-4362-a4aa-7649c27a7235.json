@@ -1,0 +1,65 @@
+{
+  "patch_id": "2f680eef-5d3b-4362-a4aa-7649c27a7235",
+  "timestamp": "2025-10-28T20:48:48.616309",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://5968796999": {
+        "status": "added",
+        "data": {
+          "phd": false,
+          "umoa": true,
+          "imb": false,
+          "dp": false,
+          "rpd": 0,
+          "pfht": 0.15,
+          "smod": "LightningStream",
+          "hso": 0,
+          "aatk": false,
+          "rsd": 0,
+          "ieae": false,
+          "iae": true,
+          "ha": false,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 31,
+                "X": 31,
+                "Z": 31
+              },
+              "when": 0,
+              "ihbc": false
+            }
+          ],
+          "pfh": false,
+          "ndfb": false,
+          "duih": false,
+          "after": 0,
+          "_id": "rbxassetid://5968796999",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "phds": 0,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "LightningStreamWindup",
+          "imxd": 301,
+          "smn": false,
+          "fhb": false,
+          "imdd": 0,
+          "tag": "Mantra"
+        }
+      },
+      "rbxassetid://7761251007": {
+        "status": "removed",
+        "name": "LightningStream"
+      }
+    }
+  }
+}

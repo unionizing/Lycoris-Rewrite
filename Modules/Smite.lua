@@ -15,7 +15,7 @@ return function(self, timing)
 	until shooty.IsPlaying
 
 	timing.duih = true
-	timing.hitbox = Vector3.new(5, 5, 5)
+	timing.hitbox = Vector3.new(7, 7, 7)
 	timing.fhb = false
 
 	local action = Action.new()

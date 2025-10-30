@@ -1,0 +1,40 @@
+{
+  "patch_id": "f863818a-261a-401a-80e9-da5c7bcb530a",
+  "timestamp": "2025-10-27T23:34:41.677920",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://80709298050884": {
+        "status": "modified",
+        "changes": {
+          "smod": {
+            "from": "N/A",
+            "to": "SwordCritical"
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://7576748728": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.5,
+            "to": 0.5000000596046448
+          }
+        }
+      },
+      "rbxassetid://8194213529": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.5,
+            "to": 0.5000000596046448
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,503 @@
+{
+  "patch_id": "5b0a8e1e-4822-4632-99f0-de5a149e7e29",
+  "timestamp": "2025-10-25T10:56:08.765203",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://133484657892607": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 10,
+                  "X": 10,
+                  "Z": 10
+                },
+                "when": 400,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 10,
+                  "X": 14,
+                  "Z": 10
+                },
+                "when": 400,
+                "ihbc": false
+              }
+            ]
+          },
+          "hitbox": {
+            "from": {
+              "Y": 10,
+              "X": 10,
+              "Z": 10
+            },
+            "to": {
+              "Y": 10,
+              "X": 14,
+              "Z": 10
+            }
+          }
+        }
+      },
+      "rbxassetid://128614295452457": {
+        "status": "added",
+        "data": {
+          "phd": false,
+          "umoa": false,
+          "imb": false,
+          "dp": false,
+          "rpd": 0,
+          "pfht": 0.15,
+          "smod": "N/A",
+          "hso": 0,
+          "aatk": false,
+          "rsd": 0,
+          "ieae": false,
+          "iae": false,
+          "ha": false,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 12,
+                "X": 14,
+                "Z": 18
+              },
+              "when": 0,
+              "ihbc": false
+            }
+          ],
+          "pfh": false,
+          "ndfb": false,
+          "duih": true,
+          "after": 0,
+          "_id": "rbxassetid://128614295452457",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "phds": 0,
+          "hitbox": {
+            "Y": 14,
+            "X": 14,
+            "Z": 20
+          },
+          "punishable": 0,
+          "name": "IronRunningCrit",
+          "imxd": 53,
+          "smn": false,
+          "fhb": false,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      },
+      "rbxassetid://75485891279258": {
+        "status": "modified",
+        "changes": {
+          "hso": {
+            "from": 0,
+            "to": 3
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 10,
+                  "X": 10,
+                  "Z": 10
+                },
+                "when": 300,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 10,
+                  "X": 18,
+                  "Z": 16
+                },
+                "when": 300,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://8194213529": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.5,
+            "to": 0.5000000596046448
+          }
+        }
+      }
+    },
+    "part": {
+      "StarHail": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 120,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "3",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 500,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 250,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "5",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 1000,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "4",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 750,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "7",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 1500,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "6",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 1250,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "9",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 2000,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "8",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 1750,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "15",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 3500,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "14",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 3250,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "13",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 3000,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "12",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 2750,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "11",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 2500,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "10",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 2250,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 120,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "3",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 500,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 250,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "5",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 1000,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "4",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 750,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "7",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 1500,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "6",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 1250,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "9",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 2000,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "8",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 1750,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "15",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 3500,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "14",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 3250,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "13",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 3000,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "12",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 2750,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "11",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 2500,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "10",
+                "hitbox": {
+                  "Y": 24,
+                  "X": 40,
+                  "Z": 24
+                },
+                "when": 2250,
+                "ihbc": false
+              }
+            ]
+          },
+          "uhc": {
+            "from": false,
+            "to": true
+          },
+          "duih": {
+            "from": true,
+            "to": false
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "patch_id": "4301c972-6843-4c54-90a7-fecd298490e6",
+  "timestamp": "2025-10-29T21:06:47.086080",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://9236066780": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 107,
+            "to": 129
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "ShardBow"
+          }
+        }
+      }
+    }
+  }
+}

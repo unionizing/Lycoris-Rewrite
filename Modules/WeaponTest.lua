@@ -24,7 +24,7 @@ return function(self, timing)
 	timing.pfh = true
 	timing.phd = true
 	timing.pfht = 0.3
-	timing.phds = 1.0
+	timing.phds = 0.2
 
 	local windup = nil
 	local ispeed = self.track.Speed
@@ -109,7 +109,7 @@ return function(self, timing)
 		or data.type == "Greatsword"
 		or data.type == "Greataxe"
 	then
-		action.hitbox = Vector3.new(data.length * 2.7, data.length * 3, data.length * 2.2)
+		action.hitbox = Vector3.new(data.length * 2.7, data.length * 3, data.length * 2)
 	end
 
 	action.name = string.format(

@@ -1,0 +1,30 @@
+{
+  "patch_id": "52e85aaf-1f4a-4685-8396-c29877d3b5d7",
+  "timestamp": "2025-10-27T22:51:39.429978",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://5786525661": {
+        "status": "modified",
+        "changes": {
+          "iae": {
+            "from": false,
+            "to": true
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "LightningClones"
+          },
+          "tag": {
+            "from": "Undefined",
+            "to": "Mantra"
+          },
+          "mat": {
+            "from": 2000,
+            "to": 500
+          }
+        }
+      }
+    }
+  }
+}

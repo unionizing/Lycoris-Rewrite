@@ -12,7 +12,7 @@ return function(self, timing)
 	local action = Action.new()
 	action._when = 0
 	action._type = "Parry"
-	action.hitbox = Vector3.new(15, 25, 20)
+	action.hitbox = Vector3.new(15, 25, 28)
 	action.name = string.format("(%.2f) Dynamic Brute Punch Timing", self.track.Speed)
 	self:action(timing, action)
 end

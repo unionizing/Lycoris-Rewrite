@@ -1,0 +1,18 @@
+{
+  "patch_id": "4d033d14-ad1f-458d-9174-1a62ff736282",
+  "timestamp": "2025-10-27T23:50:29.643442",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "StarHail": {
+        "status": "modified",
+        "changes": {
+          "duih": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    }
+  }
+}

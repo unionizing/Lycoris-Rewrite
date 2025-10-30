@@ -15,7 +15,7 @@ return function(self, timing)
 	local action = Action.new()
 	action._when = math.min(400 + distance * 3, 1500)
 	action._type = "Parry"
-	action.hitbox = Vector3.new(35, 35, 40 + range)
+	action.hitbox = Vector3.new(35, 35, 50 + range)
 	action.name = string.format("(%.2f) Dynamic Lightning Assault Timing", distance)
 
 	return self:action(timing, action)

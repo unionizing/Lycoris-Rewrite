@@ -1,0 +1,75 @@
+{
+  "patch_id": "71313492-6ce5-4167-9bb1-5663518b98ab",
+  "timestamp": "2025-10-29T20:40:46.672424",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://132988395977398": {
+        "status": "removed",
+        "name": "ParalyticDustAOE"
+      },
+      "rbxassetid://87962259614393": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 53,
+            "to": 0
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Dodge",
+                "name": "1",
+                "hitbox": {
+                  "Y": 15,
+                  "X": 15,
+                  "Z": 15
+                },
+                "when": 300,
+                "ihbc": false
+              }
+            ],
+            "to": []
+          }
+        }
+      },
+      "rbxassetid://7627558238": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 1,
+            "to": 0.2
+          }
+        }
+      },
+      "rbxassetid://7627372304": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 1,
+            "to": 0.2
+          }
+        }
+      }
+    },
+    "part": {
+      "SmiteBall": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 7,
+              "X": 7,
+              "Z": 7
+            },
+            "to": {
+              "Y": 5,
+              "X": 5,
+              "Z": 5
+            }
+          }
+        }
+      }
+    }
+  }
+}

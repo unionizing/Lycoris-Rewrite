@@ -1,0 +1,18 @@
+{
+  "patch_id": "a718fda5-be1d-4876-b95b-c6be11d0d73c",
+  "timestamp": "2025-10-28T20:41:04.619572",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "STREAMPART": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 301,
+            "to": 0
+          }
+        }
+      }
+    }
+  }
+}

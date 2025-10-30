@@ -1,0 +1,49 @@
+{
+  "patch_id": "1950962e-4c1c-4be4-a92b-39b0fbe89a25",
+  "timestamp": "2025-10-28T23:07:00.484762",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "DiskPart": {
+        "status": "added",
+        "data": {
+          "umoa": false,
+          "pname": "DiskPart",
+          "smod": "N/A",
+          "hso": 0,
+          "actions": [
+            {
+              "_type": "Forced Full Dodge",
+              "name": "1",
+              "hitbox": {
+                "Y": 0,
+                "X": 0,
+                "Z": 0
+              },
+              "when": 0,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "after": 0,
+          "uhc": true,
+          "duih": true,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "SinisterHalo",
+          "imxd": 107,
+          "smn": false,
+          "fhb": false,
+          "imdd": 14,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

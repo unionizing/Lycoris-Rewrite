@@ -38,15 +38,15 @@ return function(self, timing)
 		local action = Action.new()
 		action._when = 150
 		action._type = "Forced Full Dodge"
-		action.hitbox = Vector3.new(100, 100, 100)
+		action.hitbox = Vector3.new(50, 100, 130)
 		action.name = "Lionfish Beam Dodge"
 
 		if glacial then
 			action.name = "Glacial Lionfish Beam Dodge"
-			action._when = 0
+			action._when = 150
 		elseif corrupted then
 			action.name = "Corrupted Lionfish Beam Dodge"
-			action._when = 0
+			action._when = 150
 		end
 
 		return self:action(timing, action)

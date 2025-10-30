@@ -1,0 +1,179 @@
+{
+  "patch_id": "33542671-4b2e-43ea-b458-0c17ba922d38",
+  "timestamp": "2025-10-28T23:11:20.538826",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://9941118927": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 16,
+                  "X": 16,
+                  "Z": 18
+                },
+                "when": 870,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 16,
+                  "X": 16,
+                  "Z": 18
+                },
+                "when": 380,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 16,
+                  "X": 16,
+                  "Z": 31
+                },
+                "when": 870,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 16,
+                  "X": 16,
+                  "Z": 31
+                },
+                "when": 380,
+                "ihbc": false
+              }
+            ]
+          },
+          "fhb": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://9919986614": {
+        "status": "modified",
+        "changes": {
+          "iae": {
+            "from": false,
+            "to": true
+          },
+          "imxd": {
+            "from": 53,
+            "to": 75
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "SinisterHalo"
+          },
+          "mat": {
+            "from": 2000,
+            "to": 2550
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Dodge",
+                "name": "1",
+                "hitbox": {
+                  "Y": 18,
+                  "X": 24,
+                  "Z": 24
+                },
+                "when": 300,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Start Block",
+                "name": "1",
+                "hitbox": {
+                  "Y": 18,
+                  "X": 16,
+                  "Z": 20
+                },
+                "when": 400,
+                "ihbc": false
+              },
+              {
+                "_type": "End Block",
+                "name": "2",
+                "hitbox": {
+                  "Y": 45,
+                  "X": 41,
+                  "Z": 38
+                },
+                "when": 2200,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://7627372304": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.2,
+            "to": 1
+          }
+        }
+      }
+    },
+    "part": {
+      "DiskPart": {
+        "status": "added",
+        "data": {
+          "umoa": false,
+          "pname": "DiskPart",
+          "smod": "N/A",
+          "hso": 0,
+          "actions": [
+            {
+              "_type": "Forced Full Dodge",
+              "name": "1",
+              "hitbox": {
+                "Y": 0,
+                "X": 0,
+                "Z": 0
+              },
+              "when": 0,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "after": 0,
+          "uhc": true,
+          "duih": true,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 18,
+            "X": 18,
+            "Z": 18
+          },
+          "punishable": 0,
+          "name": "SinisterHalo",
+          "imxd": 107,
+          "smn": false,
+          "fhb": false,
+          "imdd": 18,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

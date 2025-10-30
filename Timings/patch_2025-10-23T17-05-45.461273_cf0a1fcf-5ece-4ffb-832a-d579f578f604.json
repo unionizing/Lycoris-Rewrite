@@ -1,0 +1,99 @@
+{
+  "patch_id": "cf0a1fcf-5ece-4ffb-832a-d579f578f604",
+  "timestamp": "2025-10-23T17:05:45.461273",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://11186652658": {
+        "status": "modified",
+        "changes": {
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "WeaponTest"
+          }
+        }
+      },
+      "rbxassetid://11186656574": {
+        "status": "added",
+        "data": {
+          "phd": true,
+          "umoa": true,
+          "imb": false,
+          "dp": false,
+          "rpd": 0,
+          "pfht": 0.15,
+          "smod": "WeaponTest",
+          "hso": 0,
+          "aatk": false,
+          "rsd": 0,
+          "ieae": false,
+          "iae": false,
+          "ha": false,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 10,
+                "X": 12,
+                "Z": 15
+              },
+              "when": 275,
+              "ihbc": false
+            }
+          ],
+          "pfh": true,
+          "ndfb": false,
+          "duih": false,
+          "after": 0,
+          "_id": "rbxassetid://11186656574",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "phds": 0.21,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "TollM1_3",
+          "imxd": 32,
+          "smn": false,
+          "fhb": true,
+          "imdd": 0,
+          "tag": "M1"
+        }
+      },
+      "rbxassetid://11186654931": {
+        "status": "modified",
+        "changes": {
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "phds": {
+            "from": 0,
+            "to": 0.21
+          },
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "phd": {
+            "from": false,
+            "to": true
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "WeaponTest"
+          }
+        }
+      }
+    }
+  }
+}

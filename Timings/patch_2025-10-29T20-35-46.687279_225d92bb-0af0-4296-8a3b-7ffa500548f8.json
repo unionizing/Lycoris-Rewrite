@@ -1,0 +1,26 @@
+{
+  "patch_id": "225d92bb-0af0-4296-8a3b-7ffa500548f8",
+  "timestamp": "2025-10-29T20:35:46.687279",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "SmiteBall": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 5,
+              "X": 5,
+              "Z": 5
+            },
+            "to": {
+              "Y": 7,
+              "X": 7,
+              "Z": 7
+            }
+          }
+        }
+      }
+    }
+  }
+}

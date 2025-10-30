@@ -1,0 +1,26 @@
+{
+  "patch_id": "90b64685-c864-468a-9681-a270f372b2b7",
+  "timestamp": "2025-10-28T23:10:00.042315",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "DiskPart": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 21,
+              "X": 21,
+              "Z": 21
+            },
+            "to": {
+              "Y": 18,
+              "X": 18,
+              "Z": 18
+            }
+          }
+        }
+      }
+    }
+  }
+}
