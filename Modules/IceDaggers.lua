@@ -64,6 +64,10 @@ return function(self, timing)
 		pt.hitbox = Vector3.new(10, 10, 10)
 		Defense.cdpo(projectile, pt)
 
+		local baseHitbox = Vector3.new(10, 10, 10)
+		local lastSpeed = 0
+		local smoothing = 0.3 -- 0.1–0.3 recommended: lower = snappier, higher = smoother
+
 		while task.wait() do
 			if not projectile or not projectile.Parent then
 				break
