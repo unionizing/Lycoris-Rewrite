@@ -64,6 +64,7 @@ local lycorisMaid = Maid.new()
 -- Constants.
 local LOBBY_PLACE_ID = 4111023553
 local DEPTHS_PLACE_ID = 5735553160
+local CHIME_LOBBY_PLACE_ID = 12559711136
 
 -- Services.
 local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -79,7 +80,7 @@ local function handleExecutionLogging()
 	local eloType = "N/A"
 	local userEloRank = "N/A"
 
-	if game.PlaceId == 12559711136 then
+	if game.PlaceId == CHIME_LOBBY_PLACE_ID then
 		local eloRating = localPlayer:GetAttribute("EloRating")
 		local eloLeaderboardNumber = localPlayer:GetAttribute("EloRankNo")
 
@@ -205,8 +206,12 @@ function Lycoris.init()
 	]]
 	--
 
-	if game.PlaceId == 12559711136 or game.PlaceId == LOBBY_PLACE_ID then
+	if game.PlaceId == CHIME_LOBBY_PLACE_ID or game.PlaceId == LOBBY_PLACE_ID then
 		handleExecutionLogging()
+	end
+
+	if game.PlaceId == CHIME_LOBBY_PLACE_ID then
+		return Logger.warn("Script has initialized in the Chime lobby.")
 	end
 
 	if game.PlaceId ~= LOBBY_PLACE_ID then
@@ -274,9 +279,7 @@ function Lycoris.init()
 
 	Logger.notify("Script has been initialized in %ims.", (os.clock() - startTimestamp) * 1000)
 
-	if game.PlaceId ~= 12559711136 and game.PlaceId ~= LOBBY_PLACE_ID then
-		handleExecutionLogging()
-	end
+	handleExecutionLogging()
 
 	if not PersistentData.get("fli") then
 		PersistentData.set("fli", os.time())
