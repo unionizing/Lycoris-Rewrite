@@ -72,6 +72,8 @@
 
 - Chain of Perfection Counter
   
+- Silent Aim
+- 
 - Fix No Blur Not Working With No Water
   
 - No Blind

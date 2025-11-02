@@ -55,6 +55,9 @@ local Wipe = require("Game/Wipe")
 ---@module Features.Automation.EchoFarm
 local EchoFarm = require("Features/Automation/EchoFarm")
 
+---@module Features.Automation.JoyFarm
+local JoyFarm = require("Features/Automation/JoyFarm")
+
 -- Lycoris maid.
 local lycorisMaid = Maid.new()
 
@@ -241,6 +244,8 @@ function Lycoris.detach()
 	lycorisMaid:clean()
 
 	ModuleManager.detach()
+
+	JoyFarm.stop()
 
 	Menu.detach()
 

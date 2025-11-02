@@ -1,6 +1,9 @@
 -- Fish farming.
 local FishFarm = {}
 
+---@module Game.AntiAFK
+local AntiAFK = require("Game/AntiAFK")
+
 ---@module Utility.Maid
 local Maid = require("Utility/Maid")
 
@@ -37,9 +40,13 @@ local function updateFishFarm()
 
 	fishFarmTimestamp = os.clock()
 
+	AntiAFK.stop("FishFarm")
+
 	if not Configuration.expectToggleValue("AutoFish") then
 		return
 	end
+
+	AntiAFK.start("FishFarm")
 
 	local localPlayer = players.LocalPlayer
 	local localPlayerCharacter = localPlayer.Character

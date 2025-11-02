@@ -229,6 +229,10 @@ return LPH_NO_VIRTUALIZE(function()
 			return true
 		end
 
+		if not attachTarget.Parent then
+			return false
+		end
+
 		local attachTargetHrp = attachTarget:FindFirstChild("HumanoidRootPart")
 		if not attachTargetHrp then
 			return false

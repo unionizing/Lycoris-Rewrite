@@ -46,6 +46,9 @@ local Teleport = require("Features/Game/Teleport")
 ---@module Features.Automation.AutoLoot
 local AutoLoot = require("Features/Automation/AutoLoot")
 
+---@module Game.AntiAFK
+local AntiAFK = require("Game/AntiAFK")
+
 ---Initialize features.
 ---@note: Careful with features that have entire return LPH_NO_VIRTUALIZE(function() blocks. We assume that we don't care about what's placed in there.
 function Features.init()
@@ -62,6 +65,7 @@ function Features.init()
 	FishFarm.init()
 	Teleport.init()
 	AutoLoot.init()
+	AntiAFK.init()
 
 	-- Only initialize if we're a builder.
 	if not armorshield or armorshield.current_role == "builder" then
@@ -79,6 +83,7 @@ function Features.detach()
 	end
 
 	Teleport.detach()
+	AntiAFK.detach()
 	FishFarm.detach()
 	Defense.detach()
 	CharismaFarm.detach()

@@ -344,8 +344,9 @@ InputClient.bstart = LPH_NO_VIRTUALIZE(function()
 end)
 
 ---Left click function.
+---@param cframe CFrame
 ---@param ignoreChecks boolean
-InputClient.left = LPH_NO_VIRTUALIZE(function(ignoreChecks)
+InputClient.left = LPH_NO_VIRTUALIZE(function(cframe, ignoreChecks)
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then
 		return
@@ -391,7 +392,7 @@ InputClient.left = LPH_NO_VIRTUALIZE(function(ignoreChecks)
 		end
 	end
 
-	leftClickRemote:FireServer(inAir(humanoid, effectReplicatorModule), players.LocalPlayer:GetMouse().Hit, inputData)
+	leftClickRemote:FireServer(inAir(humanoid, effectReplicatorModule), cframe, inputData)
 
 	---@note: Missing M1-Hold and Input Buffering functionality but I don't think the caller cares about it.
 end)
