@@ -351,7 +351,7 @@ end)
 ---Update defenders.
 local updateDefenders = LPH_NO_VIRTUALIZE(function()
 	if Configuration.expectToggleValue("M1Hold") and leftClickState then
-		InputClient.left(true)
+		InputClient.left(players.LocalPlayer:GetMouse().Hit, true)
 	end
 
 	if Configuration.expectToggleValue("AutoWisp") and cwp and cws then

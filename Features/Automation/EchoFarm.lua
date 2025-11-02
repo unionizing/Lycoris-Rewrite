@@ -7,6 +7,9 @@ local EchoFarm = { voiding = false }
 ---@module Utility.PersistentData
 local PersistentData = require("Utility/PersistentData")
 
+---@module Game.AntiAFK
+local AntiAFK = require("Game/AntiAFK")
+
 ---@module Utility.Finder
 local Finder = require("Utility/Finder")
 
@@ -448,6 +451,8 @@ function EchoFarm.start()
 
 	PersistentData.set("efdata", data)
 
+	AntiAFK.start("EchoFarm")
+
 	if localPlayer:GetAttribute("GameLoaded") == "CharacterCreation" then
 		data.wiped = true
 	end
@@ -496,6 +501,9 @@ function EchoFarm.stop()
 	end
 
 	running = false
+
+	-- Stop AntiAFK.
+	AntiAFK.stop("EchoFarm")
 
 	-- Clear persistent data.
 	PersistentData.set("efdata", nil)

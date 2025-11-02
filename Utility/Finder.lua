@@ -23,6 +23,25 @@ Finder.near = LPH_NO_VIRTUALIZE(function(position, range)
 	return (position - localRootPart.Position).Magnitude <= range
 end)
 
+---Wait for the shrine. Deepwoken is weird so it can be both thrown or non-thrown?
+---@return Model?
+Finder.wshrine = LPH_NO_VIRTUALIZE(function()
+	local thrown = workspace:FindFirstChild("Thrown")
+	local waves = workspace:FindFirstChild("HallowtideWaves")
+	local shrine = nil
+
+	-- Wait.
+	while not shrine do
+		-- Look for the shrine in both locations.
+		shrine = waves:FindFirstChild("HallowtideShrine") or thrown:FindFirstChild("HallowtideShrine")
+
+		-- Wait.
+		task.wait()
+	end
+
+	return shrine
+end)
+
 ---Is a player within X studs of the specified position?
 ---@param position Vector3
 ---@param range number
@@ -69,6 +88,37 @@ Finder.entity = LPH_NO_VIRTUALIZE(function(name)
 
 		return child
 	end
+end)
+
+---Return all current simple prompt text(s) for the player.
+---@return table
+Finder.sprompts = LPH_NO_VIRTUALIZE(function()
+	local playerGui = players.LocalPlayer:FindFirstChild("PlayerGui")
+	if not playerGui then
+		return {}
+	end
+
+	local simplePrompt = playerGui:FindFirstChild("SimplePrompt")
+	if not simplePrompt then
+		return {}
+	end
+
+	local prompts = simplePrompt:FindFirstChild("Prompts")
+	if not prompts then
+		return {}
+	end
+
+	local texts = {}
+
+	for _, prompt in next, prompts:GetChildren() do
+		if not prompt:IsA("TextLabel") then
+			continue
+		end
+
+		texts[#texts + 1] = prompt.Text
+	end
+
+	return texts
 end)
 
 ---Get the nearest area marker.

@@ -7,23 +7,8 @@ local Logger = require("Utility/Logger")
 ---@module Features.Automation.EchoFarm
 local EchoFarm = require("Features/Automation/EchoFarm")
 
----@module Game.ServerHop
-local ServerHop = require("Game/ServerHop")
-
----@module Features.Game.Interactions
-local Interactions = require("Features/Game/Interactions")
-
----@module Game.Wipe
-local Wipe = require("Game/Wipe")
-
----@module Features.Game.Tweening
-local Tweening = require("Features/Game/Tweening")
-
----@module Utility.Finder
-local Finder = require("Utility/Finder")
-
--- Services.
-local players = game:GetService("Players")
+---@module Features.Automation.JoyFarm
+local JoyFarm = require("Features/Automation/JoyFarm")
 
 ---Attribute section.
 ---@param groupbox table
@@ -186,6 +171,13 @@ function AutomationTab.initAutoLootSection(groupbox)
 	})
 end
 
+---Initialize Joy Farm section.
+---@param groupbox table
+function AutomationTab.initJoyFarmSection(groupbox)
+	groupbox:AddButton("Start Joy Farm", JoyFarm.start)
+	groupbox:AddButton("Stop Joy Farm", JoyFarm.stop)
+end
+
 ---Initialize Effect Automation section.
 ---@param groupbox table
 function AutomationTab.initEffectAutomation(groupbox)
@@ -214,6 +206,10 @@ function AutomationTab.init(window)
 	AutomationTab.initAttributeSection(tab:AddDynamicGroupbox("Attribute Farm"))
 	AutomationTab.initEffectAutomation(tab:AddDynamicGroupbox("Effect Automation"))
 	AutomationTab.initAutoLootSection(tab:AddLeftGroupbox("Auto Loot"))
+
+	if game.PlaceId == 8668476218 then
+		AutomationTab.initJoyFarmSection(tab:AddLeftGroupbox("Joy Farm"))
+	end
 
 	if LRM_UserNote then
 		return

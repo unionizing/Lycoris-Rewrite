@@ -63,7 +63,8 @@
         "LRM_UserNote",
         "PP_SCRAMBLE_STR",
         "PP_SCRAMBLE_NUM",
-        "PP_SCRAMBLE_RE_NUM"
+        "PP_SCRAMBLE_RE_NUM",
+        "getcallbackvalue"
     ],
     "robloxLsp.suggestedImports.importIgnore": [
         "**/_Index/**",
