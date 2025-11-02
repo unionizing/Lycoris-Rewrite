@@ -21,6 +21,7 @@ local TaskSpawner = getfenv().TaskSpawner
 ---@param self AnimatorDefender
 ---@param timing AnimationTiming
 return function(self, timing)
+	---@note: This can get move stacked.
 	TaskSpawner.spawn("Module_RisingShadow", function()
 		local data = Mantra.data(self.entity, "Mantra:RisingSlashShadow{{Rising Shadow}}")
 		local range = data.rush * 3 + data.drift * 2

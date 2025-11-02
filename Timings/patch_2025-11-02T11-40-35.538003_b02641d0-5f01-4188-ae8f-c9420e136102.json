@@ -1,0 +1,102 @@
+{
+  "patch_id": "b02641d0-5f01-4188-ae8f-c9420e136102",
+  "timestamp": "2025-11-02T11:40:35.538003",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://7576748728": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.5,
+            "to": 0.5000000596046448
+          }
+        }
+      },
+      "rbxassetid://111024000122473": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Dodge",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 512.0000610351562,
+                  "X": 128.00001525878906,
+                  "Z": 512.0000610351562
+                },
+                "when": 900,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Dodge",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 37,
+                  "X": 42,
+                  "Z": 85
+                },
+                "when": 900,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://11363599835": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.5,
+            "to": 0.5000000596046448
+          }
+        }
+      },
+      "rbxassetid://95071929775027": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.5,
+            "to": 0.5000000596046448
+          }
+        }
+      },
+      "rbxassetid://106711913879378": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Dodge",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 1024.0001220703125,
+                  "X": 256.0000305175781,
+                  "Z": 512.0000610351562
+                },
+                "when": 500,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Dodge",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 43
+                },
+                "when": 500,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
