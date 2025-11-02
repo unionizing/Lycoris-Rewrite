@@ -425,7 +425,6 @@ Defender.visualize = LPH_NO_VIRTUALIZE(function(self, identifier, cframe, size, 
 end)
 
 ---Run hitbox check. Returns wheter if the hitbox is being touched.
----@todo: An issue is that the player's current look vector will not be the same as when they attack due to a parry timing being seperate from the attack causing this check to fail.
 ---@param self Defender
 ---@param cframe CFrame
 ---@param fd boolean
