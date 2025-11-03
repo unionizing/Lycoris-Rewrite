@@ -13,8 +13,8 @@ local Configuration = require("Utility/Configuration")
 ---@module Game.InputClient
 local InputClient = require("Game/InputClient")
 
----@module Features.Combat.EffectListener
-local EffectListener = require("Features/Combat/EffectListener")
+---@module Features.Combat.StateListener
+local StateListener = require("Features/Combat/StateListener")
 
 ---@module Game.LeaderboardClient
 local LeaderboardClient = require("Game/LeaderboardClient")
@@ -538,7 +538,7 @@ local onNameCall = LPH_NO_VIRTUALIZE(function(...)
 	end
 
 	if name == "ActivateMantra" then
-		EffectListener.lastMantraActivated = args[2]
+		StateListener.lMantraActivated = args[2]
 	end
 
 	if name == "Gesture" and Configuration.expectToggleValue("EmoteSpoofer") and typeof(args[2]) == "string" then

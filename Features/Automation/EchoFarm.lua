@@ -512,12 +512,12 @@ function EchoFarm.stop()
 	echoFarmMaid:clean()
 
 	-- Cancel all tweens related to EchoFarm.
-	for idx, _ in next, Tweening.queue do
-		if not idx:match("EF") then
+	for _, data in next, Tweening.queue do
+		if not data.identifier:match("EF") then
 			continue
 		end
 
-		Tweening.cancel(idx)
+		Tweening.cancel(data.identifier)
 	end
 end
 

@@ -37,8 +37,8 @@ local HitboxOptions = require("Features/Combat/Objects/HitboxOptions")
 ---@module Utility.OriginalStore
 local OriginalStore = require("Utility/OriginalStore")
 
----@module Features.Combat.EffectListener
-local EffectListener = require("Features/Combat/EffectListener")
+---@module Features.Combat.StateListener
+local StateListener = require("Features/Combat/StateListener")
 
 ---@module Utility.Finder
 local Finder = require("Utility/Finder")
@@ -50,6 +50,8 @@ local Finder = require("Utility/Finder")
 ---@field markers table<string, boolean> Blocking markers for unknown length timings. If the entry exists and is true, then we're blocking.
 ---@field maid Maid
 ---@field hmaid Maid Maid for hitbox visualizations.
+---@field uids number Unique ID counter for hitbox visualizations.
+---@field afeinted boolean Whether if we have auto-feinted this defense cycle.
 local Defender = {}
 Defender.__index = Defender
 Defender.__type = "Defender"
@@ -316,7 +318,7 @@ Defender.valid = LPH_NO_VIRTUALIZE(function(self, options)
 		return internalNotifyFunction(timing, "User is typing in a text box.")
 	end
 
-	if selectedFilters["Disable While Using Sightless Beam"] and EffectListener.csb() then
+	if selectedFilters["Disable While Using Sightless Beam"] and StateListener.csb() then
 		return internalNotifyFunction(timing, "User is using the 'Sightless Beam' move.")
 	end
 
@@ -334,7 +336,7 @@ Defender.valid = LPH_NO_VIRTUALIZE(function(self, options)
 		return internalNotifyFunction(timing, "No effect replicator module found.")
 	end
 
-	if not options.sstun and EffectListener.astun() then
+	if not self.afeinted and not options.sstun and StateListener.astun() then
 		return internalNotifyFunction(timing, "User is in action (e.g swinging / critical / mantra) stun.")
 	end
 
@@ -784,8 +786,8 @@ Defender.parry = LPH_NO_VIRTUALIZE(function(self, timing, action)
 
 	-- Parry if possible.
 	-- We'll assume that we're in the parry state. There's no other type.
-	if EffectListener.cparry() then
-		if timing.nfdb or not EffectListener.cdodge() or not dashReplacement then
+	if StateListener.cparry() then
+		if timing.nfdb or not StateListener.cdodge() or not dashReplacement then
 			return InputClient.deflect()
 		end
 
@@ -801,7 +803,7 @@ Defender.parry = LPH_NO_VIRTUALIZE(function(self, timing, action)
 			return false
 		end
 
-		if not EffectListener.cblock() then
+		if not StateListener.cblock() then
 			return internalNotify(timing, "We are unable to do anything because we are unable to block.")
 		end
 
@@ -821,7 +823,7 @@ Defender.parry = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return internalNotify(timing, "Action fallback 'Dodge' is disabled for this timing.")
 	end
 
-	if not EffectListener.cdodge() then
+	if not StateListener.cdodge() then
 		return blockFallback()
 			or internalNotify(timing, "Action fallback 'Dodge' blocked because we are unable to dash.")
 	end
@@ -886,6 +888,9 @@ Defender.clean = LPH_NO_VIRTUALIZE(function(self)
 	-- Clean up hitboxes.
 	self.hmaid:clean()
 
+	-- Reset auto feint.
+	self.afeinted = false
+
 	-- Was there a start block, end block, or parry?
 	local blocking = false
 
@@ -934,12 +939,44 @@ end)
 ---@param self Defender
 ---@param timing Timing
 ---@param action Action
-Defender.afeint = LPH_NO_VIRTUALIZE(function(self, timing, action)
-	if not EffectListener.cfeint() then
+---@param started number Timestamp of when the auto feint task started.
+Defender.afeint = LPH_NO_VIRTUALIZE(function(self, timing, action, started)
+	local lfaction = StateListener.lAnimFaction
+	if not lfaction then
+		return self:notify(timing, "Auto feint blocked because there is no local first action.")
+	end
+
+	local latimestamp = StateListener.lAnimTimestamp
+	if not latimestamp then
+		return self:notify(timing, "Auto feint blocked because there is no last animation timestamp.")
+	end
+
+	if not StateListener.cfeint() then
 		return self:notify(timing, "Auto feint blocked because we are unable to feint.")
 	end
 
-	action.hitbox = action.hitbox * Vector3.new(1.2, 1.2, 1.2)
+	-- Our goal is to attempt to detect if this local timing will out-pace the animation timing that the enemey is doing.
+	-- If it will out-pace it, then we don't want to feint as it will be useless, and not ideal.
+	-- If not, then we did our goal, and prevented the user from getting hit.
+
+	-- Time until our animation ends.
+	local animTimeLeft = lfaction:when() - (os.clock() - latimestamp)
+
+	-- Time until the enemy's action hits us.
+	local enemyTimeLeft = action:when() - (os.clock() - started)
+
+	-- The local player will hit them before they do, so we don't want to feint.
+	if enemyTimeLeft > animTimeLeft then
+		return self:notify(
+			timing,
+			"Auto feint blocked because enemy action (%.2fs, %.2fs) would not hit before local animation ends (%.2fs, %.2fs, %.2fs).",
+			enemyTimeLeft,
+			(os.clock() - started),
+			animTimeLeft,
+			lfaction:when(),
+			(os.clock() - latimestamp)
+		)
+	end
 
 	local options = ValidationOptions.new(action, timing)
 	options.sstun = true
@@ -950,6 +987,7 @@ Defender.afeint = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	end
 
 	self:notify(timing, "Auto feint executed.")
+	self.afeinted = true
 
 	InputClient.feint()
 end)
@@ -959,6 +997,10 @@ end)
 ---@param timing Timing
 ---@param action Action
 Defender.action = LPH_NO_VIRTUALIZE(function(self, timing, action)
+	if timing.umoa and self.__type == "Animation" then
+		timing.et = action["_when"]
+	end
+
 	if timing.umoa or timing.cbm then
 		action["_type"] = PP_SCRAMBLE_STR(action["_type"])
 		action["name"] = PP_SCRAMBLE_STR(action["name"])
@@ -986,7 +1028,7 @@ Defender.action = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	then
 		self:mark(Task.new(string.format("AutoFeint_%s", action.name), function()
 			return action:when() - rdelay - (self.sdelay() * 2)
-		end, timing.punishable, timing.after, self.afeint, self, timing, action))
+		end, timing.punishable, timing.after, self.afeint, self, timing, action, os.clock()))
 	end
 
 	-- Add action.
@@ -1079,6 +1121,7 @@ function Defender.new()
 	self.uids = 0
 	self.markers = {}
 	self.lvisualization = os.clock()
+	self.afeinted = false
 	return self
 end
 

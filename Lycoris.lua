@@ -25,8 +25,8 @@ local PlayerScanning = require("Game/PlayerScanning")
 ---@module Game.Timings.SaveManager
 local SaveManager = require("Game/Timings/SaveManager")
 
----@module Features.Combat.EffectListener
-local EffectListener = require("Features/Combat/EffectListener")
+---@module Features.Combat.StateListener
+local StateListener = require("Features/Combat/StateListener")
 
 ---@module Utility.PersistentData
 local PersistentData = require("Utility/PersistentData")
@@ -275,7 +275,7 @@ function Lycoris.init()
 
 	PlayerScanning.init()
 
-	EffectListener.init()
+	StateListener.init()
 
 	Logger.notify("Script has been initialized in %ims.", (os.clock() - startTimestamp) * 1000)
 
@@ -357,7 +357,7 @@ function Lycoris.detach()
 
 	CoreGuiManager.clear()
 
-	EffectListener.detach()
+	StateListener.detach()
 
 	local modules = replicatedStorage:FindFirstChild("Modules")
 	local bloxstrapRPC = modules and modules:FindFirstChild("BloxstrapRPC")

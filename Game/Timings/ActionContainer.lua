@@ -51,7 +51,13 @@ end
 ---@param action Action
 function ActionContainer:remove(action)
 	self._data[action.name] = nil
-	self._count = self._count - 1
+
+	local idx = table.find(self._stack, action)
+	if not idx then
+		return
+	end
+
+	table.remove(self._stack, idx)
 end
 
 ---Push a action to the list.
@@ -65,7 +71,8 @@ function ActionContainer:push(action)
 	end
 
 	self._data[name] = action
-	self._count = self._count + 1
+
+	table.insert(self._stack, action)
 end
 
 ---Load from partial values.
@@ -88,15 +95,22 @@ function ActionContainer:names()
 	return names
 end
 
+---Get action stack.
+---@return Action[]
+function ActionContainer:stack()
+	return self._stack
+end
+
 ---Get action count.
 ---@return number
 function ActionContainer:count()
-	return self._count
+	return #self._stack
 end
 
 ---Clear actions.
 function ActionContainer:clear()
 	self._data = {}
+	self._stack = {}
 end
 
 ---Get action data.
@@ -124,7 +138,7 @@ function ActionContainer.new(values)
 	local self = setmetatable({}, ActionContainer)
 
 	self._data = {}
-	self._count = 0
+	self._stack = {}
 
 	if values then
 		self:load(values)

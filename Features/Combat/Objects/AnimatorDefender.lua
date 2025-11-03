@@ -25,17 +25,14 @@ local RepeatInfo = require("Features/Combat/Objects/RepeatInfo")
 ---@module Features.Combat.Objects.HitboxOptions
 local HitboxOptions = require("Features/Combat/Objects/HitboxOptions")
 
----@module Features.Combat.Objects.Task
-local Task = require("Features/Combat/Objects/Task")
-
 ---@module Utility.OriginalStore
 local OriginalStore = require("Utility/OriginalStore")
 
 ---@module Features.Combat.EntityHistory
 local EntityHistory = require("Features/Combat/EntityHistory")
 
----@module Features.Combat.EffectListener
-local EffectListener = require("Features/Combat/EffectListener")
+---@module Features.Combat.StateListener
+local StateListener = require("Features/Combat/StateListener")
 
 ---@class AnimatorDefender: Defender
 ---@field animator Animator
@@ -83,7 +80,7 @@ AnimatorDefender.stopped = LPH_NO_VIRTUALIZE(function(self, track, timing, notif
 		and not timing.umoa
 		and not timing.rpue
 		and Random.new():NextNumber(1.0, 100.0) <= (Configuration.expectOptionValue("IgnoreAnimationEndRate") or 0.0)
-		and EffectListener.cdodge()
+		and StateListener.cdodge()
 	then
 		return false, internalNotifyFunction(timing, "Intentionally ignoring animation end to simulate human error.")
 	end
@@ -449,7 +446,7 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 
 	-- Fake mistime rate.
 	---@type Action?
-	local _, faction = next(timing.actions._data)
+	local faction = timing.actions:stack()[1]
 
 	-- Obviously, we don't want any modules where we don't know how many actions there are.
 	-- We don't want any actions that have a count that is not equal to 1.
@@ -461,7 +458,7 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 		and not timing.rpue
 		and timing.actions:count() == 1
 		and Random.new():NextNumber(1.0, 100.0) <= (Configuration.expectOptionValue("FakeMistimeRate") or 0.0)
-		and EffectListener.cdodge()
+		and StateListener.cdodge()
 		and faction
 		and PP_SCRAMBLE_STR(faction._type) == "Parry"
 		and faction:when() > (self.rtt() + 0.6)

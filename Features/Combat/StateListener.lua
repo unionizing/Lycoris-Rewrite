@@ -1,5 +1,5 @@
--- EffectListener module.
-local EffectListener = { lastMantraActivated = nil }
+-- StateListener module. Practically, it is a module to store data / information about what is happening with the character.
+local StateListener = { lMantraActivated = nil, lAnimFaction = nil, lAnimTimestamp = nil }
 
 ---@module Utility.Signal
 local Signal = require("Utility/Signal")
@@ -16,12 +16,95 @@ local Logger = require("Utility/Logger")
 ---@module Game.InputClient
 local InputClient = require("Game/InputClient")
 
+---@module Game.Timings.SaveManager
+local SaveManager = require("Game/Timings/SaveManager")
+
+---@module Game.Timings.ModuleManager
+local ModuleManager = require("Game/Timings/ModuleManager")
+
 -- Maids.
-local effectMaid = Maid.new()
+local stateMaid = Maid.new()
 
 -- Services.
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
+
+---Handle module data.
+---@param track AnimationTrack
+---@param timing AnimationTiming
+local function handleModuleData(track, timing)
+	-- Since we don't know what it could fail on, limit it to weapons for now.
+	if timing.tag ~= "M1" then
+		return
+	end
+
+	-- Get loaded function.
+	local lf = ModuleManager.modules[PP_SCRAMBLE_STR(timing.smod)]
+	if not lf then
+		return
+	end
+
+	-- Run module with a fake 'AnimationDefender' object.
+	local extracted = {}
+	local fake = {
+		tmaid = Maid.new(),
+		track = track,
+		entity = players.LocalPlayer.Character,
+		action = function(_, _, action)
+			table.insert(extracted, action)
+		end,
+	}
+
+	lf(fake, timing)
+
+	-- Clean up.
+	fake.tmaid:clean()
+
+	-- Set first extracted action as last animation faction.
+	StateListener.lAnimFaction = extracted[1]
+end
+
+---On local animation played.
+---@param track AnimationTrack
+local function onLocalAnimationPlayed(track)
+	local aid = tostring(track.Animation.AnimationId)
+	local data = SaveManager.as:index(aid)
+	if not data then
+		return
+	end
+
+	StateListener.lAnimTimestamp = os.clock()
+
+	-- If this is a module, we need to extract the actions differently. It expects to be ran normally.
+	-- Run it in a emulated environment.
+	if data.umoa then
+		return handleModuleData(track, data)
+	end
+
+	StateListener.lAnimFaction = data.actions:stack()[1]
+end
+
+---On descendant added.
+---@param descendant Instance
+local function onDescendantAdded(descendant)
+	if not descendant:IsA("Animator") then
+		return
+	end
+
+	local character = players.LocalPlayer.Character
+	if not character then
+		return
+	end
+
+	if not descendant:IsDescendantOf(character) then
+		return
+	end
+
+	local animationPlayed = Signal.new(descendant.AnimationPlayed)
+
+	stateMaid["LocalPlayerAnimListener"] =
+		animationPlayed:connect("StateListener_AnimationPlayed", onLocalAnimationPlayed)
+end
 
 ---Is an effect within a specific time?
 ---@param effect table
@@ -52,12 +135,12 @@ end
 
 ---Are we currently casting Sightless Beam?
 ---@return boolean
-function EffectListener.csb()
-	if not EffectListener.lastMantraActivated then
+function StateListener.csb()
+	if not StateListener.lMantraActivated then
 		return false
 	end
 
-	local name = tostring(EffectListener.lastMantraActivated)
+	local name = tostring(StateListener.lMantraActivated)
 	if not name or not name:match("Sightless Beam") then
 		return false
 	end
@@ -97,7 +180,7 @@ end
 
 ---Are we in action stun? That small window after doing an action where you can't do anything.
 ---@return boolean
-function EffectListener.astun()
+function StateListener.astun()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	local lightAttackEffect = effectReplicatorModule:FindEffect("LightAttack")
@@ -121,7 +204,7 @@ end
 
 ---Can we block?
 ---@return boolean
-function EffectListener.cblock()
+function StateListener.cblock()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	return effectReplicatorModule:HasAny("ShakyBlock", "CancelBlock")
@@ -129,7 +212,7 @@ end
 
 ---Can we parry?
 ---@return boolean
-function EffectListener.cparry()
+function StateListener.cparry()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	local parryCooldownEffect = effectReplicatorModule:FindEffect("ParryCool")
@@ -147,7 +230,7 @@ end
 
 ---Can we feint?
 ---@return boolean
-function EffectListener.cfeint()
+function StateListener.cfeint()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	local feintCooldownEffect = effectReplicatorModule:FindEffect("FeintCool")
@@ -161,7 +244,7 @@ end
 
 ---Can we dodge?
 ---@return boolean
-function EffectListener.cdodge()
+function StateListener.cdodge()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	local dodgeCooldownEffect = effectReplicatorModule:FindEffect("NoRoll")
@@ -218,28 +301,36 @@ local onEffectRemoving = LPH_NO_VIRTUALIZE(function(effect)
 	warn(string.format("%s", tostring(effect)))
 end)
 
----Initialize EffectListener.
-function EffectListener.init()
+---Initialize StateListener.
+function StateListener.init()
+	local live = workspace:WaitForChild("Live")
+	local liveDescendantAdded = Signal.new(live.DescendantAdded)
+
 	---@note: Not type of RBXScriptSignal - but it works.
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	local effectAddedSignal = Signal.new(effectReplicatorModule.EffectAdded)
 	local effectRemovingSignal = Signal.new(effectReplicatorModule.EffectRemoving)
 
-	effectMaid:mark(effectAddedSignal:connect("Defense_EffectReplicated", onEffectReplicated))
-	effectMaid:mark(effectRemovingSignal:connect("Defense_EffectRemoving", onEffectRemoving))
+	stateMaid:mark(effectAddedSignal:connect("StateListener_EffectReplicated", onEffectReplicated))
+	stateMaid:mark(effectRemovingSignal:connect("StateListener_EffectRemoving", onEffectRemoving))
+	stateMaid:mark(liveDescendantAdded:connect("StateListener_DescendantAdded", onDescendantAdded))
 
 	for _, effect in next, effectReplicatorModule.Effects do
 		onEffectReplicated(effect)
 	end
 
-	Logger.warn("EffectListener initialized.")
+	for _, descendant in next, live:GetDescendants() do
+		onDescendantAdded(descendant)
+	end
+
+	Logger.warn("StateListener initialized.")
 end
 
----Detach EffectListener.
-function EffectListener.detach()
-	effectMaid:clean()
+---Detach StateListener.
+function StateListener.detach()
+	stateMaid:clean()
 end
 
--- Return EffectListener module.
-return EffectListener
+-- Return StateListener module.
+return StateListener
