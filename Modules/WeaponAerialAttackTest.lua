@@ -33,7 +33,7 @@ return function(self, timing)
 	timing.iae = false
 	timing.fhb = true
 	timing.dp = false
-	timing.pfht = 0.5
+	timing.pfht = 0.15
 	timing.phd = true
 	timing.pfh = true
 

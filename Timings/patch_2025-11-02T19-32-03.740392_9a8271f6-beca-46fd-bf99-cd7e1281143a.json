@@ -1,0 +1,26 @@
+{
+  "patch_id": "9a8271f6-beca-46fd-bf99-cd7e1281143a",
+  "timestamp": "2025-11-02T19:32:03.740392",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://6466993564": {
+        "status": "modified",
+        "changes": {
+          "rsd": {
+            "from": 750,
+            "to": 400
+          },
+          "rpd": {
+            "from": 400,
+            "to": 300
+          },
+          "duih": {
+            "from": true,
+            "to": false
+          }
+        }
+      }
+    }
+  }
+}

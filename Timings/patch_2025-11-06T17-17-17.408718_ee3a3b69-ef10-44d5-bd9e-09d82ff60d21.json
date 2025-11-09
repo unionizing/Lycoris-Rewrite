@@ -1,0 +1,85 @@
+{
+  "patch_id": "ee3a3b69-ef10-44d5-bd9e-09d82ff60d21",
+  "timestamp": "2025-11-06T17:17:17.408718",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://6466993564": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 21.899999618530273,
+              "X": 24.899999618530273,
+              "Z": 21.899999618530273
+            },
+            "to": {
+              "Y": 16.000001907348633,
+              "X": 16.000001907348633,
+              "Z": 16.000001907348633
+            }
+          }
+        }
+      },
+      "rbxassetid://11363599835": {
+        "status": "modified",
+        "changes": {
+          "fhb": {
+            "from": true,
+            "to": false
+          },
+          "pfht": {
+            "from": 0.5,
+            "to": 0.5000000596046448
+          },
+          "iae": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://7576614609": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.5,
+            "to": 0.5000000596046448
+          }
+        }
+      },
+      "rbxassetid://7018046790": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 34.560001373291016,
+                  "X": 25.920001983642578,
+                  "Z": 34.560001373291016
+                },
+                "when": 450,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 32.000003814697266,
+                  "X": 16.000001907348633,
+                  "Z": 32.000003814697266
+                },
+                "when": 450,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

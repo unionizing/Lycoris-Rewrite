@@ -112,6 +112,7 @@ return function(self, timing)
 		or data.type == "Greatcannon"
 		or data.type == "Greatsword"
 		or data.type == "Greataxe"
+		or data.type == "Fist"
 	then
 		action.hitbox = Vector3.new(data.length * 2.7, data.length * 3, data.length * 2)
 	end

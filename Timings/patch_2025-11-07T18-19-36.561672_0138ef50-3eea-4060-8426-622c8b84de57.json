@@ -1,0 +1,22 @@
+{
+  "patch_id": "0138ef50-3eea-4060-8426-622c8b84de57",
+  "timestamp": "2025-11-07T18:19:36.561672",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://9893133020": {
+        "status": "modified",
+        "changes": {
+          "smod": {
+            "from": "RailbladeCrit",
+            "to": "RailbladeAerialCrit"
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    }
+  }
+}

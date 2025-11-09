@@ -1,0 +1,63 @@
+{
+  "patch_id": "115cd6ac-84b7-4634-b92a-c510828a55a3",
+  "timestamp": "2025-11-02T19:49:04.088229",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://11363599835": {
+        "status": "modified",
+        "changes": {
+          "fhb": {
+            "from": false,
+            "to": true
+          },
+          "iae": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6466993564": {
+        "status": "modified",
+        "changes": {
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "rpd": {
+            "from": 300,
+            "to": 500
+          },
+          "hitbox": {
+            "from": {
+              "Y": 20,
+              "X": 10,
+              "Z": 21
+            },
+            "to": {
+              "Y": 21,
+              "X": 24,
+              "Z": 21
+            }
+          },
+          "mat": {
+            "from": 2000,
+            "to": 1750
+          },
+          "iae": {
+            "from": false,
+            "to": true
+          },
+          "imxd": {
+            "from": 75,
+            "to": 100
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "WindCarve"
+          }
+        }
+      }
+    }
+  }
+}

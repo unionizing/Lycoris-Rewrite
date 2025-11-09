@@ -14,8 +14,8 @@ return function(self, timing)
 	action.name = "Dynamic Titus Drive Timing"
 
 	if self.entity.Name:match(".titus") then
-		action.hitbox *= 2.0
-		action._when = 740
+		action.hitbox *= 1.7
+		action._when = 700
 		action._type = "Dodge"
 	end
 

@@ -29,20 +29,12 @@ return function(self, timing)
 	if self:distance(self.entity) <= 25 then
 		local action = Action.new()
 		action._type = "Parry"
-		action._when = 100
+		action._when = 150
 		action.name = "Putrid Edenstaff Close Timing (1)"
 		action.hitbox = Vector3.new(25, 25, 25)
 		action.fhb = false
 		action.ihbc = false
 		self:action(timing, action)
-
-		local actionTwo = Action.new()
-		actionTwo._type = "Dodge"
-		actionTwo._when = 1000
-		actionTwo.name = "Putrid Edenstaff Close Timing (2)"
-		actionTwo.fhb = false
-		actionTwo.ihbc = true
-		self:action(timing, actionTwo)
 	end
 
 	local action = Action.new()

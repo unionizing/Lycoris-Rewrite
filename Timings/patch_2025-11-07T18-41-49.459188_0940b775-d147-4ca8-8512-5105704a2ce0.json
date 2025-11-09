@@ -1,0 +1,87 @@
+{
+  "patch_id": "0940b775-d147-4ca8-8512-5105704a2ce0",
+  "timestamp": "2025-11-07T18:41:49.459188",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://132792155877270": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 14,
+                  "X": 14,
+                  "Z": 16
+                },
+                "when": 600,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 14,
+                  "X": 20,
+                  "Z": 16
+                },
+                "when": 1100,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://9893133020": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 21,
+                  "X": 21,
+                  "Z": 20
+                },
+                "when": 400,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 28,
+                  "X": 24,
+                  "Z": 33
+                },
+                "when": 400,
+                "ihbc": false
+              }
+            ]
+          },
+          "hso": {
+            "from": 0,
+            "to": 11
+          },
+          "smod": {
+            "from": "RailbladeCrit",
+            "to": "RailbladeAerialCrit"
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    }
+  }
+}
