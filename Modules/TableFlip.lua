@@ -15,37 +15,39 @@ local Defense = getfenv().Defense
 ---@param self AnimatorDefender
 ---@param timing AnimationTiming
 return function(self, timing)
+	local thrown = workspace:FindFirstChild("Thrown")
+	if not thrown then
+		return
+	end
+
 	local tracker = ProjectileTracker.new(function(candidate)
-		return candidate.Name == "IceShuriken"
+		return candidate.Name == "Secondary"
 	end)
 
-	task.wait(0.20 - self.rtt())
+	task.wait(0.5 - self.rtt())
+
 	if self:distance(self.entity) <= 20 then
 		local action = Action.new()
-		action._type = "Start Block"
+		action._type = "Parry"
 		action._when = 0
-		action.hitbox = Vector3.new(50, 50, 50)
-		action.name = "Ice Forge Close Timing"
-		self:action(timing, action)
-
-		local actionTwo = Action.new()
-		actionTwo._type = "End Block"
-		actionTwo._when = 800
-		actionTwo.hitbox = Vector3.new(80, 80, 80)
-		self:action(timing, actionTwo)
+		action.name = "Table Flip Close Timing"
+		action.hitbox = Vector3.new(20, 20, 20)
+		action.fhb = true
+		action.ihbc = false
+		return self:action(timing, action)
 	end
 
 	local action = Action.new()
 	action._when = 0
 	action._type = "Parry"
-	action.name = "Ice Forge Part"
+	action.name = "Table Flip Part"
 
 	local pt = PartTiming.new()
 	pt.uhc = true
 	pt.duih = true
-	pt.fhb = false
-	pt.name = "IceForgeProjectile"
-	pt.hitbox = Vector3.new(35, 35, 35)
+	pt.fhb = true
+	pt.name = "TableFlipProjectile"
+	pt.hitbox = Vector3.new(20, 20, 20)
 	pt.actions:push(action)
 	pt.cbm = true
 
