@@ -1,0 +1,30 @@
+{
+  "patch_id": "762200a3-4b58-41e3-9045-ea9791d18e0a",
+  "timestamp": "2025-11-14T21:34:55.270172",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "BloodSlash": {
+        "status": "modified",
+        "changes": {
+          "fhb": {
+            "from": true,
+            "to": false
+          },
+          "hitbox": {
+            "from": {
+              "Y": 19,
+              "X": 60,
+              "Z": 19
+            },
+            "to": {
+              "Y": 20,
+              "X": 20,
+              "Z": 38
+            }
+          }
+        }
+      }
+    }
+  }
+}

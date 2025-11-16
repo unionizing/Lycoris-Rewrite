@@ -1,0 +1,22 @@
+{
+  "patch_id": "a7f5d947-9a87-40e2-9679-d553742bae31",
+  "timestamp": "2025-11-14T20:54:44.721748",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://18445492872": {
+        "status": "modified",
+        "changes": {
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "WraithclawCrit"
+          }
+        }
+      }
+    }
+  }
+}

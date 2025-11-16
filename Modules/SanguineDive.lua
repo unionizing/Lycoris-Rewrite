@@ -10,14 +10,14 @@ return function(self, timing)
 		return
 	end
 
-	if not hrp:FindFirstChild("REP_SOUND_3750959498") then
+	if not hrp:FindFirstChild("REP_SOUND_15776883508") then
 		return
 	end
 
 	local action = Action.new()
 	action._when = 200
 	action._type = "Parry"
-	action.hitbox = Vector3.new(30, 30, 30)
+	action.hitbox = Vector3.new(19, 14, 12)
 	action.name = "Sanguine Dive Timing"
 	self:action(timing, action)
 end

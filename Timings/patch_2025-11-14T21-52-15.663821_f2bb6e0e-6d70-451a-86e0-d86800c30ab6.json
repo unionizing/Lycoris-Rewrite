@@ -1,0 +1,26 @@
+{
+  "patch_id": "f2bb6e0e-6d70-451a-86e0-d86800c30ab6",
+  "timestamp": "2025-11-14T21:52:15.663821",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://82898164556000": {
+        "status": "modified",
+        "changes": {
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "imdd": {
+            "from": 9,
+            "to": 0
+          },
+          "tag": {
+            "from": "Undefined",
+            "to": "Mantra"
+          }
+        }
+      }
+    }
+  }
+}

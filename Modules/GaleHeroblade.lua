@@ -6,18 +6,10 @@ local Action = getfenv().Action
 ---@param timing AnimationTiming
 return function(self, timing)
 	local distance = self:distance(self.entity)
-
 	local action = Action.new()
-	action._when = math.min(375 + distance * 5, 800)
+	action._when = math.min(450 + distance * 3)
 	action._type = "Parry"
-	action.hitbox = Vector3.new(30, 20, 50)
-	action.name = "Dynamic Titus Drive Timing"
-
-	if self.entity.Name:match(".titus") then
-		action.hitbox *= 1.7
-		action._when = 700
-		action._type = "Dodge"
-	end
-
+	action.hitbox = Vector3.new(30, 23, 27)
+	action.name = string.format("(%.2f) Gale Heroblade Crit Timing", distance)
 	return self:action(timing, action)
 end

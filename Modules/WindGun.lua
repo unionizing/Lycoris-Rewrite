@@ -18,9 +18,5 @@ return function(self, timing)
 	action.name = string.format("(%.2f) Dynamic Wind Gun Timing", self.track.Speed)
 	action.hitbox = Vector3.new(25, 20, 60)
 
-	if data.blast then
-		action.hitbox = Vector3.new(action.hitbox.X, action.hitbox.Y, action.hitbox.Z / 2.2)
-	end
-
 	return self:action(timing, action)
 end

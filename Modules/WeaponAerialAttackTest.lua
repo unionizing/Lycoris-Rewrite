@@ -13,23 +13,6 @@ return function(self, timing)
 		return
 	end
 
-	local torsoEquipment = self.entity:FindFirstChild("TorsoEquipment")
-
-	if torsoEquipment and torsoEquipment:GetAttribute("DisplayName") == "Mantle of Enmity" then
-		timing.mat = 1200
-		timing.iae = true
-		timing.ieae = true
-		timing.fhb = false
-
-		local action = Action.new()
-		action._when = 1000
-		action._type = "Parry"
-		action.hitbox = Vector3.new(45, 45, 55)
-		action.name = "Dynamic Mantle Of Enmity Swing"
-
-		return self:action(timing, action)
-	end
-
 	timing.iae = false
 	timing.fhb = true
 	timing.dp = false

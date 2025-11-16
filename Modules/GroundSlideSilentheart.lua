@@ -30,9 +30,9 @@ return function(self, timing)
 	until self.track.Speed ~= ispeed
 
 	local action = Action.new()
-	action._when = 300 / self.track.Speed
+	action._when = 375 / self.track.Speed
 	action._type = "Parry"
-	action.hitbox = Vector3.new(40, 10, 40)
+	action.hitbox = Vector3.new(40, 15, 40)
 	action.name = string.format("(%.2f) Ground Slide Silentheart Timing", self.track.Speed)
 	self:action(timing, action)
 end

@@ -6,15 +6,14 @@ local Action = getfenv().Action
 ---@param timing AnimationTiming
 return function(self, timing)
 	local action = Action.new()
-	action._when = 740
-	action._type = "Parry"
-	action.hitbox = Vector3.new(18, 18, 30)
-	action.name = "Dynamic Skycrash Timing"
+	action._when = 175
+	action._type = "Dodge"
+	action.hitbox = Vector3.new(30, 30, 30)
+	action.name = "Dynamic Skycrash End Timing"
 
 	if self.entity.Name:match(".titus") then
 		action.hitbox *= 2.0
-		action._type = "Dodge"
-		action.name = "Dynamic Titus Skycrash Timing"
+		action.name = "Dynamic Titus Skycrash End Timing"
 	end
 
 	return self:action(timing, action)

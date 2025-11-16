@@ -1,0 +1,18 @@
+{
+  "patch_id": "4af0d4ba-19fc-4c90-b873-bf4739c35959",
+  "timestamp": "2025-11-14T21:06:55.219371",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "sphereinner": {
+        "status": "modified",
+        "changes": {
+          "umoa": {
+            "from": true,
+            "to": false
+          }
+        }
+      }
+    }
+  }
+}
