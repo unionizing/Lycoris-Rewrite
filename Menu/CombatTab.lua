@@ -153,7 +153,7 @@ function CombatTab.initAutoDefenseSection(groupbox)
 	autoDefenseDepBox:AddToggle("VentFallback", {
 		Text = "Vent Fallback",
 		Default = false,
-		Tooltip = "This is used as a last resort. If 'Deflect Block Fallback' is on, it will wait for shaky block.",
+		Tooltip = "This is used as a last resort. If 'Deflect Block Fallback' is on, it will wait for shaky block to be used.",
 	})
 
 	autoDefenseDepBox:AddToggle("DeflectBlockFallback", {

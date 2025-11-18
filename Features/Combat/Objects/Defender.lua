@@ -99,7 +99,7 @@ end
 ---Fetch distance.
 ---@param from Model? | BasePart?
 ---@return number?
-function Defender:distance(from)
+Defender.distance = LPH_NO_VIRTUALIZE(function(_, from)
 	if not from then
 		return
 	end
@@ -125,7 +125,7 @@ function Defender:distance(from)
 	end
 
 	return (entRootPart.Position - localRootPart.Position).Magnitude
-end
+end)
 
 ---Find target - hookable function.
 ---@param self Defender
@@ -421,7 +421,7 @@ Defender.hitbox = LPH_NO_VIRTUALIZE(function(self, cframe, fd, soffset, size, fi
 	end
 
 	-- Used CFrame.
-	local usedCFrame = cframe
+	local usedCFrame = root.CFrame * CFrame.new(0, 0, -(root.Size.Z / 2))
 
 	if fd then
 		usedCFrame = usedCFrame * CFrame.new(0, 0, -(size.Z / 2))
@@ -756,7 +756,7 @@ Defender.parry = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	end
 
 	-- What fallbacks can we run?
-	local canBlock = Configuration.expectToggleValue("DeflectBlockFallback")
+	local canBlock = Configuration.expectToggleValue("DeflectBlockFallback") and StateListener.cblock()
 	local canVent = StateListener.cvent() and Configuration.expectToggleValue("VentFallback") and not timing.nvfb
 	local canDodge = StateListener.cdodge()
 		and Configuration.expectToggleValue("RollOnParryCooldown")

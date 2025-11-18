@@ -577,7 +577,7 @@ class LuaPreprocessor:
             if to_process:
                 # Aggregate net changes across all new patches instead of emitting per-patch spam.
                 # For each (container, id) track starting presence and ending presence plus fields modified.
-                IGNORE_FIELDS = {'dp', 'pfht', 'imb', 'hso', 'tag', 'scrambled'}
+                IGNORE_FIELDS = {'dp', 'pfht', 'imb', 'hso', 'tag', 'scrambled', 'nvfb', 'bfht'}
                 aggregate: dict[str, dict[str, dict[str, Any]]] = {k: {} for k in containers}
 
                 # Build index maps from the CURRENT (original, unscrambled) timing data so we can recover display names.
@@ -596,7 +596,41 @@ class LuaPreprocessor:
                     return idx
                 index_maps = {k: build_index(k) for k in containers}
 
+                def should_ignore_change(container_key: str, cid: str, change_obj: dict) -> bool:
+                    """Skip entries that opt into use-module-over-actions (umoa)."""
+                    if not isinstance(change_obj, dict):
+                        change_obj = {}
+
+                    data_obj = change_obj.get('data')
+                    if isinstance(data_obj, dict):
+                        umoa_val = data_obj.get('umoa')
+                        if isinstance(umoa_val, bool):
+                            return umoa_val
+
+                    direct_umoa = change_obj.get('umoa')
+                    if isinstance(direct_umoa, bool):
+                        return direct_umoa
+
+                    chg_map = change_obj.get('changes')
+                    if isinstance(chg_map, dict):
+                        umoa_change = chg_map.get('umoa')
+                        if isinstance(umoa_change, dict):
+                            to_val = umoa_change.get('to')
+                            if isinstance(to_val, bool):
+                                return to_val
+                            from_val = umoa_change.get('from')
+                            if isinstance(from_val, bool):
+                                return from_val
+
+                    entry = index_maps.get(container_key, {}).get(cid)
+                    if isinstance(entry, dict):
+                        return bool(entry.get('umoa'))
+
+                    return False
+
                 def record_change(container: str, cid: str, change: dict, author: Optional[str]):
+                    if should_ignore_change(container, cid, change):
+                        return
                     status = (change or {}).get('status')
                     entry = aggregate[container].get(cid)
                     if entry is None:
@@ -658,7 +692,8 @@ class LuaPreprocessor:
                                 if fn in IGNORE_FIELDS:
                                     continue
                                 entry['changed_fields'].add(fn)
-                        entry['author'] = author
+                                entry['author'] = author
+                    
                         # Attempt to capture a name if not already set
                         if not entry['name']:
                             nm = (change or {}).get('name')

@@ -10,14 +10,23 @@ local EchoFarm = require("Features/Automation/EchoFarm")
 ---@module Features.Automation.JoyFarm
 local JoyFarm = require("Features/Automation/JoyFarm")
 
----@module Game.InputClient
-local InputClient = require("Game/InputClient")
-
 ---@module Game.QueuedBlocking
 local QueuedBlocking = require("Game/QueuedBlocking")
 
 ---@module Game.KeyHandling
 local KeyHandling = require("Game/KeyHandling")
+
+---@module Features.Combat.Defense
+local Defense = require("Features/Combat/Defense")
+
+---@module Game.Timings.AnimationTiming
+local AnimationTiming = require("Game/Timings/AnimationTiming")
+
+---@module Features.Combat.Objects.RepeatInfo
+local RepeatInfo = require("Features/Combat/Objects/RepeatInfo")
+
+---@module Features.Combat.Targeting
+local Targeting = require("Features/Combat/Targeting")
 
 ---Attribute section.
 ---@param groupbox table
@@ -244,6 +253,36 @@ function AutomationTab.initDebuggingSection(groupbox)
 		end
 
 		unblockRemote:FireServer()
+	end)
+
+	groupbox:AddButton("Start RPUE", function()
+		local timing = AnimationTiming.new()
+		timing.fhb = false
+		timing.rpue = true
+		timing.duih = true
+		timing.imdd = 0
+		timing.imxd = 1000000
+		timing._rsd = 100
+		timing._rpd = 100
+		timing.hitbox = Vector3.new(10, 10, 10)
+		timing.name = "foobar"
+
+		local self = Defense.lol
+		local info = RepeatInfo.new(timing, self.rdelay(), self:uid(10))
+
+		self:hook("target", function()
+			return Targeting.best()[1]
+		end)
+
+		self:hook("distance", function()
+			return 0
+		end)
+
+		self:hook("rc", function()
+			return os.clock() - info.start <= 3.0
+		end)
+
+		self:srpue(self.entity, timing, info)
 	end)
 end
 

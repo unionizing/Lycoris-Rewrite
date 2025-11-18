@@ -16,7 +16,7 @@ Task.__index = Task
 
 ---Check if task should block the input.
 ---@return boolean
-function Task:blocking()
+Task.blocking = LPH_NO_VIRTUALIZE(function(self)
 	if not (coroutine.status(self.thread) ~= "dead") then
 		return false
 	end
@@ -28,22 +28,22 @@ function Task:blocking()
 
 	---@note: Allow us to do inputs up until a certain amount of time before the task happens.
 	return os.clock() >= self:when() - self.punishable
-end
+end)
 
 ---Cancel task.
-function Task:cancel()
+Task.cancel = LPH_NO_VIRTUALIZE(function(self)
 	if coroutine.status(self.thread) ~= "suspended" then
 		return
 	end
 
 	task.cancel(self.thread)
-end
+end)
 
 ---Get when approximately the task will be executed.
 ---@return number
-function Task:when()
+Task.when = LPH_NO_VIRTUALIZE(function(self)
 	return self.when + self.delay()
-end
+end)
 
 ---Create new Task object.
 ---@param identifier string
@@ -53,7 +53,7 @@ end
 ---@param callback function
 ---@vararg any
 ---@return Task
-function Task.new(identifier, delay, punishable, after, callback, ...)
+Task.new = LPH_NO_VIRTUALIZE(function(identifier, delay, punishable, after, callback, ...)
 	local self = setmetatable({}, Task)
 	self.identifier = identifier
 	self.delay = delay
@@ -70,7 +70,7 @@ function Task.new(identifier, delay, punishable, after, callback, ...)
 	end
 
 	return self
-end
+end)
 
 -- Return Task module.
 return Task

@@ -9,14 +9,14 @@ ValidationOptions.__index = ValidationOptions
 ---Create a new ValidationOptions object.
 ---@param action Action
 ---@param timing Timing
-function ValidationOptions.new(action, timing)
+ValidationOptions.new = LPH_NO_VIRTUALIZE(function(action, timing)
 	local self = setmetatable({}, ValidationOptions)
 	self.sstun = false
 	self.action = action
 	self.timing = timing
 	self.notify = true
 	return self
-end
+end)
 
 -- Return the module.
 return ValidationOptions

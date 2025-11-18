@@ -426,7 +426,7 @@ function GameTab.initPlayerMonitoringSection(groupbox)
 
 	groupbox:AddToggle("ShowRobloxChat", {
 		Text = "Show Roblox Chat",
-		Default = true,
+		Default = false,
 	})
 
 	groupbox:AddToggle("ShowOwnership", {

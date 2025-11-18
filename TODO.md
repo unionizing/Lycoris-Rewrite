@@ -66,13 +66,10 @@ Essential Additions
   
 - 4. Auto Roll Cancel (for Float Like a Butterfly or Death From Above)
 
-- 5. Clientside Hit Prediction + No Dodge Fallback Additions (e.g Astral Wind)
-   - Astral Wind (needs to keep blocking if parrying; else hold block lol)
-  
+- 5. Clientside Hit Prediction 
+- 
 - 6. Instead of first action, grab the last mutli-hit action for the timing information
 
-- 7. Per-Timing Block Hold Time With Global 0.3s
-  
 Farming Fixes
 
 - 4. Clean Up "Echo Farm"
@@ -134,3 +131,6 @@ Research
 - NPC / Mob Notifier (Silhuett, Grudge, Ministry Heartspiller, Maljuror)
 
 - CTU Logging (v.s. logging, timezone & region logging)
+  
+- Menu Scale & Windows Scale & Notification Scale
+  

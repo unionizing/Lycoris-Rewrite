@@ -16,7 +16,7 @@ local Target = {}
 ---@param fov number
 ---@param du number
 ---@return Target
-function Target.new(character, humanoid, root, dc, fov, du)
+Target.new = LPH_NO_VIRTUALIZE(function(character, humanoid, root, dc, fov, du)
 	local self = setmetatable({}, Target)
 	self.character = character
 	self.humanoid = humanoid
@@ -25,7 +25,7 @@ function Target.new(character, humanoid, root, dc, fov, du)
 	self.fov = fov
 	self.du = du
 	return self
-end
+end)
 
 -- Return Target module.
 return Target

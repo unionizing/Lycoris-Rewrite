@@ -25,19 +25,19 @@ local players = game:GetService("Players")
 
 ---Hit color.
 ---@return Color3
-function HitboxOptions:ghcolor(result)
+HitboxOptions.ghcolor = LPH_NO_VIRTUALIZE(function(self, result)
 	return result and self.hcolor or self.mcolor
-end
+end)
 
 ---Predicted hit color.
 ---@return Color3
-function HitboxOptions:gphcolor(result)
+HitboxOptions.gphcolor = LPH_NO_VIRTUALIZE(function(self, result)
 	return result and self.phcolor or self.pmcolor
-end
+end)
 
 ---Cloned hitbox options.
 ---@return HitboxOptions
-function HitboxOptions:clone()
+HitboxOptions.clone = LPH_NO_VIRTUALIZE(function(self)
 	local options = setmetatable({}, HitboxOptions)
 	options.action = self.action
 	options.spredict = self.spredict
@@ -54,10 +54,10 @@ function HitboxOptions:clone()
 	options.cframe = self.cframe
 	options.timing = self.timing
 	return options
-end
+end)
 
 ---Update cache.
-function HitboxOptions:ucache()
+HitboxOptions.ucache = LPH_NO_VIRTUALIZE(function(self)
 	if not self.timing then
 		return error("HitboxOptions:update - no timing specified")
 	end
@@ -73,17 +73,17 @@ function HitboxOptions:ucache()
 	else
 		self.cache = Vector3.new(PP_SCRAMBLE_NUM(hitbox.X), PP_SCRAMBLE_NUM(hitbox.Y), PP_SCRAMBLE_NUM(hitbox.Z))
 	end
-end
+end)
 
 ---Get the hitbox size.
 ---@return Vector3
-function HitboxOptions:hitbox()
+HitboxOptions.hitbox = LPH_NO_VIRTUALIZE(function(self)
 	if not self.cache then
 		self:ucache()
 	end
 
 	return self.cache
-end
+end)
 
 ---Get extrapolated position.
 ---@return CFrame

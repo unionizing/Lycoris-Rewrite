@@ -12,7 +12,7 @@ local MAX_HISTORY_SECS = 3.0
 ---@param position CFrame
 ---@param velocity Vector3
 ---@param timestamp number
-function EntityHistory.add(idx, position, velocity, timestamp)
+EntityHistory.add = LPH_NO_VIRTUALIZE(function(idx, position, velocity, timestamp)
 	local history = histories[idx] or {}
 
 	if not histories[idx] then
@@ -37,13 +37,13 @@ function EntityHistory.add(idx, position, velocity, timestamp)
 
 		table.remove(history, 1)
 	end
-end
+end)
 
 ---Get every velocity in the history, looking back a given time.
 ---@param index any
 ---@param time number
 ---@return Vector3[]?
-function EntityHistory.vall(index, time)
+EntityHistory.vall = LPH_NO_VIRTUALIZE(function(index, time)
 	local history = histories[index]
 	if not history then
 		return nil
@@ -60,12 +60,12 @@ function EntityHistory.vall(index, time)
 	end
 
 	return out
-end
+end)
 
 ---Get the horizontal angular velocity (yaw rate) for a current index.
 ---@param index any
 ---@return number?
-function EntityHistory.yrate(index)
+EntityHistory.yrate = LPH_NO_VIRTUALIZE(function(index)
 	local history = histories[index]
 	if not history or #history < 2 then
 		return nil
@@ -84,14 +84,14 @@ function EntityHistory.yrate(index)
 	local crossY = prevLook:Cross(latestLook).Y
 	local angle = math.atan2(crossY, dot)
 	return angle / dt
-end
+end)
 
 ---Divides the history into a number of equal steps and returns the position at each step.
 ---@param idx any
 ---@param steps number
 ---@param phds number History second limit for past hitbox detection.
 ---@return CFrame[]?
-function EntityHistory.pstepped(idx, steps, phds)
+EntityHistory.pstepped = LPH_NO_VIRTUALIZE(function(idx, steps, phds)
 	local history = histories[idx]
 	if not history or #history == 0 then
 		return nil
@@ -124,13 +124,13 @@ function EntityHistory.pstepped(idx, steps, phds)
 	end
 
 	return out
-end
+end)
 
 ---Get closest position (in time) to a timestamp.
 ---@param idx any
 ---@param timestamp number
 ---@return CFrame?
-function EntityHistory.pclosest(idx, timestamp)
+EntityHistory.pclosest = LPH_NO_VIRTUALIZE(function(idx, timestamp)
 	if not histories[idx] then
 		return nil
 	end
@@ -150,7 +150,7 @@ function EntityHistory.pclosest(idx, timestamp)
 	end
 
 	return closestPosition
-end
+end)
 
 -- Return EntityHistory module.
 return EntityHistory

@@ -28,11 +28,12 @@ return function(self, timing)
 		timing.ieae = true
 		timing.iae = true
 		timing.rpue = true
+		timing.duih = false
 		timing.imxd = 600
 		timing._rsd = 800
 		timing._rpd = 150
-		timing.hitbox = Vector3.new(800, 800, 800)
 		return self:srpue(self.entity, timing, info)
+
 	-- Blinding move
 	else
 		local action = Action.new()

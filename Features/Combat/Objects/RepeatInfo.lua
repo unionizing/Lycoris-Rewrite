@@ -14,7 +14,7 @@ RepeatInfo.__index = RepeatInfo
 ---@param irdelay number
 ---@param hmid number
 ---@return RepeatInfo
-function RepeatInfo.new(timing, irdelay, hmid)
+RepeatInfo.new = LPH_NO_VIRTUALIZE(function(timing, irdelay, hmid)
 	local self = setmetatable({}, RepeatInfo)
 	self.track = nil
 	self.timing = timing
@@ -23,7 +23,7 @@ function RepeatInfo.new(timing, irdelay, hmid)
 	self.irdelay = irdelay
 	self.hmid = hmid
 	return self
-end
+end)
 
 -- Return RepeatInfo module.
 return RepeatInfo

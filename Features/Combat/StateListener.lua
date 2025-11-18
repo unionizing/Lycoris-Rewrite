@@ -37,7 +37,7 @@ local CHIME_ARENA_PLACE_ID = 6832944305
 ---Handle module data.
 ---@param track AnimationTrack
 ---@param timing AnimationTiming
-local function handleModuleData(track, timing)
+local handleModuleData = LPH_NO_VIRTUALIZE(function(track, timing)
 	-- Since we don't know what it could fail on, limit it to weapons for now.
 	if timing.tag ~= "M1" then
 		return
@@ -67,11 +67,11 @@ local function handleModuleData(track, timing)
 
 	-- Set first extracted action as last animation faction.
 	StateListener.lAnimFaction = extracted[1]
-end
+end)
 
 ---On local animation played.
 ---@param track AnimationTrack
-local function onLocalAnimationPlayed(track)
+local onLocalAnimationPlayed = LPH_NO_VIRTUALIZE(function(track)
 	local aid = tostring(track.Animation.AnimationId)
 	local data = SaveManager.as:index(aid)
 	if not data then
@@ -89,11 +89,11 @@ local function onLocalAnimationPlayed(track)
 	end
 
 	StateListener.lAnimFaction = data.actions:stack()[1]
-end
+end)
 
 ---On descendant added.
 ---@param descendant Instance
-local function onDescendantAdded(descendant)
+local onDescendantAdded = LPH_NO_VIRTUALIZE(function(descendant)
 	if not descendant:IsA("Animator") then
 		return
 	end
@@ -111,14 +111,14 @@ local function onDescendantAdded(descendant)
 
 	stateMaid["LocalPlayerAnimListener"] =
 		animationPlayed:connect("StateListener_AnimationPlayed", onLocalAnimationPlayed)
-end
+end)
 
 ---Is an effect within a specific time?
 ---@param effect table
 ---@param time number? If the number is unspecified, it will use the Debris time.
 ---@param offset boolean If the number is specified, should we use it as an offset from the Debris time?
 ---@return boolean
-local function withinTime(effect, time, offset)
+local withinTime = LPH_NO_VIRTUALIZE(function(effect, time, offset)
 	if not effect.index then
 		return false
 	end
@@ -138,11 +138,11 @@ local function withinTime(effect, time, offset)
 	end
 
 	return os.clock() - timestamp <= (time or dtime)
-end
+end)
 
 ---Are we currently holding block?
 ---@return boolean
-function StateListener.hblock()
+StateListener.hblock = LPH_NO_VIRTUALIZE(function()
 	local keybinds = replicatedStorage:FindFirstChild("KeyBinds")
 	if not keybinds then
 		return false
@@ -172,11 +172,11 @@ function StateListener.hblock()
 	end
 
 	return false
-end
+end)
 
 ---Are we currently casting Sightless Beam?
 ---@return boolean
-function StateListener.csb()
+StateListener.csb = LPH_NO_VIRTUALIZE(function()
 	if not StateListener.lMantraActivated then
 		return false
 	end
@@ -217,11 +217,11 @@ function StateListener.csb()
 	end
 
 	return false
-end
+end)
 
 ---Are we in action stun? That small window after doing an action where you can't do anything.
 ---@return boolean
-function StateListener.astun()
+StateListener.astun = LPH_NO_VIRTUALIZE(function()
 	local lAnimFaction = StateListener.lAnimFaction
 	local lAnimationValidTrack = StateListener.lAnimationValidTrack
 	local lAnimTimestamp = StateListener.lAnimTimestamp
@@ -230,16 +230,24 @@ function StateListener.astun()
 		return false
 	end
 
-	if lAnimationValidTrack.IsPlaying and os.clock() - lAnimTimestamp <= (lAnimFaction:when() + 0.3) then
+	if lAnimationValidTrack.IsPlaying and os.clock() - lAnimTimestamp <= (lAnimFaction:when() + 0.1) then
 		return true
 	end
 
 	return false
-end
+end)
+
+---Can we block?
+---@return boolean
+StateListener.cblock = LPH_NO_VIRTUALIZE(function()
+	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
+	local effectReplicatorModule = require(effectReplicator)
+	return effectReplicatorModule:FindEffect("ShakyBlock") ~= nil
+end)
 
 ---Can we vent?
 ---@return boolean
-function StateListener.cvent()
+StateListener.cvent = LPH_NO_VIRTUALIZE(function()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	local ventCooldownEffect = effectReplicatorModule:FindEffect("NoBurst")
@@ -267,11 +275,11 @@ function StateListener.cvent()
 	end
 
 	return true
-end
+end)
 
 ---Can we parry?
 ---@return boolean
-function StateListener.cparry()
+StateListener.cparry = LPH_NO_VIRTUALIZE(function()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	local parryCooldownEffect = effectReplicatorModule:FindEffect("ParryCool")
@@ -285,11 +293,11 @@ function StateListener.cparry()
 	end
 
 	return true
-end
+end)
 
 ---Can we feint?
 ---@return boolean
-function StateListener.cfeint()
+StateListener.cfeint = LPH_NO_VIRTUALIZE(function()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	local feintCooldownEffect = effectReplicatorModule:FindEffect("FeintCool")
@@ -299,11 +307,11 @@ function StateListener.cfeint()
 	end
 
 	return true
-end
+end)
 
 ---Can we dodge?
 ---@return boolean
-function StateListener.cdodge()
+StateListener.cdodge = LPH_NO_VIRTUALIZE(function()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	local dodgeCooldownEffect = effectReplicatorModule:FindEffect("NoRoll")
@@ -318,13 +326,13 @@ function StateListener.cdodge()
 	end
 
 	return true
-end
+end)
 
 ---Are we in chime countdown?
 ---@return boolean
-function StateListener.ccd()
+StateListener.ccd = LPH_NO_VIRTUALIZE(function()
 	return game.PlaceId == CHIME_ARENA_PLACE_ID and workspace.DistributedGameTime < 15
-end
+end)
 
 ---On effect replicated.
 ---@param effect table

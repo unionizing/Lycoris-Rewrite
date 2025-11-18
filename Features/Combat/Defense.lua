@@ -38,7 +38,7 @@ local TaskSpawner = require("Utility/TaskSpawner")
 local Logger = require("Utility/Logger")
 
 -- Handle all defense related functions.
-local Defense = { lastMantraActivate = nil }
+local Defense = { lastMantraActivate = nil, lol = nil }
 
 -- Services.
 local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -82,6 +82,7 @@ local addAnimatorDefender = LPH_NO_VIRTUALIZE(function(animator)
 	local animationDefender = AnimatorDefender.new(animator, mobAnimations)
 	defenderObjects[animator] = animationDefender
 	defenderAnimationObjects[animator] = animationDefender
+	Defense.lol = animationDefender
 end)
 
 ---Add sound defender.

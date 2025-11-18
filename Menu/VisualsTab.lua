@@ -104,7 +104,7 @@ end
 function VisualsTab.initWorldVisualsSection(groupbox)
 	groupbox:AddToggle("ModifyFieldOfView", {
 		Text = "Modify Field Of View",
-		Default = true,
+		Default = false,
 	})
 
 	local fovDepBox = groupbox:AddDependencyBox()
