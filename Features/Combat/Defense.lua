@@ -476,6 +476,10 @@ end)
 
 ---Feint flourish.
 function Defense.fflourish()
+	if not Configuration.expectToggleValue("FeintFlourish") then
+		return
+	end
+
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then
 		return Logger.warn("EffectReplicator not found for FeintFlourish.")

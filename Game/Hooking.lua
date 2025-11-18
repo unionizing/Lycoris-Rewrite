@@ -709,8 +709,24 @@ end)
 ---On has effect.
 ---@return any
 local onHasEffect = LPH_NO_VIRTUALIZE(function(...)
+	if checkcaller() then
+		return oldHasEffect(...)
+	end
+
 	local args = { ... }
 	local class = args[2]
+
+	local attackEffects = {
+		"LightAttack",
+		"HeavyAttack",
+		"OffhandAttack",
+		"UsingAbility",
+		"CastingSpell",
+	}
+
+	if Configuration.expectToggleValue("NoAttackingClientChecks") and table.find(attackEffects, class) then
+		return false
+	end
 
 	if Configuration.expectToggleValue("NoFallDamage") and class == "NoFall" then
 		return true

@@ -153,13 +153,13 @@ function CombatTab.initAutoDefenseSection(groupbox)
 	autoDefenseDepBox:AddToggle("VentFallback", {
 		Text = "Vent Fallback",
 		Default = false,
-		Tooltip = "This is used as a last resort. If 'Deflect Block Fallback' is on, it will wait for shaky block to be used.",
+		Tooltip = "This is used as a last resort which takes priority after 'Deflect Block Fallback' if it is on.",
 	})
 
 	autoDefenseDepBox:AddToggle("DeflectBlockFallback", {
 		Text = "Deflect Block Fallback",
 		Default = false,
-		Tooltip = "If enabled, the auto defense will fallback to block frames if parry action and/or fallback is not available.",
+		Tooltip = "If enabled, the auto defense will fallback to block frames if parry action and/or fallback is not available as a last resort.",
 	})
 
 	local rollCancelToggle = autoDefenseDepBox:AddToggle("RollCancel", {

@@ -86,7 +86,7 @@ return function(self, timing)
 	elseif data.type == "Dagger" then
 		windup = (0.150 / self.track.Speed) + 0.075
 	elseif data.type == "Sword" then
-		windup = (0.150 / self.track.Speed) + 0.075
+		windup = (0.150 / self.track.Speed) + 0.100
 	end
 
 	if not windup then
@@ -104,7 +104,7 @@ return function(self, timing)
 	end
 
 	if data.type == "Sword" then
-		action.hitbox = Vector3.new(data.length * 2.0, data.length * 3, data.length * 2.1)
+		action.hitbox = Vector3.new(data.length * 2.0, data.length * 3, data.length * 1.9)
 	end
 
 	if

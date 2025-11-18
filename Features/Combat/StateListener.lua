@@ -222,31 +222,28 @@ StateListener.csb = LPH_NO_VIRTUALIZE(function()
 	return false
 end)
 
----Are we in action stun? That small window after doing an action where you can't do anything.
----@return boolean, string
+--Are we in action stun? That small window after doing an action where you can't do anything.
+---@return boolean
 StateListener.astun = LPH_NO_VIRTUALIZE(function()
-	local lAnimFaction = StateListener.lAnimFaction
-	local lAnimationValidTrack = StateListener.lAnimationValidTrack
-	local lAnimTimestamp = StateListener.lAnimTimestamp
+	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
+	local effectReplicatorModule = require(effectReplicator)
+	local lightAttackEffect = effectReplicatorModule:FindEffect("LightAttack")
+	local usingCriticalEffect = effectReplicatorModule:FindEffect("UsingCritical")
+	local usingSpellEffect = effectReplicatorModule:FindEffect("UsingSpell")
 
-	if not lAnimFaction and not lAnimationValidTrack and not lAnimTimestamp then
-		return false
+	if lightAttackEffect and withinTime(lightAttackEffect, 0.5, false) then
+		return true
 	end
 
-	if lAnimationValidTrack.IsPlaying and os.clock() - lAnimTimestamp <= (lAnimFaction:when() + Latency.rtt()) then
-		return true,
-			string.format("%.2f vs. %.2f (+%.2f)", os.clock() - lAnimTimestamp, lAnimFaction:when(), Latency.rtt())
+	if usingCriticalEffect and withinTime(usingCriticalEffect, -0.1, true) then
+		return true
+	end
+
+	if usingSpellEffect then
+		return true
 	end
 
 	return false
-end)
-
----Can we block?
----@return boolean
-StateListener.cblock = LPH_NO_VIRTUALIZE(function()
-	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
-	local effectReplicatorModule = require(effectReplicator)
-	return effectReplicatorModule:FindEffect("ShakyBlock") ~= nil
 end)
 
 ---Can we vent?
@@ -342,7 +339,7 @@ end)
 ---@param effect table
 local onEffectReplicated = LPH_NO_VIRTUALIZE(function(effect)
 	if Configuration.expectToggleValue("EffectLogging") then
-		print(string.format("%s", tostring(effect)))
+		print(string.format("(%s) %s", tostring(effect.index.DebrisTime) or "N/A", tostring(effect)))
 	end
 
 	if effect.Class == "Knocked" or effect.Class == "Ragdoll" then

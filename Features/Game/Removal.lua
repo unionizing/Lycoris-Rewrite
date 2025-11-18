@@ -336,18 +336,6 @@ return LPH_NO_VIRTUALIZE(function()
 			hideEffect(effect)
 		end
 
-		local attackEffects = {
-			"LightAttack",
-			"HeavyAttack",
-			"OffhandAttack",
-			"UsingAbility",
-			"CastingSpell",
-		}
-
-		if Configuration.expectToggleValue("NoAttackingClientChecks") and table.find(attackEffects, effect.Class) then
-			hideEffect(effect)
-		end
-
 		if
 			(effect.Class == "BeingWinded" or effect.Class == "StrongWind")
 			and Configuration.expectToggleValue("NoWind")

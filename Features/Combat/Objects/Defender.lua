@@ -306,10 +306,8 @@ Defender.valid = LPH_NO_VIRTUALIZE(function(self, options)
 		return internalNotifyFunction(timing, "No effect replicator module found.")
 	end
 
-	local state, status = StateListener.astun()
-
-	if not self.afeinted and not options.sstun and state then
-		return internalNotifyFunction(timing, "(%s) User is in action stun.", status)
+	if not self.afeinted and not options.sstun and StateListener.astun() then
+		return internalNotifyFunction(timing, "User is in action stun.")
 	end
 
 	if effectReplicatorModule:FindEffect("Knocked") then
@@ -719,7 +717,7 @@ Defender.parry = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	end
 
 	-- What fallbacks can we run?
-	local canBlock = Configuration.expectToggleValue("DeflectBlockFallback") and StateListener.cblock()
+	local canBlock = Configuration.expectToggleValue("DeflectBlockFallback")
 	local canVent = StateListener.cvent() and Configuration.expectToggleValue("VentFallback") and not timing.nvfb
 	local canDodge = StateListener.cdodge()
 		and Configuration.expectToggleValue("RollOnParryCooldown")
@@ -733,20 +731,20 @@ Defender.parry = LPH_NO_VIRTUALIZE(function(self, timing, action)
 		return internalNotify(timing, "Action type 'Parry' fallback to 'Dodge' type.")
 	end
 
-	if canBlock then
-		-- Block.
-		QueuedBlocking.invoke(QueuedBlocking.BLOCK_TYPE_NORMAL, "Defender_BlockFallback", timing.bfht)
-
-		-- Notify.
-		return internalNotify(timing, "Action type 'Parry' fallback to 'Block' type.")
-	end
-
 	if canVent then
 		-- Vent.
 		InputClient.vent()
 
 		-- Notify.
 		return internalNotify(timing, "Action type 'Parry' fallback to 'Vent' type.")
+	end
+
+	if canBlock then
+		-- Block.
+		QueuedBlocking.invoke(QueuedBlocking.BLOCK_TYPE_NORMAL, "Defender_BlockFallback", timing.bfht)
+
+		-- Notify.
+		return internalNotify(timing, "Action type 'Parry' fallback to 'Block' type.")
 	end
 
 	-- Cannot fallback.

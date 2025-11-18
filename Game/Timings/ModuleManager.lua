@@ -51,9 +51,6 @@ local Maid = require("Utility/Maid")
 ---@module Utility.Signal
 local Signal = require("Utility/Signal")
 
----@module Game.Latency
-local Latency = require("Game/Latency")
-
 -- Module filesystem.
 local fs = Filesystem.new("Lycoris-Rewrite-Modules")
 local gfs = Filesystem.new(fs:append("Globals"))
@@ -71,6 +68,9 @@ function ModuleManager.execute(lf, id, file, global)
 	---@note: For some reason, it broke lol. Returned nil.
 	-- Has to do with loadingPlaceholder issue. A very wide cyclic dependency where depdendencies rely on each other can break the bundler.
 	local Defense = require("Features/Combat/Defense")
+
+	---@module Game.Latency
+	local Latency = require("Game/Latency")
 
 	-- Set function environment to allow for internal modules.
 	getfenv(lf).Timing = Timing
