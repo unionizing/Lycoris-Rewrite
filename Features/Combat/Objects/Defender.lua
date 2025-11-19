@@ -611,6 +611,7 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, started)
 		and not timing.duih
 		and action._when > 0
 		and self.__type == "Animation"
+		and actionType ~= "End Block"
 	then
 		self:afeint(timing, action, started)
 	end
