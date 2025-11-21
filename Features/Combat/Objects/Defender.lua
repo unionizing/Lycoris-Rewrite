@@ -177,7 +177,7 @@ Defender.srpue = LPH_NO_VIRTUALIZE(function(self, entity, timing, info)
 
 	self:mark(Task.new(string.format("RPUE_%s_%i", timing.name, 0), function()
 		return cache["rsd"] - info.irdelay - Latency.sdelay()
-	end, timing.punishable, timing.after, self.rpue, self, entity, timing, info, cache))
+	end, timing.punishable, timing.after, self.rpue, self, entity, timing, info, cache, options))
 
 	-- Notify.
 	if not LRM_UserNote or LRM_UserNote == "tester" then
@@ -220,9 +220,12 @@ Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, timing, info, cache, op
 	local success = false
 	local reasons = {}
 
+	options.part = target and target.root
+	options.cframe = not options.part and CFrame.new()
+
 	if timing.duih and target then
 		success = self:hc(options, info)
-		reasons[#reasons + 1] = "hitbox"
+		reasons[#reasons + 1] = string.format("hitbox (%s)", tostring(options:hitbox()))
 	end
 
 	local within = (distance >= cache.imdd and distance <= cache.imxd)
@@ -239,7 +242,7 @@ Defender.rpue = LPH_NO_VIRTUALIZE(function(self, entity, timing, info, cache, op
 
 	self:mark(Task.new(string.format("RPUE_%s_%i", cache.name, info.index), function()
 		return cache["rpd"] - info.irdelay - Latency.sdelay()
-	end, timing.punishable, timing.after, self.rpue, self, entity, timing, info, cache))
+	end, timing.punishable, timing.after, self.rpue, self, entity, timing, info, cache, options))
 
 	if not target then
 		return Logger.warn("Skipping RPUE '%s' because the target is not valid.", cache.name)
@@ -312,7 +315,7 @@ Defender.valid = LPH_NO_VIRTUALIZE(function(self, options)
 		return internalNotifyFunction(timing, "No effect replicator module found.")
 	end
 
-	local actionType = options.action._type
+	local actionType = options.action and options.action._type or "N/A"
 
 	if
 		not Configuration.expectToggleValue("BlatantRoll")
