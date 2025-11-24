@@ -8,11 +8,11 @@ return function(self, timing)
 	local action = Action.new()
 	action._when = 400
 	action._type = "Parry"
-	action.hitbox = Vector3.new(15, 15, 15)
+	action.hitbox = Vector3.new(15, 15, 30)
 	action.name = "Dynamic Warp Kick Windup Timing"
 
 	if self.entity.Name:match(".titus") then
-		action.hitbox = Vector3.new(20, 20, 25)
+		action.hitbox = Vector3.new(20, 20, 50)
 		action._type = "Dodge"
 		action.name = "Dynamic Titus Kick Windup Timing"
 	end
