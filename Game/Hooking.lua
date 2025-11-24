@@ -201,6 +201,22 @@ local handleActionRolling = LPH_NO_VIRTUALIZE(function(type)
 		return
 	end
 
+	if type ~= INPUT_CAST then
+		local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
+		if not effectReplicator then
+			return
+		end
+
+		local effectReplicatorModule = require(effectReplicator)
+		if not effectReplicatorModule then
+			return
+		end
+
+		if not effectReplicatorModule:HasEffect("Equipped") then
+			return
+		end
+	end
+
 	if
 		lastActionRoll
 		and os.clock() - lastActionRoll < (Configuration.expectOptionValue("ActionRollCooldown") or 2.0)

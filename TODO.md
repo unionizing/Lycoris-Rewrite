@@ -61,15 +61,13 @@ Essential Additions
 
 - 2. "Timing Probability" section
   - How can we tie "Timing Names" to Probabilities when we click on it in the list?
-  
-- 3. Roll Parry, Roll M1, etc
-  
-- 4. Auto Roll Cancel (for Float Like a Butterfly or Death From Above)
 
-- 5. Clientside Hit Prediction 
-- 
-- 6. Instead of first action, grab the last mutli-hit action for the timing information
-
+- 3. New ESP Port
+  - ESP Fade In / Fade Out
+  - ESP Glow?
+  - ESP Focus Keybind
+  - Damage / Healing Numbers
+  
 Farming Fixes
 
 - 4. Clean Up "Echo Farm"
@@ -78,35 +76,29 @@ Farming Fixes
 
 Gank Fixes
 
-- 6. Ignore Allies Rework
+- 5. Ignore Allies Rework
 
-- 7. Easier Whitelist / Blaclist
-  
-- 8. New ESP Port
-  - ESP Fade In / Fade Out
-  - ESP Glow?
-  - ESP Focus Keybind
-  - Damage / Healing Numbers
-  
+- 6. Easier Whitelist / Blaclist
+
 Quality Of Life
 
-- 9. Finish "Extra Keybinds"
+- 7. Finish "Extra Keybinds"
     - Keybind builder to partial item search find
     - Instant log ability
 
-- 10. PVP Safety
+- 8. PVP Safety
 
-- 12. No Roll Fatigue (slider for how much less roll fatigue you want)
+- 9. No Roll Fatigue (slider for how much less roll fatigue you want)
   
-- 13. Auto Utility
+- 10. Auto Utility
   - Reinforce
   - Ardour Scream
   - Judgement
   - etc...
  
-- 14. Unlock Zoom Distance
+- 11. Unlock Zoom Distance
 
-- 15. Interact Aura
+- 12. Interact Aura
   - Layer Two Bones
   - Layer Two Obelisk
   - Chest   
@@ -120,10 +112,6 @@ Other Stuff
     - User ID 
 
 Research
-
-- Priority Dodge Frame
-
-- Client Side Attack Detection
 
 - No Blind 
 
