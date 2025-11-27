@@ -1,0 +1,57 @@
+{
+  "patch_id": "0564144e-a137-4359-ac27-e07c4e1fa347",
+  "timestamp": "2025-11-27T13:42:33.389199",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://7616407967": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.4,
+            "to": 0.25
+          },
+          "phds": {
+            "from": 1,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://9597289518": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          }
+        }
+      },
+      "rbxassetid://6063195211": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.4,
+            "to": 0.25
+          },
+          "phds": {
+            "from": 1,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://6063188218": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.4,
+            "to": 0.25
+          },
+          "phds": {
+            "from": 1,
+            "to": 0.6
+          }
+        }
+      }
+    }
+  }
+}

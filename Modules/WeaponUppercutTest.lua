@@ -15,6 +15,7 @@ return function(self, timing)
 
 	timing.ffh = true
 	timing.phd = true
+	timing.nvfb = true
 	timing.pfht = 0.25
 	timing.phds = 1.0
 

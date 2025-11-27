@@ -13,6 +13,9 @@ local HitboxOptions = require("Features/Combat/Objects/HitboxOptions")
 ---@module Utility.Configuration
 local Configuration = require("Utility/Configuration")
 
+---@module Utility.Logger
+local Logger = require("Utility/Logger")
+
 ---@class EffectDefender: Defender
 ---@field name string The name of the effect.
 ---@field data table The data of the effect.
@@ -104,6 +107,14 @@ EffectDefender.process = LPH_NO_VIRTUALIZE(function(self)
 	local timing = self:initial(self.owner, SaveManager.es, self.owner.Name, self.name)
 	if not timing then
 		return
+	end
+
+	if timing.flp and self.owner ~= players.LocalPlayer.Character then
+		return Logger.warn(
+			"EffectDefender.process - Effect '%s' is not on local player (%s) is being ignored.",
+			self.name,
+			tostring(self.owner)
+		)
 	end
 
 	if timing.ilp and self.owner == players.LocalPlayer.Character then

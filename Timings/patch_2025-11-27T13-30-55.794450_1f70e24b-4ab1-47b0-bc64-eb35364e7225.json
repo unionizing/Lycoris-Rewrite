@@ -1,0 +1,391 @@
+{
+  "patch_id": "1f70e24b-4ab1-47b0-bc64-eb35364e7225",
+  "timestamp": "2025-11-27T13:30:55.794450",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://8150828674": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.3,
+            "to": 0.45
+          },
+          "ndfb": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://8161044711": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://14435773739": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.2,
+            "to": 0.6
+          },
+          "pfht": {
+            "from": 0.3,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://6675703249": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://11887938902": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://7627854272": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          }
+        }
+      },
+      "rbxassetid://94626092299428": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://5064195992": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          }
+        }
+      },
+      "rbxassetid://115757796989607": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://17108040817": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.1,
+            "to": 0.15
+          }
+        }
+      },
+      "rbxassetid://8367730650": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.1,
+            "to": 0.15
+          }
+        }
+      },
+      "rbxassetid://14435778571": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.2,
+            "to": 0.6
+          },
+          "pfht": {
+            "from": 0.3,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://107771611881875": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://16372476897": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 1,
+            "to": 0.6
+          },
+          "pfht": {
+            "from": 0.4,
+            "to": 0.25
+          }
+        }
+      },
+      "rbxassetid://14435770311": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.2,
+            "to": 0.6
+          },
+          "pfht": {
+            "from": 0.3,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://6675698010": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://5067105317": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          }
+        }
+      },
+      "rbxassetid://9597289518": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://8161043368": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://87039001813522": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://8161039359": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://7627889074": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          }
+        }
+      },
+      "rbxassetid://8161094751": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://137565901647190": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://11887887621": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://96170267983421": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://88620745767944": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://6607538047": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.2,
+            "to": 0.6
+          },
+          "pfht": {
+            "from": 0.3,
+            "to": 0.2500000298023224
+          }
+        }
+      }
+    },
+    "effect": {
+      "DisplayThorns": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "DisplayThornsRed": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "SilentheartWarn": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 269,
+            "to": 592
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 32,
+                  "Z": 38
+                },
+                "when": 200,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 300,
+                  "X": 300,
+                  "Z": 300
+                },
+                "when": 150,
+                "ihbc": false
+              }
+            ]
+          },
+          "flp": {
+            "from": null,
+            "to": true
+          }
+        }
+      },
+      "OwlDisperse": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "ShadowSludge": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "MetalArmament": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "ManiWindup": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "GolemBeam": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      }
+    }
+  }
+}

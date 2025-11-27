@@ -22,6 +22,7 @@ local ActionContainer = require("Game/Timings/ActionContainer")
 ---@field cbm boolean A non-saved field to indicate whether this was non-part-timing created by a module.
 ---@field nvfb boolean No vent fallback.
 ---@field bfht number Block fallback hold time.
+---@field pbfb boolean Prefer block fallback.
 local Timing = {}
 Timing.__index = Timing
 

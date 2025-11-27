@@ -24,10 +24,39 @@ return function(self, timing)
 		return
 	end
 
+	-- Fallbacks. Reset to normal.
+	timing.nvfb = true
+	timing.pbfb = false
+	timing.ndfb = false
+	timing.bfht = 0.3
+
+	-- Prediction settings.
+	timing.dp = false
 	timing.pfh = true
 	timing.phd = true
+
+	-- Prediction history times.
 	timing.pfht = 0.25
 	timing.phds = 0.6
+
+	if data.type == "Fist" or data.type == "Dagger" or data.type == "Pistol" then
+		timing.pbfb = true
+		timing.bfht = 0.5
+		timing.phds = data.type == "Dagger" and 0.6 or 0.25
+		timing.pfh = false
+		timing.dp = true
+	end
+
+	if
+		data.type == "Greathammer"
+		or data.type == "Greatcannon"
+		or data.type == "Greatsword"
+		or data.type == "Greataxe"
+	then
+		timing.phds = 0.2
+		timing.pfh = false
+		timing.dp = true
+	end
 
 	local windup = nil
 	local ispeed = self.track.Speed
@@ -119,9 +148,11 @@ return function(self, timing)
 		or data.type == "Greatcannon"
 		or data.type == "Greatsword"
 		or data.type == "Greataxe"
-		or data.type == "Fist"
-		or data.type == "Dagger"
 	then
+		action.hitbox = Vector3.new(data.length * 2, data.length * 2, data.length * 1.6)
+	end
+
+	if data.type == "Fist" or data.type == "Dagger" then
 		action.hitbox = Vector3.new(data.length * 2.7, data.length * 3, data.length * 2)
 	end
 

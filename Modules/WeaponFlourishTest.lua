@@ -18,6 +18,12 @@ return function(self, timing)
 	timing.phd = true
 	timing.pfht = 0.25
 	timing.phds = 0.6
+	timing.dp = false
+
+	if data.type == "Fist" or data.type == "Dagger" or data.type == "Pistol" then
+		timing.phds = 0.15
+		timing.dp = true
+	end
 
 	local windup = nil
 

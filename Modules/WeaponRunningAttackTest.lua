@@ -17,6 +17,7 @@ return function(self, timing)
 	timing.duih = false
 	timing.fhb = true
 	timing.dp = false
+	timing.nvfb = true
 	timing.pfht = 0.15
 
 	local windup = nil

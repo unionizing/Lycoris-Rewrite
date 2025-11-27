@@ -11,7 +11,7 @@ return function(self, timing)
 		return
 	end
 
-	if #model:GetChildren() <= 3 then
+	if #model:GetChildren() <= 2 then
 		return
 	end
 
@@ -21,8 +21,15 @@ return function(self, timing)
 
 	local action = Action.new()
 	action._when = 0
-	action._type = "Parry"
+	action._type = "Start Block"
 	action.ihbc = true
 	action.name = "Dynamic Glacial Arc Timing"
-	return self:action(timing, action)
+	self:action(timing, action)
+
+	local actionEnd = Action.new()
+	actionEnd._when = 300
+	actionEnd._type = "End Block"
+	actionEnd.ihbc = true
+	actionEnd.name = "Dynamic Glacial Arc End Timing"
+	return self:action(timing, actionEnd)
 end

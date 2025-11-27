@@ -14,7 +14,7 @@ return function(self, timing)
 	local action = Action.new()
 	action._when = 450
 	action._type = "Parry"
-	action.hitbox = Vector3.new(40 + range, 15, 40 + range)
+	action.hitbox = Vector3.new(60 + range, 15, 60 + range)
 	action.name = "Dynamic Rapid Slashes Timing"
 
 	timing.fhb = false

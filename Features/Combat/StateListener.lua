@@ -322,6 +322,37 @@ StateListener.cfeint = LPH_NO_VIRTUALIZE(function()
 	return true
 end)
 
+---Can we block?
+---@return boolean
+StateListener.cblock = LPH_NO_VIRTUALIZE(function()
+	local character = players.LocalPlayer and players.LocalPlayer.Character
+	if not character then
+		return false
+	end
+
+	local breakMeter = character:FindFirstChild("BreakMeter")
+	if not breakMeter then
+		return false
+	end
+
+	if breakMeter.Value / breakMeter.MaxValue > 0.6 then
+		return false
+	end
+
+	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
+	local effectReplicatorModule = require(effectReplicator)
+
+	if effectReplicatorModule:FindEffect("ShakyBlock") then
+		return false
+	end
+
+	if effectReplicatorModule:FindEffect("CancelBlock") then
+		return false
+	end
+
+	return true
+end)
+
 ---Can we dodge?
 ---@return boolean
 StateListener.cdodge = LPH_NO_VIRTUALIZE(function()
