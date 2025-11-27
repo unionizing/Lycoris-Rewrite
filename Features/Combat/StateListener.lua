@@ -6,6 +6,7 @@ local StateListener = {
 	lAnimTimestamp = nil,
 	chainStacks = nil,
 	lastVent = nil,
+	lAnimLatency = nil,
 }
 
 ---@module Utility.Signal
@@ -90,6 +91,7 @@ local onLocalAnimationPlayed = LPH_NO_VIRTUALIZE(function(track)
 	StateListener.lAnimTimestamp = os.clock()
 	StateListener.lAnimationValidTrack = track
 	StateListener.lAnimTiming = data
+	StateListener.lAnimLatency = Latency.rtt()
 
 	-- If this is a module, we need to extract the actions differently. It expects to be ran normally.
 	-- Run it in a emulated environment.

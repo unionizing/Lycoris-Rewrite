@@ -1,0 +1,42 @@
+{
+  "patch_id": "9f43cae2-d2ee-4ce5-b763-dd69e1668733",
+  "timestamp": "2025-11-26T22:47:02.662697",
+  "author": "Blastbrean",
+  "diff": {
+    "effect": {
+      "SilentheartWarn": {
+        "status": "added",
+        "data": {
+          "rsd": 0,
+          "umoa": false,
+          "rpd": 0,
+          "smod": "N/A",
+          "hso": 0,
+          "ilp": false,
+          "bfht": 0.3,
+          "actions": [],
+          "ndfb": false,
+          "duih": false,
+          "after": 0,
+          "ename": "SilentheartWarn",
+          "nvfb": false,
+          "rpue": false,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "SilentheartWarn",
+          "imxd": 269,
+          "smn": false,
+          "fhb": false,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

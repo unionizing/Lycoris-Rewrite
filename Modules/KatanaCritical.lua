@@ -7,12 +7,20 @@ local Weapon = getfenv().Weapon
 -- Services.
 local players = game:GetService("Players")
 
+---@module Utility.Signal
+local Signal = getfenv().Signal
+
 ---Module function.
 ---@param self AnimatorDefender
 ---@param timing AnimationTiming
 return function(self, timing)
 	local data = Weapon.data(self.entity)
 	if not data then
+		return
+	end
+
+	local ehrp = self.entity:FindFirstChild("HumanoidRootPart")
+	if not ehrp then
 		return
 	end
 
@@ -56,6 +64,21 @@ return function(self, timing)
 		action._when = 550
 		action.ihbc = true
 	end
+
+	local onDescendantAdded = Signal.new(self.entity.DescendantAdded)
+
+	self.tmaid:add(onDescendantAdded:connect("KatanaCritical_DetectManiKatti", function(child)
+		local current = self.tasks[#self.tasks]
+		if not current then
+			return
+		end
+
+		if child.Name ~= "CLIENT_SOUND_5033483075" then
+			return
+		end
+
+		current:cancel()
+	end))
 
 	return self:action(timing, action)
 end

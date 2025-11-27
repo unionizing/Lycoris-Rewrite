@@ -7,11 +7,12 @@ local Action = getfenv().Action
 return function(self, timing)
 	timing.pfh = true
 
+	local distance = self:distance(self.entity)
 	local action = Action.new()
-	action._when = 450
+	action._when = math.min(400 + distance * 14.5)
 
-	if self.track.Speed >= 0.8 then
-		action._when = 350
+	if self.track.Speed >= 0.7 then
+		action._when = math.min(350 + distance * 20, 650)
 	end
 
 	action._type = "Parry"

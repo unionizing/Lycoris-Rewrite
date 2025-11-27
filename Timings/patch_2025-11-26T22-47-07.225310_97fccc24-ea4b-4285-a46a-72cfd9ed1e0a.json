@@ -1,0 +1,30 @@
+{
+  "patch_id": "97fccc24-ea4b-4285-a46a-72cfd9ed1e0a",
+  "timestamp": "2025-11-26T22:47:07.225310",
+  "author": "Blastbrean",
+  "diff": {
+    "effect": {
+      "SilentheartWarn": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 32,
+                  "Z": 38
+                },
+                "when": 400,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

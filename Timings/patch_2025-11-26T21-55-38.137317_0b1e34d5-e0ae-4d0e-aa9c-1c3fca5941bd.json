@@ -1,0 +1,34 @@
+{
+  "patch_id": "0b1e34d5-e0ae-4d0e-aa9c-1c3fca5941bd",
+  "timestamp": "2025-11-26T21:55:38.137317",
+  "author": "Blastbrean",
+  "diff": {
+    "effect": {
+      "ManiWindup": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 118,
+            "to": 387
+          },
+          "actions": {
+            "from": [],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 300,
+                  "X": 300,
+                  "Z": 300
+                },
+                "when": 400,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

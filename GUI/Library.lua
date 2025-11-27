@@ -3190,7 +3190,8 @@ return LPH_NO_VIRTUALIZE(function()
 
 		Library.PositionList = {}
 		Library.Recording = false
-
+		Library.Markers = {}
+		
 		WatermarkOuter.InputBegan:Connect(function(Input)
 			xpcall(function()
 				if not Toggles["ShowDebugInformation"].Value then
@@ -3223,6 +3224,36 @@ return LPH_NO_VIRTUALIZE(function()
 							"Positions have stopped recording. These positions are copied to your clipboard.",
 							5
 						)
+					end
+				end
+
+				if Input.KeyCode == Enum.KeyCode.L then
+					local Character = LocalPlayer and LocalPlayer.Character
+					local Root = Character and Character:FindFirstChild("HumanoidRootPart")
+
+					if Root then
+						local Marker = Instance.new("Part")
+						Marker.Name = "LycorisMarker"
+						Marker.Size = Vector3.new(1, 1, 1)
+						Marker.Anchored = true
+						Marker.CanCollide = false
+						Marker.Transparency = 0.5
+						Marker.Color = Color3.fromRGB(255, 50, 50)
+						Marker.Material = Enum.Material.Neon
+						Marker.CFrame = Root.CFrame
+						Marker.Parent = workspace
+
+						table.insert(Library.Markers, Marker)
+						Library:Notify("Created debug marker.", 1)
+					end
+				end
+
+				if Input.KeyCode == Enum.KeyCode.P then
+					local Marker = table.remove(Library.Markers)
+
+					if Marker then
+						Marker:Destroy()
+						Library:Notify("Removed recent debug marker.", 1)
 					end
 				end
 			end, warn)

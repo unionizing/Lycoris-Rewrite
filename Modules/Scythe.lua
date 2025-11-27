@@ -13,10 +13,11 @@ return function(self, timing)
 
 	if hrp:WaitForChild("REP_SOUND_15776883341", 0.1) then
 		timing.pfh = true
+
 		local action = Action.new()
 		action._when = 450
 
-		if self:distance(self.entity) > 10 then
+		if self:distance(self.entity) > 15 then
 			action._when = 550
 		end
 

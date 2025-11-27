@@ -71,17 +71,19 @@ EffectDefender.valid = LPH_NO_VIRTUALIZE(function(self, options)
 		return internalNotifyFunction(timing, "No character found.")
 	end
 
-	if not self:target(self.owner) then
-		return internalNotifyFunction(timing, "Not a viable target.")
-	end
+	if self.owner ~= players.LocalPlayer.Character then
+		if not self:target(self.owner) then
+			return internalNotifyFunction(timing, "Not a viable target.")
+		end
 
-	local hoptions = HitboxOptions.new(humanoidRootPart, timing)
-	hoptions.spredict = false
-	hoptions.action = action
-	hoptions:ucache()
+		local hoptions = HitboxOptions.new(humanoidRootPart, timing)
+		hoptions.spredict = false
+		hoptions.action = action
+		hoptions:ucache()
 
-	if not self:hc(hoptions, timing.duih and RepeatInfo.new(timing) or nil) then
-		return self:notify(timing, "Not in hitbox.")
+		if not self:hc(hoptions, timing.duih and RepeatInfo.new(timing) or nil) then
+			return self:notify(timing, "Not in hitbox.")
+		end
 	end
 
 	return true

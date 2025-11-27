@@ -21,15 +21,15 @@ return function(self, timing)
 	else
 		local distance = self:distance(self.entity)
 		local action = Action.new()
-		action._when = 570
+		action._when = 470
 		if distance >= 13 then
-			action._when = 670
+			action._when = 570
 		end
 		if distance >= 16 then
-			action._when = 690
+			action._when = 590
 		end
 		if distance >= 20 then
-			action._when = 870
+			action._when = 770
 		end
 		action._type = "Dodge"
 		action.hitbox = Vector3.new(25, 20, 30)

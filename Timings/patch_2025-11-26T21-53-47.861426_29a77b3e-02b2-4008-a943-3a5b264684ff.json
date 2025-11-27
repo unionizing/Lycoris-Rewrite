@@ -1,0 +1,13 @@
+{
+  "patch_id": "29a77b3e-02b2-4008-a943-3a5b264684ff",
+  "timestamp": "2025-11-26T21:53:47.861426",
+  "author": "Blastbrean",
+  "diff": {
+    "part": {
+      "MalStrike1": {
+        "status": "removed",
+        "name": "MalStrike1"
+      }
+    }
+  }
+}

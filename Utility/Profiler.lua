@@ -4,17 +4,24 @@ return LPH_NO_VIRTUALIZE(function()
 	local Profiler = {}
 
 	---Runs a function with a specified profiler label.
+	---@todo: This breaks on yielding functions.
 	---@param label string
 	---@param functionToProfile function
 	function Profiler.run(label, functionToProfile, ...)
+		local okay = shared and typeof(shared.Lycoris) == "table" and not shared.Lycoris.silent
+
 		-- Profile under label.
-		debug.profilebegin(label)
+		if okay then
+			debug.profilebegin(label)
+		end
 
 		-- Call function to profile.
 		local ret_values = table.pack(functionToProfile(...))
 
 		-- End most recent profiling.
-		debug.profileend()
+		if okay then
+			debug.profileend()
+		end
 
 		-- Return values.
 		return unpack(ret_values)

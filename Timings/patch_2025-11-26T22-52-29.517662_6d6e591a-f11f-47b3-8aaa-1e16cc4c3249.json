@@ -1,0 +1,21 @@
+{
+  "patch_id": "6d6e591a-f11f-47b3-8aaa-1e16cc4c3249",
+  "timestamp": "2025-11-26T22:52:29.517662",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://72748965289041": {
+        "status": "removed",
+        "name": "SilentheartMediumRelentless"
+      },
+      "rbxassetid://82111969749817": {
+        "status": "removed",
+        "name": "SilentheartHeavyRelentless"
+      },
+      "rbxassetid://110691694093015": {
+        "status": "removed",
+        "name": "SlientheartLightRelentless"
+      }
+    }
+  }
+}

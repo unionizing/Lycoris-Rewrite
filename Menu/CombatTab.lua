@@ -315,6 +315,12 @@ function CombatTab.initCombatAssistance(groupbox)
 		Tooltip = "Detect what Silentheart moves would be thrown out and use flow-state beforehand.",
 	})
 
+	groupbox:AddToggle("DelayedFeints", {
+		Text = "Delayed Feints",
+		Default = false,
+		Tooltip = "When you feint during a move, it will attempt to delay it to be as late as possible.",
+	})
+
 	local ascToggle = groupbox:AddToggle("AnimationSpeedChanger", {
 		Text = "Animation Speed Changer",
 		Default = false,

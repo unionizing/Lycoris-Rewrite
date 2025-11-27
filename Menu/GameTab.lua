@@ -524,7 +524,7 @@ function GameTab.initEffectRemovalsSection(groupbox)
 	groupbox:AddToggle("NoAttackingClientChecks", {
 		Text = "No Attacking Client Checks",
 		Default = false,
-		Tooltip = "Remve any 'Attacking' effects from the server.",
+		Tooltip = "Remove any 'Attacking' effects from the server.",
 	})
 
 	groupbox:AddToggle("AlwaysAllowJump", {

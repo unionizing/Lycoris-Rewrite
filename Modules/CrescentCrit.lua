@@ -5,28 +5,24 @@ local Action = getfenv().Action
 ---@param self AnimatorDefender
 ---@param timing AnimationTiming
 return function(self, timing)
-	timing.pfh = true
+	timing.ffh = true
+	timing.duih = false
 
-	local distance = self:distance(self.entity)
-	local action = Action.new()
-	action._when = 450
-	if distance >= 7 then
-		action._when = 600
+	local dist = self:distance(self.entity)
+
+	if dist <= 12 then
+		local action = Action.new()
+		action._when = 450
+		action._type = "Parry"
+		action.ihbc = true
+		action.name = string.format("(%.2f) Close Crescent Crit Timing", dist)
+		return self:action(timing, action)
 	end
-	if distance >= 10 then
-		action._when = 700
-	end
-	if distance >= 15 then
-		action._when = 700
-	end
-	if distance >= 18 then
-		action._when = 750
-	end
-	if distance >= 20 then
-		action._when = 800
-	end
-	action._type = "Parry"
-	action.hitbox = Vector3.new(15, 25, 25)
-	action.name = string.format("(%.2f) Dynamic Crescent Crit Timing", distance)
-	return self:action(timing, action)
+
+	local actionTwo = Action.new()
+	actionTwo._when = 800
+	actionTwo._type = "Parry"
+	actionTwo.ihbc = true
+	actionTwo.name = string.format("(%.2f) Far Crescent Crit Timing", dist)
+	return self:action(timing, actionTwo)
 end

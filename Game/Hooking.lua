@@ -248,6 +248,43 @@ local handleActionRolling = LPH_NO_VIRTUALIZE(function(type)
 	end
 end)
 
+---Handle delayed feints.
+local handleDelayedFeints = LPH_NO_VIRTUALIZE(function()
+	local lAnimTrack = StateListener.lAnimationValidTrack
+	if not lAnimTrack then
+		return Logger.warn("No valid animation track for delayed feint.")
+	end
+
+	local lAnimFaction = StateListener.lAnimFaction
+	if not lAnimFaction then
+		return Logger.warn("No animation faction for delayed feint.")
+	end
+
+	if not lAnimTrack.IsPlaying then
+		return Logger.warn("Non playing animation track for delayed feint.")
+	end
+
+	if not StateListener.cfeint() then
+		return Logger.warn("Unable to feint for delayed feint.")
+	end
+
+	local laTimestamp = StateListener.lAnimTimestamp
+	if not laTimestamp then
+		return Logger.warn("No animation timestamp for delayed feint.")
+	end
+
+	local laLatency = StateListener.lAnimLatency
+	if not laLatency then
+		return Logger.warn("No animation latency for delayed feint.")
+	end
+
+	local delayed = (lAnimFaction:when() - (os.clock() - laTimestamp)) - laLatency
+
+	Logger.warn("Delaying for %.2f seconds before sending the feint remote.", delayed)
+
+	task.wait(delayed)
+end)
+
 ---On intercepted input.
 ---@param type number
 ---@param state number
@@ -258,6 +295,15 @@ local onInterceptedInput = LPH_NO_VIRTUALIZE(function(type, state)
 
 	if Configuration.expectToggleValue("ActionRolling") and state == INPUT_TYPE_AFTER then
 		handleActionRolling(type)
+	end
+
+	if
+		Configuration.expectToggleValue("DelayedFeints")
+		and state == INPUT_TYPE_BEFORE
+		and type == INPUT_RIGHT_CLICK
+		and StateListener.lAnimationValidTrack
+	then
+		handleDelayedFeints()
 	end
 end)
 

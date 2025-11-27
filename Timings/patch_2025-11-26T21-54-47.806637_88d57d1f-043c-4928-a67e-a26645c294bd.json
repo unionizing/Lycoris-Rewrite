@@ -1,0 +1,42 @@
+{
+  "patch_id": "88d57d1f-043c-4928-a67e-a26645c294bd",
+  "timestamp": "2025-11-26T21:54:47.806637",
+  "author": "Blastbrean",
+  "diff": {
+    "effect": {
+      "ManiWindup": {
+        "status": "added",
+        "data": {
+          "rsd": 0,
+          "umoa": false,
+          "rpd": 0,
+          "smod": "N/A",
+          "hso": 0,
+          "ilp": false,
+          "bfht": 0.3,
+          "actions": [],
+          "ndfb": false,
+          "duih": false,
+          "after": 0,
+          "ename": "ManiWindup",
+          "nvfb": false,
+          "rpue": false,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "ManiWindup",
+          "imxd": 118,
+          "smn": false,
+          "fhb": true,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}
