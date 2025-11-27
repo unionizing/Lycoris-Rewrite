@@ -1,0 +1,18 @@
+{
+  "patch_id": "9726b9c3-faa8-4b89-9838-8525b51b7c16",
+  "timestamp": "2025-11-23T21:31:01.725145",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "BoneSpear": {
+        "status": "modified",
+        "changes": {
+          "ndfb": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    }
+  }
+}
