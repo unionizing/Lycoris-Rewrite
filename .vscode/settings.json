@@ -68,7 +68,8 @@
         "LRM_SEND_WEBHOOK",
         "LRM_SANITIZE",
         "getnilinstances",
-        "getcallingscript"
+        "getcallingscript",
+        "ProjectileTracker"
     ],
     "robloxLsp.suggestedImports.importIgnore": [
         "**/_Index/**",
