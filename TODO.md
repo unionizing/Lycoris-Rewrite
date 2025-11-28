@@ -119,7 +119,7 @@ Research
 
 - No Hallowing Enchant
   
-- NPC / Mob Notifier (Silhuett, Grudge, Ministry Heartspiller, Maljuror)
+- NPC / Mob Notifier (Silhuett, Grudge, Ministry Heartspiller, Maljuror, Astral Knight/Star Knight) and their location
 
 - CTU Logging (v.s. logging, timezone & region logging)
   
