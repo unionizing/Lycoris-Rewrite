@@ -30,6 +30,7 @@ return function(self, timing)
 	end)
 
 	timing.fhb = false
+	timing.ndfb = true
 	timing.rpue = true
 	timing._rsd = (duration / 2.5) * 1000
 	timing._rpd = 250

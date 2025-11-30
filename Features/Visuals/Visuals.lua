@@ -688,11 +688,6 @@ local updateCardHovering = LPH_NO_VIRTUALIZE(function()
 		return
 	end
 
-	local playerGui = players.LocalPlayer:FindFirstChild("PlayerGui")
-	if not playerGui then
-		return
-	end
-
 	local mousePosition = userInputService:GetMouseLocation() - guiService:GetGuiInset()
 	if not mousePosition then
 		return
@@ -753,6 +748,27 @@ local updateCardHovering = LPH_NO_VIRTUALIZE(function()
 	class.Text = firstHoveringData.category or "???"
 	icon.ImageRectOffset = Vector2.new(0, 0)
 	icon.Image = "rbxassetid://94097748688985"
+
+	local colorTable = {
+		["rare"] = Color3.fromRGB(145, 94, 95),
+		["common"] = Color3.fromRGB(98, 97, 90),
+		["advanced"] = Color3.fromRGB(58, 117, 129),
+		["whisper"] = Color3.fromRGB(143, 110, 145),
+		["mystery"] = Color3.fromRGB(145, 158, 172),
+		["oath"] = Color3.fromRGB(25, 44, 62),
+		["faction"] = Color3.fromRGB(52, 83, 41),
+		["quest"] = Color3.fromRGB(153, 125, 47),
+		["resonance"] = Color3.fromRGB(63, 78, 129),
+		["corrupted resonance"] = Color3.fromRGB(117, 48, 81),
+		["drowned resonance"] = Color3.fromRGB(198, 199, 255),
+		["legendary resonance"] = Color3.fromRGB(222, 209, 191),
+		["artifact"] = Color3.fromRGB(114, 77, 222),
+	}
+
+	local backgroundColor = colorTable[string.lower(firstHoveringData.rarity or "N/A")]
+	if backgroundColor then
+		cardFrame.BackgroundColor3 = backgroundColor
+	end
 
 	local reqData = firstHoveringData.reqs
 	local reqTags = {}

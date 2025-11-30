@@ -92,6 +92,10 @@ function VisualsTab.initESPOptimizations(groupbox)
 		Rounding = 0,
 	})
 
+	esuDepBox:SetupDependencies({
+		{ Toggles.ESPSplitUpdates, true },
+	})
+
 	groupbox:AddToggle("NoPersisentESP", {
 		Text = "No Persistent ESP",
 		Tooltip = "Disable ESP models from being persistent and never being streamed out.",

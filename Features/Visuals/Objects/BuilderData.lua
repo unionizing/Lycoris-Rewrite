@@ -94,6 +94,23 @@ function BuilderData:load(values)
 		self.mantras = values.mantras
 	end
 
+	-- Replace mapping(s) if they have tags to ones without brackets.
+	for idx, talent in next, self.talents do
+		local cleaned = talent:gsub("%s*%[.-%]$", "")
+
+		if cleaned ~= talent then
+			self.talents[idx] = cleaned
+		end
+	end
+
+	for idx, mantra in next, self.mantras do
+		local cleaned = mantra:gsub("%s*%[.-%]$", "")
+
+		if cleaned ~= mantra then
+			self.mantras[idx] = cleaned
+		end
+	end
+
 	if typeof(values.preShrine) == "table" then
 		self.pre:load(values.preShrine)
 	end
