@@ -350,7 +350,7 @@ AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 		local generated = nil
 
 		if not self.multiplier[track] and not Configuration.expectToggleValue("SwitchBetweenSpeeds") then
-			generated = rng:NextInteger(min, max)
+			generated = rng:NextNumber(min, max)
 		end
 
 		if not self.multiplier[track] and Configuration.expectToggleValue("SwitchBetweenSpeeds") then
@@ -361,7 +361,14 @@ AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 			self.multiplier[track] = generated
 		end
 
-		local multiplier = self.multiplier[track] or 1.0
+		local multiplier = self.multiplier[track]
+		if not multiplier then
+			continue
+		end
+
+		if multiplier == 1.0 then
+			continue
+		end
 
 		local adjusted = track.Speed * multiplier
 
