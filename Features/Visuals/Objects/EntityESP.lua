@@ -4,6 +4,12 @@ local Configuration = require("Utility/Configuration")
 ---@module Utility.Maid
 local Maid = require("Utility/Maid")
 
+---@module Utility.Signal
+local Signal = require("Utility/Signal")
+
+---@module Utility.TaskSpawner
+local TaskSpawner = require("Utility/TaskSpawner")
+
 ---@class EntityESP
 local EntityESP = {}
 EntityESP.__index = EntityESP
@@ -11,6 +17,8 @@ EntityESP.__type = "EntityESP"
 
 -- Services.
 local playersService = game:GetService("Players")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local tweenService = game:GetService("TweenService")
 
 -- Constants.
 local ELEMENT_PADDING = 1
@@ -233,6 +241,113 @@ EntityESP.btext = LPH_NO_VIRTUALIZE(function(self, label, tags)
 	return table.concat(lines, "\n"), #lines
 end)
 
+---On health changed.
+---@param self PlayerESP
+EntityESP.hchanged = LPH_NO_VIRTUALIZE(function(self)
+	if not self.lhealth then
+		return
+	end
+
+	local character = self.entity
+	if not character or not character:IsA("Model") then
+		return
+	end
+
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	if not humanoid then
+		return
+	end
+
+	local root = character:FindFirstChild("HumanoidRootPart")
+	if not root then
+		return
+	end
+
+	local debris = replicatedStorage:FindFirstChild("Debris")
+	if not debris then
+		return
+	end
+
+	local newHealth = humanoid.Health
+	local differenceColor = Color3.fromRGB(255, 0, 0)
+	local differenceAmount = newHealth - self.lhealth
+
+	if differenceAmount >= 0 then
+		differenceColor = Color3.fromRGB(0, 255, 0)
+	end
+
+	self.lhealth = newHealth
+
+	if differenceAmount >= -0.5 and differenceAmount <= 0.5 then
+		return
+	end
+
+	local clientEffectModules = replicatedStorage:FindFirstChild("ClientEffectModules")
+	local replication = clientEffectModules and clientEffectModules:FindFirstChild("Replication")
+	local replicationModule = replication and replication:FindFirstChild("Replication")
+	if not replicationModule then
+		return
+	end
+
+	local damageSplash = replicationModule:FindFirstChild("DamageSplash")
+	if not damageSplash then
+		return
+	end
+
+	local thrown = workspace:FindFirstChild("Thrown")
+	if not thrown then
+		return
+	end
+
+	local initialOffset = Vector3.new(math.random() * 2 - 1, math.random() * 2 - 1, math.random() * 2 - 1) * 2
+	local clonedSplash = damageSplash:Clone()
+	clonedSplash.Adornee = root
+	clonedSplash.Size = UDim2.new(2.5, 0, 0.5, 0)
+	clonedSplash.Parent = thrown
+	clonedSplash.TextLabel.Text = string.format("%.02f", differenceAmount)
+	clonedSplash.StudsOffsetWorldSpace = initialOffset
+
+	if differenceColor then
+		clonedSplash.TextLabel.TextColor3 = differenceColor
+	end
+
+	local textLabel = clonedSplash and clonedSplash:FindFirstChild("TextLabel")
+	if not textLabel then
+		return
+	end
+
+	local uiStroke = textLabel:FindFirstChild("UIStroke")
+	if not uiStroke then
+		return
+	end
+
+	uiStroke.Transparency = 1.0
+
+	tweenService
+		:Create(clonedSplash, TweenInfo.new(0.5, Enum.EasingStyle.Back), {
+			Size = UDim2.new(5, 0, 1),
+		})
+		:Play()
+
+	tweenService
+		:Create(clonedSplash, TweenInfo.new(5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+			StudsOffsetWorldSpace = initialOffset + Vector3.new(0, 10, 0),
+		})
+		:Play()
+
+	self.maid:mark(TaskSpawner.delay("PlayerESP_RemoveDamageSplash", function()
+		return 3.0
+	end, function()
+		tweenService
+			:Create(textLabel, TweenInfo.new(2), {
+				TextTransparency = 1,
+			})
+			:Play()
+	end))
+
+	debris:Fire(clonedSplash, 5)
+end)
+
 ---Update InstanceESP.
 ---@param self InstanceESP
 ---@param tags string[]
@@ -268,6 +383,20 @@ EntityESP.update = LPH_NO_VIRTUALIZE(function(self, tags)
 
 	if distance > Configuration.idOptionValue(identifier, "MaxDistance") then
 		return self:visible(false)
+	end
+
+	---@todo: This was a lazy way to connect to the signal.
+	if not self.maid["PlayerESP_OnHealthChanged"] and not self.lhealth then
+		-- Create signal wrapper.
+		local onHealthChanged = Signal.new(entityHumanoid.HealthChanged)
+
+		-- Store last health.
+		self.lhealth = entityHumanoid.Health
+
+		-- Connect to health changed signal.
+		self.maid["PlayerESP_OnHealthChanged"] = onHealthChanged:connect("PlayerESP_OnHealthChanged", function()
+			self:hchanged()
+		end)
 	end
 
 	-- Update Adornee.

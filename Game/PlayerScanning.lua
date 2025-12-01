@@ -266,6 +266,17 @@ end
 function PlayerScanning.isAlly(player)
 	---@note: bruh we can call ReputationSystem
 	local localPlayerGuild = players.LocalPlayer:GetAttribute("Guild")
+	local usernameList = Options["UsernameList"]
+
+	if usernameList then
+		local displayNameFound = player and table.find(usernameList.Values, player.DisplayName)
+		local usernameFound = player and table.find(usernameList.Values, player.Name)
+
+		if displayNameFound or usernameFound then
+			return true
+		end
+	end
+
 	return PlayerScanning.friendCache[player]
 		or ((localPlayerGuild and #localPlayerGuild >= 1) and player:GetAttribute("Guild") == localPlayerGuild)
 end

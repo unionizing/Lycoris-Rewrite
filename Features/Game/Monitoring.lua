@@ -46,6 +46,7 @@ return LPH_NO_VIRTUALIZE(function()
 	local monitoringMaid = Maid.new()
 	local spectateMaid = Maid.new()
 	local buildStealMaid = Maid.new()
+	local plwMaid = Maid.new()
 
 	-- Instances.
 	local beepSound = CoreGuiManager.imark(Instance.new("Sound"))
@@ -66,6 +67,41 @@ return LPH_NO_VIRTUALIZE(function()
 
 		return spoofName and "[REDACTED]"
 			or string.format("(%s) %s", player:GetAttribute("CharacterName") or "Unknown Character Name", player.Name)
+	end
+
+	---On whitelisting input began.
+	---@param player Player
+	---@param input InputObject
+	local function onWhitelistingInputBegan(player, input)
+		if input.KeyCode ~= Enum.KeyCode.L then
+			return
+		end
+
+		local usernameList = Options["UsernameList"]
+		if not usernameList then
+			return
+		end
+
+		local whitelisted = usernameList.Values
+		if not whitelisted then
+			return
+		end
+
+		local whitelistIndex = table.find(whitelisted, player.Name)
+
+		if whitelistIndex then
+			whitelisted[whitelistIndex] = nil
+
+			Logger.notify("Removed player '%s' from the whitelist.", fetchName(player))
+		else
+			whitelisted[#whitelisted + 1] = player.Name
+
+			Logger.notify("Added player '%s' to the whitelist.", fetchName(player))
+		end
+
+		usernameList:SetValues(whitelisted)
+		usernameList:SetValue({})
+		usernameList:Display()
 	end
 
 	---On spectate input began.
@@ -410,6 +446,31 @@ return LPH_NO_VIRTUALIZE(function()
 		end
 	end
 
+	---Update player list whitelisting.
+	local function updatePlayerListWhitelisting()
+		local leaderboardMap, refreshLeaderboard = LeaderboardClient.gld(), LeaderboardClient.glrf()
+		if not leaderboardMap or not refreshLeaderboard then
+			return cameraSubject:restore()
+		end
+
+		-- Refresh leaderboard state.
+		refreshLeaderboard()
+
+		-- Update leaderboard based on state.
+		for player, frame in next, leaderboardMap do
+			local inputBegan = Signal.new(frame.InputBegan)
+			local label = string.format("Monitoring_InputBegan_PLW_%s", player.Name)
+
+			if plwMaid[frame] then
+				continue
+			end
+
+			plwMaid[frame] = inputBegan:connect(label, function(input)
+				onWhitelistingInputBegan(player, input)
+			end)
+		end
+	end
+
 	---Update spectating.
 	local function updateSpectating()
 		local leaderboardMap, refreshLeaderboard = LeaderboardClient.gld(), LeaderboardClient.glrf()
@@ -532,6 +593,12 @@ return LPH_NO_VIRTUALIZE(function()
 
 		lastUpdateTime = os.clock()
 
+		if Configuration.expectToggleValue("PlayerListWhitelisting") then
+			updatePlayerListWhitelisting()
+		else
+			plwMaid:clean()
+		end
+
 		if Configuration.expectToggleValue("BuildStealer") then
 			updateBuildStealing()
 		else
@@ -564,6 +631,7 @@ return LPH_NO_VIRTUALIZE(function()
 		monitoringMaid:clean()
 		buildStealMaid:clean()
 		spectateMaid:clean()
+		plwMaid:clean()
 		showHiddenMap:restore()
 
 		-- Get leaderboard data.

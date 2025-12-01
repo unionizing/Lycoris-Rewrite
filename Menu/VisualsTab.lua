@@ -398,6 +398,11 @@ function VisualsTab.addEntityESP(identifier, depbox)
 		Default = false,
 	})
 
+	depbox:AddToggle(Configuration.identify(identifier, "ShowHealthChanges"), {
+		Text = "Show Health Changes",
+		Default = false,
+	})
+
 	return identifier, depbox
 end
 
@@ -413,6 +418,24 @@ function VisualsTab.addPlayerESP(identifier, depbox)
 
 	markAlliesToggle:AddColorPicker(Configuration.identify(identifier, "AllyColor"), {
 		Default = Color3.new(1, 1, 1),
+	})
+
+	local maDepBox = depbox:AddDependencyBox()
+
+	maDepBox
+		:AddToggle(Configuration.identify(identifier, "HideIfAlly"), {
+			Text = "Hide Allies On ESP",
+			Default = false,
+		})
+		:AddKeyPicker(Configuration.identify(identifier, "HideIfAllyKeybind"), {
+			Default = "N/A",
+			SyncToggleState = true,
+			NoUI = true,
+			Text = "Hide Allies On ESP",
+		})
+
+	maDepBox:SetupDependencies({
+		{ markAlliesToggle, true },
 	})
 
 	local markOathToggle = depbox:AddToggle(Configuration.identify(identifier, "MarkOathUsers"), {

@@ -48,6 +48,14 @@ PlayerESP.update = LPH_NO_VIRTUALIZE(function(self)
 		return self:visible(false)
 	end
 
+	if
+		PlayerScanning.isAlly(player)
+		and Configuration.idToggleValue(identifier, "HideIfAlly")
+		and Configuration.idToggleValue(identifier, "MarkAllies")
+	then
+		return self:visible(false)
+	end
+
 	-- Update element visibility.
 	local abar = self.abar
 	local pbar = self.pbar

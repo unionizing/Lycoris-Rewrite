@@ -38,11 +38,16 @@ It attempts to parry instead of block with some added information in the notific
 ```diff
 - (bug fix) Animation speed changer cycled through many random speeds in one timing
 - (removed) "User is in hit animation" check is now removed
+- (removed) Temporarily removed using the map position to locate far away players (32k+ studs)
 + (added) Animation speed changer has new switch between speeds feature
 + (added) Aggressive auto feint type which ignores all player attacking checks
 + (added) Entity ESP rework
++ (added) Hide Allies On ESP
++ (added) Player list whitelisting
++ (added) Damage indicators
 + (changed) Auto feint now respects hyperarmor (this caused auto feint to be useless in PVE) (this data may be missing for some timings; please report if so)
 + (changed) Auto feint now runs another check a bit before the timing to combat feinting latency
++ (changed) Whitelisted players are now considered allies
 ```
 
 *No change in commit ID. This update is super minor.*

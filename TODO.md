@@ -62,9 +62,6 @@ Essential Additions
 - 2. "Timing Probability" section
   - How can we tie "Timing Names" to Probabilities when we click on it in the list?
 
-- ESP Focus Keybind
-- Damage / Healing Numbers
-
 - Look into M1 Feint -> Mantra Feint -> M1
 
 Farming Fixes
@@ -81,6 +78,9 @@ Gank Fixes
 
 Quality Of Life
 
+- ESP Focus Keybind
+- Combat Focus Keybind
+  
 - 7. Finish "Extra Keybinds"
     - Keybind builder to partial item search find
     - Instant log ability

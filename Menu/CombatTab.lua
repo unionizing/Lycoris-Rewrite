@@ -71,6 +71,12 @@ end
 -- Initialize combat whitelist section.
 ---@param groupbox table
 function CombatTab.initCombatWhitelistSection(groupbox)
+	groupbox:AddToggle("PlayerListWhitelisting", {
+		Text = "Player List Whitelisting",
+		Tooltip = "Click your 'L' key on players in the player list to add/remove them from the whitelist.",
+		Default = false,
+	})
+
 	local usernameList = groupbox:AddDropdown("UsernameList", {
 		Text = "Username List",
 		Values = {},
