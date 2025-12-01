@@ -248,6 +248,10 @@ EntityESP.hchanged = LPH_NO_VIRTUALIZE(function(self)
 		return
 	end
 
+	if not Configuration.idToggleValue(self.identifier, "ShowHealthChanges") then
+		return
+	end
+
 	local character = self.entity
 	if not character or not character:IsA("Model") then
 		return
