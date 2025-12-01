@@ -106,10 +106,6 @@ Other Stuff
 
 - Fix "No Blur" Breaking On No Water
   
-- Fix "Info Spoofing"
-    - Guild Chat
-    - User ID 
-
 Research
 
 - No Blind 
@@ -122,3 +118,4 @@ Research
   
 - Menu Scale & Windows Scale & Notification Scale
   
+- Auto Echo Farm Use Gun + Fix Server Hop + Enchant In Fight + Tween Under Self Ignore Others + No Holds Barred To Prevent Whitehat
