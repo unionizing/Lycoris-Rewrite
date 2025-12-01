@@ -107,6 +107,7 @@ It attempts to parry instead of block with some added information in the notific
 + (added) Entity ESP rework
 + (added) Hide Allies On ESP
 + (added) Player list whitelisting
++ (added) Timing probabilities feature
 + (added) Damage indicators
 + (changed) Auto feint now respects hyperarmor (this caused auto feint to be useless in PVE) (this data may be missing for some timings; please report if so)
 + (changed) Auto feint now runs another check a bit before the timing to combat feinting latency
