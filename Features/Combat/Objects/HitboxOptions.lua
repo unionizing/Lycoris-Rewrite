@@ -51,6 +51,7 @@ HitboxOptions.clone = LPH_NO_VIRTUALIZE(function(self)
 	options.part = self.part
 	options.cframe = self.cframe
 	options.timing = self.timing
+	options.visualize = self.visualize
 	return options
 end)
 
@@ -137,7 +138,7 @@ HitboxOptions.new = LPH_NO_VIRTUALIZE(function(target, timing, filter)
 	self.hcolor = Color3.new(0, 1, 0)
 	self.mcolor = Color3.new(1, 0, 0)
 	self.ptime = nil
-	self.visualize = false
+	self.visualize = true
 
 	if not self.part and not self.cframe or not self.timing then
 		return error("HitboxOptions: No part or CFrame or timing specified.")

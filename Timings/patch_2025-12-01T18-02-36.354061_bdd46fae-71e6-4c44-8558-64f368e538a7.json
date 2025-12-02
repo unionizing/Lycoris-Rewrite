@@ -1,0 +1,59 @@
+{
+  "patch_id": "bdd46fae-71e6-4c44-8558-64f368e538a7",
+  "timestamp": "2025-12-01T18:02:36.354061",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://11887874227": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          }
+        }
+      },
+      "rbxassetid://5067105317": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.5
+          },
+          "dp": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://11887887621": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          }
+        }
+      }
+    },
+    "part": {
+      "VengefulSlashes": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 15,
+              "X": 15,
+              "Z": 20
+            },
+            "to": {
+              "Y": 15,
+              "X": 10,
+              "Z": 25
+            }
+          }
+        }
+      }
+    }
+  }
+}

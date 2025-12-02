@@ -60,6 +60,7 @@ Task.new = LPH_NO_VIRTUALIZE(function(identifier, delay, punishable, after, call
 	self.punishable = punishable
 	self.after = after
 	self.thread = TaskSpawner.delay("Action_" .. identifier, delay, callback, ...)
+	self.forced = false
 
 	if not self.punishable or self.punishable <= 0 then
 		self.punishable = Configuration.expectOptionValue("DefaultPunishableWindow") or 0.7

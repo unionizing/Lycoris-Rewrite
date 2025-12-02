@@ -483,6 +483,7 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 
 	if timing.tag == "Critical" then
 		timing.nbfb = true
+		timing.ha = true
 	end
 
 	---@note: Clean up previous tasks that are still waiting or suspended because they're in a different track.

@@ -1,72 +1,66 @@
----@type Action
+---@class Action
 local Action = getfenv().Action
 
----@type Timing
-local Timing = getfenv().Timing
+---@module Modules.Globals.Mantra
+local Mantra = getfenv().Mantra
 
----@module Modules.Globals.Waiter
-local Waiter = getfenv().Waiter
-
----@module Features.Combat.Objects.RepeatInfo
-local RepeatInfo = getfenv().RepeatInfo
-
----@module Game.Latency
-local Latency = getfenv().Latency
+---@class Signal
+local Signal = getfenv().Signal
 
 ---Module function.
 ---@param self AnimatorDefender
 ---@param timing AnimationTiming
 return function(self, timing)
-	local humanoid = self.entity:FindFirstChild("Humanoid")
+	timing.ffh = true
+	timing.pfh = true
+	timing.fhb = true
+	timing.rpue = false
+	timing.duih = true
+	timing.hitbox = Vector3.new(32, 32, 32)
+
+	local action = Action.new()
+	action._when = 200
+	action._type = "Start Block"
+	action.name = "Ice Carve Start"
+	self:action(timing, action)
+
+	local hrp = self.entity:FindFirstChild("HumanoidRootPart")
+	if not hrp then
+		return
+	end
+
+	local humanoid = self.entity:FindFirstChildOfClass("Humanoid")
 	if not humanoid then
 		return
 	end
 
-	local humanoidRootPart = self.entity:FindFirstChild("HumanoidRootPart")
-	if not humanoidRootPart then
-		return
+	repeat
+		task.wait()
+	until not self.track.IsPlaying
+
+	local activeAnim = nil
+
+	for _, animTrack in next, humanoid:GetPlayingAnimationTracks() do
+		if animTrack.Animation.AnimationId ~= "rbxassetid://15714151635" then
+			continue
+		end
+
+		activeAnim = animTrack
+		break
 	end
 
-	local animator = humanoid:FindFirstChild("Animator")
-	if not animator then
-		return
+	if activeAnim then
+		repeat
+			task.wait()
+		until not activeAnim.IsPlaying
+
+		task.wait(0.7)
 	end
 
-	local firstPartTiming = Timing.new()
-	firstPartTiming.fhb = true
-	firstPartTiming.duih = false
-	firstPartTiming.rpue = false
-	firstPartTiming.name = "IceCarve"
-	firstPartTiming.cbm = true
-
-	local action = Action.new()
-	action._when = 400
-	action._type = "Parry"
-	action.hitbox = Vector3.new(15, 15, 15)
-	action.name = "Ice Carve First Part"
-	self:action(firstPartTiming, action)
-
-	timing.fhb = true
-	timing._rsd = 0
-	timing._rpd = 100
-	timing.duih = true
-	timing.rpue = true
-	timing.hitbox = Vector3.new(15, 15, 15)
-
-	local track = Waiter.fet("rbxassetid://15714151635", animator)
-	if not track then
-		return
-	end
-
-	local startTimestamp = os.clock()
-
-	local info = RepeatInfo.new(timing, Latency.rdelay(), self:uid(10))
-	info.track = track
-
-	---@todo: Move to 'rc'
-	self:hook("stopped", function(...)
-		return os.clock() - startTimestamp >= 1.5
-	end)
-
-	self:srpue(self.entity, timing, info)
+	local actionEnd = Action.new()
+	actionEnd._when = 0
+	actionEnd._type = "End Block"
+	actionEnd.ihbc = true
+	actionEnd.name = "Ice Carve End"
+	self:action(timing, actionEnd)
 end

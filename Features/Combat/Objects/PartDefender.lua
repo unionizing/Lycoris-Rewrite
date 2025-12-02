@@ -138,9 +138,16 @@ function PartDefender.new(part, timing)
 		return nil
 	end
 
+	local okey = nil
+
+	-- Hotfix for now; too lazy to do it the animation way.
+	if part.Name:match("VengefulSlash") then
+		okey = "VengefulSlashes"
+	end
+
 	local self = setmetatable(Defender.new(), PartDefender)
 	self.part = part
-	self.timing = timing or self:initial(part, SaveManager.ps, nil, part.Name)
+	self.timing = timing or self:initial(part, SaveManager.ps, nil, okey or part.Name)
 	self.touched = false
 	self.vuid = self:uid(10)
 

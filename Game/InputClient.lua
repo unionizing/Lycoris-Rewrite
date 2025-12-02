@@ -11,15 +11,14 @@ local Logger = require("Utility/Logger")
 ---@module Game.KeyHandling
 local KeyHandling = require("Game/KeyHandling")
 
----@module Utility.TaskSpawner
-local TaskSpawner = require("Utility/TaskSpawner")
-
 -- Services.
 local runService = game:GetService("RunService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local players = game:GetService("Players")
-local debris = game:GetService("Debris")
 local tweenService = game:GetService("TweenService")
+
+-- Functions.
+local unreliableFireServer = Instance.new("UnreliableRemoteEvent").FireServer
 
 -- Cache.
 local inputDataCache = nil
@@ -514,7 +513,8 @@ InputClient.left = LPH_NO_VIRTUALIZE(function(cframe, ignoreChecks)
 	end
 
 	---@note: Missing M1-Hold and Input Buffering functionality but I don't think the caller cares about it.
-	leftClickRemote:FireServer(inAirCheck(), cframe, inputData)
+	-- Call like the game does it so our hooks go through.
+	unreliableFireServer(leftClickRemote, inAirCheck(), cframe, inputData)
 end)
 
 ---Activate mantra.

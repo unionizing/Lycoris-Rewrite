@@ -74,7 +74,7 @@ return function(self, timing)
 	local action = Action.new()
 	action._when = windup * 1000
 	action._type = "Parry"
-	action.hitbox = Vector3.new(data.length * 2.0, data.length * 3.5, data.length * 3.5)
+	action.hitbox = Vector3.new(data.length * 2.0, data.length * 3.5, data.length * 3.0)
 	action.name = string.format(
 		"(%.2f, %.2f, %.2f) (%.2f) Dynamic Weapon Aerial",
 		data.oss,

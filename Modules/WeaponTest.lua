@@ -39,7 +39,7 @@ return function(self, timing)
 	timing.pfht = 0.25
 	timing.phds = 0.6
 
-	if data.type == "Fist" or data.type == "Dagger" or data.type == "Pistol" then
+	if data.type == "Fist" or data.type == "Dagger" then
 		timing.pbfb = true
 		timing.bfht = 0.6
 		timing.phds = data.type == "Dagger" and 0.6 or 0.25
@@ -53,13 +53,14 @@ return function(self, timing)
 		or data.type == "Spear"
 		or data.type == "Club"
 		or data.type == "Rifle"
+		or data.type == "Pistol"
 	then
 		timing.pbfb = true
 		timing.bfht = 0.3
 		timing.phd = false
 		timing.ffh = true
 		timing.pfht = 0.5
-		timing.dp = false
+		timing.dp = data.type ~= "Spear"
 	end
 
 	if
@@ -98,13 +99,13 @@ return function(self, timing)
 	elseif data.type == "Bow" then
 		windup = (0.147 / self.track.Speed) + 0.160
 	elseif data.type == "Pistol" and not timing.name:match("Shot") then
-		windup = 0.400 / data.ss
+		windup = 0.350 / data.ss
 	elseif data.type == "Pistol" and timing.name:match("Shot") then
 		repeat
 			task.wait()
 		until self.track.Speed ~= ispeed
 
-		windup = 0.080 / self.track.Speed
+		windup = 0.075 / self.track.Speed
 
 		if self.track.Speed == 0.0 then
 			windup = 0.100
@@ -120,7 +121,7 @@ return function(self, timing)
 			windup = 0.100
 		end
 	elseif data.type == "Rifle" then
-		windup = (0.174 / self.track.Speed) + 0.150
+		windup = (0.174 / self.track.Speed) + 0.125
 	elseif data.type == "Club" then
 		windup = (0.180 / self.track.Speed) + 0.100
 	elseif data.type == "Twinblade" then
@@ -151,8 +152,12 @@ return function(self, timing)
 		action.hitbox = Vector3.new(data.length * 1.5, data.length * 2, data.length * 1.5)
 	end
 
-	if data.type == "Pistol" or data.type == "Rapier" or data.type == "Spear" then
-		action.hitbox = Vector3.new(data.length * 1.7, data.length * 3, data.length * 1.8)
+	if data.type == "Pistol" then
+		action.hitbox = Vector3.new(data.length * 1.5, data.length * 2, data.length * 1.25)
+	end
+
+	if data.type == "Rapier" or data.type == "Spear" then
+		action.hitbox = Vector3.new(data.length * 1.7, data.length * 3, data.length * 2.1)
 	end
 
 	if data.type == "Sword" or data.type == "Twinblade" then
@@ -165,7 +170,7 @@ return function(self, timing)
 		or data.type == "Greatsword"
 		or data.type == "Greataxe"
 	then
-		action.hitbox = Vector3.new(data.length * 2.2, data.length * 2, data.length * 1.8)
+		action.hitbox = Vector3.new(data.length * 2.2, data.length * 2, data.length * 2)
 	end
 
 	if data.type == "Fist" or data.type == "Dagger" then

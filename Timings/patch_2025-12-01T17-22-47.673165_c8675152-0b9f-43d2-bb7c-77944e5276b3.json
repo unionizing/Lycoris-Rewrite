@@ -1,0 +1,1572 @@
+{
+  "patch_id": "c8675152-0b9f-43d2-bb7c-77944e5276b3",
+  "timestamp": "2025-12-01T17:22:47.673165",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://6428525211": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://135897775294008": {
+        "status": "removed",
+        "name": "BackstabStrike"
+      },
+      "rbxassetid://5067090007": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "phds": {
+            "from": 0.2,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://7960934455": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          },
+          "dp": {
+            "from": true,
+            "to": false
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Start Block",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 21,
+                  "Z": 40
+                },
+                "when": 900,
+                "ihbc": false
+              },
+              {
+                "_type": "End Block",
+                "name": "2",
+                "hitbox": {
+                  "Y": 75,
+                  "X": 72,
+                  "Z": 71
+                },
+                "when": 2000,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Start Block",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 40
+                },
+                "when": 900,
+                "ihbc": false
+              },
+              {
+                "_type": "End Block",
+                "name": "2",
+                "hitbox": {
+                  "Y": 75,
+                  "X": 72,
+                  "Z": 71
+                },
+                "when": 2000,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://9597289518": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          },
+          "dp": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://13253662736": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5,
+            "to": 0.3
+          }
+        }
+      },
+      "rbxassetid://5950080662": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://17108258606": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://9544206893": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://7639988883": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          },
+          "hso": {
+            "from": 2,
+            "to": 0
+          }
+        }
+      },
+      "rbxassetid://99308528426034": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://80841795666744": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://82036457304798": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://134961845162650": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://93362023058024": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.15,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://14435778571": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://9474993606": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Forced Full Dodge",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 25,
+                  "Z": 25
+                },
+                "when": 1000,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Forced Full Dodge",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 15,
+                  "Z": 25
+                },
+                "when": 1000,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://8285321158": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://13799693320": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://9225086332": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          },
+          "imxd": {
+            "from": 237,
+            "to": 107
+          }
+        }
+      },
+      "rbxassetid://7961600084": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://11183278853": {
+        "status": "removed",
+        "name": "IceHeroCritNew"
+      },
+      "rbxassetid://14435763579": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://14531935090": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://11867360757": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://8365199156": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          },
+          "imxd": {
+            "from": 258,
+            "to": 107
+          }
+        }
+      },
+      "rbxassetid://8046864635": {
+        "status": "modified",
+        "changes": {
+          "hso": {
+            "from": 3,
+            "to": 0
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 20,
+                  "X": 20,
+                  "Z": 24
+                },
+                "when": 500,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 20,
+                  "X": 20,
+                  "Z": 20
+                },
+                "when": 500,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://8249271040": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.6,
+            "to": 0.3
+          }
+        }
+      },
+      "rbxassetid://74422917176963": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "phds": {
+            "from": 0.2,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://121003629056681": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "phds": {
+            "from": 0.2,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://131576892263777": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.4
+          },
+          "phds": {
+            "from": 0.2500000298023224,
+            "to": 1
+          },
+          "dp": {
+            "from": true,
+            "to": false
+          },
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.3
+          },
+          "nvfb": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://123115833203242": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://13799614234": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://123056759322514": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://15229223629": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://5778357994": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 74,
+              "X": 74,
+              "Z": 74
+            },
+            "to": {
+              "Y": 88,
+              "X": 88,
+              "Z": 88
+            }
+          }
+        }
+      },
+      "rbxassetid://6432260013": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          },
+          "imxd": {
+            "from": 258,
+            "to": 107
+          }
+        }
+      },
+      "rbxassetid://11887874227": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.2500000298023224
+          }
+        }
+      },
+      "rbxassetid://7600485223": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.5000000596046448
+          }
+        }
+      },
+      "rbxassetid://9484850093": {
+        "status": "modified",
+        "changes": {
+          "dp": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://9921853885": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6728950754": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6372560712": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://132047817527671": {
+        "status": "removed",
+        "name": "BigBrotherCrit"
+      },
+      "rbxassetid://6466993564": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 24.100000381469727,
+              "X": 24.100000381469727,
+              "Z": 24.100000381469727
+            },
+            "to": {
+              "Y": 16.000001907348633,
+              "X": 16.000001907348633,
+              "Z": 16.000001907348633
+            }
+          }
+        }
+      },
+      "rbxassetid://11183196198": {
+        "status": "added",
+        "data": {
+          "rpd": 0,
+          "hso": 0,
+          "ieae": false,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 40,
+                "X": 53,
+                "Z": 53
+              },
+              "when": 500,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "_id": "rbxassetid://11183196198",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "punishable": 0,
+          "name": "IceHeroCrit",
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "fhb": false,
+          "imdd": 0,
+          "duih": false,
+          "rsd": 0,
+          "umoa": false,
+          "smod": "N/A",
+          "bfht": 0.3,
+          "pfh": false,
+          "after": 0,
+          "imb": false,
+          "dp": false,
+          "phd": false,
+          "phds": 0,
+          "pfht": 0.15,
+          "aatk": false,
+          "nvfb": false,
+          "smn": false,
+          "ha": false,
+          "iae": false,
+          "imxd": 59,
+          "tag": "Critical"
+        }
+      },
+      "rbxassetid://14435773739": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://5067105317": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "phds": {
+            "from": 0.2,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://17108275299": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6432920452": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.2500000298023224,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://134454349271430": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://104003503692240": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6017393708": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 15,
+                  "X": 23,
+                  "Z": 18
+                },
+                "when": 410,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 15,
+                  "X": 20,
+                  "Z": 18
+                },
+                "when": 410,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://9681908909": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://18443883458": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://8176091986": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6428533082": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://11834551880": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://17108566269": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://99450771029342": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "phds": {
+            "from": 0.2,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://14435770311": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://17120101081": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.15,
+            "to": 0.2500000298023224
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 300,
+                  "X": 31,
+                  "Z": 31
+                },
+                "when": 575,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 300,
+                  "X": 40,
+                  "Z": 40
+                },
+                "when": 575,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://7627372304": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.5000000596046448
+          }
+        }
+      },
+      "rbxassetid://9544203895": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6728862735": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://8290626574": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6428530032": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://9225098544": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          },
+          "imxd": {
+            "from": 204,
+            "to": 107
+          }
+        }
+      },
+      "rbxassetid://7627854272": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://117160121128317": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6428514850": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6054920207": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 32,
+                  "X": 19,
+                  "Z": 19
+                },
+                "when": 400,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 32,
+                  "X": 19,
+                  "Z": 19
+                },
+                "when": 350,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://8228293862": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Dodge",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 29,
+                  "X": 31,
+                  "Z": 31
+                },
+                "when": 600,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Dodge",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 29,
+                  "X": 15,
+                  "Z": 31
+                },
+                "when": 600,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://11508725111": {
+        "status": "modified",
+        "changes": {
+          "ndfb": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6437665734": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://11834549387": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://8286153000": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://123456225328134": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.5000000596046448
+          }
+        }
+      },
+      "rbxassetid://75119009295288": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          },
+          "hso": {
+            "from": 2,
+            "to": 0
+          }
+        }
+      },
+      "rbxassetid://7600160919": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.5
+          }
+        }
+      },
+      "rbxassetid://16899875441": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 28,
+                  "X": 28,
+                  "Z": 28
+                },
+                "when": 725,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 28,
+                  "X": 28,
+                  "Z": 28
+                },
+                "when": 550,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://9225081967": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://90742361803263": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.4
+          },
+          "phds": {
+            "from": 0.2500000298023224,
+            "to": 1
+          },
+          "dp": {
+            "from": true,
+            "to": false
+          },
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.3
+          },
+          "nvfb": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://5064195992": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "phds": {
+            "from": 0.2,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://13529982886": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://9544183744": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://7600224169": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.5000000596046448
+          }
+        }
+      },
+      "rbxassetid://9681916972": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://7942002115": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://100404024900445": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://5074479705": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://14435766591": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://8205670183": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6438111139": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          },
+          "imxd": {
+            "from": 226,
+            "to": 107
+          }
+        }
+      },
+      "rbxassetid://9690822091": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 20,
+                  "X": 20,
+                  "Z": 15
+                },
+                "when": 200,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 20,
+                  "X": 20,
+                  "Z": 15
+                },
+                "when": 150,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://16261490439": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://7600450739": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.5000000596046448
+          }
+        }
+      },
+      "rbxassetid://13799655062": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://9544192782": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://11638263796": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6607538047": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "phds": {
+            "from": 0.2,
+            "to": 0.6
+          },
+          "dp": {
+            "from": true,
+            "to": false
+          },
+          "nvfb": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://8265980703": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": true,
+            "to": false
+          },
+          "hitbox": {
+            "from": {
+              "Y": 15,
+              "X": 21,
+              "Z": 24
+            },
+            "to": {
+              "Y": 18,
+              "X": 18,
+              "Z": 18
+            }
+          },
+          "hso": {
+            "from": 5,
+            "to": 0
+          }
+        }
+      },
+      "rbxassetid://9903097211": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://11219902982": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 1.01,
+            "to": 0.3
+          }
+        }
+      },
+      "rbxassetid://12071942369": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://11876148070": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://7639648215": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          },
+          "hso": {
+            "from": 2,
+            "to": 0
+          }
+        }
+      },
+      "rbxassetid://7938093143": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://17116756734": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://15121611060": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.5000000596046448,
+            "to": 0.121
+          }
+        }
+      },
+      "rbxassetid://133310040571072": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://118991358495157": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://6428519131": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      },
+      "rbxassetid://7627889074": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          }
+        }
+      },
+      "rbxassetid://5680585677": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          },
+          "hso": {
+            "from": 5,
+            "to": 0
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 50
+                },
+                "when": 350,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "3",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 30
+                },
+                "when": 1950,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 50
+                },
+                "when": 1150,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 49
+                },
+                "when": 350,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "3",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 25
+                },
+                "when": 1950,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 40,
+                  "X": 40,
+                  "Z": 45
+                },
+                "when": 1150,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://9681472252": {
+        "status": "modified",
+        "changes": {
+          "ha": {
+            "from": true,
+            "to": false
+          }
+        }
+      }
+    },
+    "effect": {
+      "OwlDisperse": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 120,
+            "to": 300
+          }
+        }
+      }
+    }
+  }
+}

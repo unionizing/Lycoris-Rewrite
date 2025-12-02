@@ -143,6 +143,7 @@ EntityESP.cgb = LPH_NO_VIRTUALIZE(function(self, container, seperators, vertical
 	barArea.BackgroundTransparency = 1
 	barArea.Position = UDim2.new(0, 1, 0, 1)
 	barArea.Size = UDim2.new(1, -2, 1, -2)
+	barArea.ZIndex = 1
 
 	-- separators only for vertical bars (to match original visual)
 	if seperators then
@@ -154,7 +155,7 @@ EntityESP.cgb = LPH_NO_VIRTUALIZE(function(self, container, seperators, vertical
 			Separator.BorderSizePixel = 0
 			Separator.Position = UDim2.new(0, 0, Idx / 5, 0)
 			Separator.Size = UDim2.new(1, 0, 0, 1)
-			Separator.ZIndex = 2
+			Separator.ZIndex = 3
 		end
 	end
 
@@ -162,6 +163,7 @@ EntityESP.cgb = LPH_NO_VIRTUALIZE(function(self, container, seperators, vertical
 	bar.Name = "Bar"
 	bar.Parent = barArea
 	bar.BorderSizePixel = 0
+	bar.ZIndex = 2
 
 	if vertical then
 		bar.AnchorPoint = Vector2.new(0, 1)

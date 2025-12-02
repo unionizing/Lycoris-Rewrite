@@ -1,0 +1,13 @@
+{
+  "patch_id": "bf26d525-a065-4adc-bb3d-0279b8b51372",
+  "timestamp": "2025-12-01T20:06:11.999925",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://5946954713": {
+        "status": "removed",
+        "name": "SquadGuyClap"
+      }
+    }
+  }
+}

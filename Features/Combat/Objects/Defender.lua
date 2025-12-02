@@ -882,6 +882,10 @@ end
 Defender.clean = LPH_NO_VIRTUALIZE(function(self)
 	-- Clean-up tasks.
 	for idx, task in next, self.tasks do
+		if task.forced then
+			continue
+		end
+
 		-- Cancel task.
 		task:cancel()
 
@@ -1037,9 +1041,15 @@ Defender.action = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	local rdelay = Latency.rdelay()
 
 	-- Add action.
-	self:mark(Task.new(PP_SCRAMBLE_STR(action._type), function()
+	local atask = Task.new(PP_SCRAMBLE_STR(action._type), function()
 		return action:when() - rdelay - Latency.sdelay()
-	end, timing.punishable, timing.after, self.handle, self, timing, action, os.clock()))
+	end, timing.punishable, timing.after, self.handle, self, timing, action, os.clock())
+
+	if timing.forced then
+		atask.forced = true
+	end
+
+	self:mark(atask)
 
 	-- Add auto feint action.
 	if

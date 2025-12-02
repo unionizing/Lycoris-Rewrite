@@ -23,6 +23,7 @@ local ActionContainer = require("Game/Timings/ActionContainer")
 ---@field nvfb boolean No vent fallback.
 ---@field bfht number Block fallback hold time.
 ---@field pbfb boolean Prefer block fallback.
+---@field forced boolean Hidden field which allows us to force tasks to go through.
 local Timing = {}
 Timing.__index = Timing
 
