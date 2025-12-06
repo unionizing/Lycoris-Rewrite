@@ -3643,9 +3643,7 @@ return LPH_NO_VIRTUALIZE(function()
 			BackgroundColor3 = "AccentColor",
 		}, true)
 
-		local MovingReallyFast = Time and (Time - 0.8) <= 0.3 or false
-		local TweenTime = MovingReallyFast and 0.1 or 0.4
-
+		local TweenTime = 0.4
 		local ScaledXSize = XSize + 8 + 4
 
 		pcall(NotifyOuter.TweenSize, NotifyOuter, UDim2.new(0, ScaledXSize, 0, YSize), "Out", "Quad", TweenTime, true)
