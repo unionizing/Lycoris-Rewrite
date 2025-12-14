@@ -503,7 +503,11 @@ EntityESP.build = LPH_NO_VIRTUALIZE(function(self)
 	self.lextents = extentsSize
 
 	-- Invalidate cached size if the size has changed significantly.
-	if math.abs(self.lextents.Magnitude - extentsSize.Magnitude) >= 3.0 then
+	if
+		math.abs(self.lextents.X - extentsSize.X) >= 1.5
+		or math.abs(self.lextents.Y - extentsSize.Y) >= 1.5
+		or math.abs(self.lextents.Z - extentsSize.Z) >= 1.5
+	then
 		self.sextents = nil
 	end
 

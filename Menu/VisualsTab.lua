@@ -438,6 +438,15 @@ function VisualsTab.addPlayerESP(identifier, depbox)
 		{ markAlliesToggle, true },
 	})
 
+	local markSackToggle = depbox:AddToggle(Configuration.identify(identifier, "MarkSackUsers"), {
+		Text = "Mark Users Holding Sack",
+		Default = false,
+	})
+
+	markSackToggle:AddColorPicker(Configuration.identify(identifier, "SackColor"), {
+		Default = Color3.new(1, 1, 1),
+	})
+
 	local markOathToggle = depbox:AddToggle(Configuration.identify(identifier, "MarkOathUsers"), {
 		Text = "Mark Oath Users",
 		Default = false,

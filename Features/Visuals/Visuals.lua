@@ -1198,7 +1198,11 @@ local onThrownChildAdded = LPH_NO_VIRTUALIZE(function(child)
 	end
 
 	visualsMaid:mark(TaskSpawner.spawn("Visuals_ChestCheck", function()
-		if child:IsA("Model") and child:WaitForChild("LootUpdated", 0.1) then
+		if not child:IsA("Model") and not child:IsA("Part") then
+			return
+		end
+
+		if child:WaitForChild("LootUpdated", 0.1) then
 			return emplaceObject(child, ChestESP.new("Chest", child, "Chest"))
 		end
 	end))
@@ -1292,6 +1296,10 @@ onWorkspaceChildAdded = LPH_NO_VIRTUALIZE(function(child)
 
 	if name == "DepthsWhirlpool" then
 		return emplaceObject(child, ModelESP.new("Whirlpool", child, "Whirlpool"))
+	end
+
+	if name == "Sack" then
+		return emplaceObject(child, PartESP.new("BagDrop", child, "Sack"))
 	end
 
 	if name == "MinistryCacheIndicator" then

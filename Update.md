@@ -5,7 +5,10 @@
 
 **Any new features?**
 ```diff
-+ (added) VOI Boundary ESP
++ (added) Added 'Mark User Holding Sack' to Player ESP
++ (added) Bag ESP now works on VOI Sacks
++ (added) Chest ESP now works on VOI Chests
+- (bug fix) Should have fixed Abnormal ESP sizes by making cache invalidation more lenient
 ```
 
 *If you're wondering on what to use or where to buy from...*

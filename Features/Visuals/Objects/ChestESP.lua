@@ -1,6 +1,9 @@
 ---@module Features.Visuals.Objects.ModelESP
 local ModelESP = require("Features/Visuals/Objects/ModelESP")
 
+---@module Features.Visuals.Objects.PartESP
+local PartESP = require("Features/Visuals/Objects/PartESP")
+
 ---@module Utility.Configuration
 local Configuration = require("Utility/Configuration")
 
@@ -12,21 +15,28 @@ ChestESP.__type = "ChestESP"
 ---Update ChestESP.
 ---@param self ChestESP
 ChestESP.update = LPH_NO_VIRTUALIZE(function(self)
-	local model = self.model
+	local inst = self.part or self.model
 
-	if Configuration.idToggleValue(self.identifier, "HideIfOpened") and not model:HasTag("ClosedChest") then
+	if Configuration.idToggleValue(self.identifier, "HideIfOpened") and not inst:HasTag("ClosedChest") then
 		return self:visible(false)
 	end
 
-	ModelESP.update(self, {})
+	if self.part then
+		PartESP.update(self, {})
+	else
+		ModelESP.update(self, {})
+	end
 end)
 
 ---Create new ChestESP object.
 ---@param identifier string
----@param model Model
+---@param inst Instance
 ---@param label string
-function ChestESP.new(identifier, model, label)
-	return setmetatable(ModelESP.new(identifier, model, label), ChestESP)
+function ChestESP.new(identifier, inst, label)
+	return setmetatable(
+		inst:IsA("Model") and ModelESP.new(identifier, inst, label) or PartESP.new(identifier, inst, label),
+		ChestESP
+	)
 end
 
 -- Return ChestESP module.

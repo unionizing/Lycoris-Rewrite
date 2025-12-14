@@ -186,6 +186,10 @@ PlayerESP.update = LPH_NO_VIRTUALIZE(function(self)
 		return
 	end
 
+	if Configuration.idToggleValue(identifier, "MarkSackUsers") and entity:FindFirstChild("Sack") then
+		label.TextColor3 = Configuration.idOptionValue(identifier, "SackColor")
+	end
+
 	if Configuration.idToggleValue(identifier, "MarkOathUsers") and hasOath(player) then
 		label.TextColor3 = Configuration.idOptionValue(identifier, "OathColor")
 	end
