@@ -1,0 +1,97 @@
+{
+  "patch_id": "a409971f-0236-4fe1-8401-b0ab46896333",
+  "timestamp": "2025-12-14T03:28:42.766027",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://112423929319383": {
+        "status": "added",
+        "data": {
+          "rpd": 0,
+          "hso": 0,
+          "ieae": false,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 21,
+                "X": 32,
+                "Z": 31
+              },
+              "when": 500,
+              "ihbc": false
+            },
+            {
+              "_type": "Parry",
+              "name": "4",
+              "hitbox": {
+                "Y": 21,
+                "X": 32,
+                "Z": 31
+              },
+              "when": 2680,
+              "ihbc": false
+            },
+            {
+              "_type": "Parry",
+              "name": "3",
+              "hitbox": {
+                "Y": 21,
+                "X": 32,
+                "Z": 31
+              },
+              "when": 1950,
+              "ihbc": false
+            },
+            {
+              "_type": "Parry",
+              "name": "2",
+              "hitbox": {
+                "Y": 21,
+                "X": 32,
+                "Z": 31
+              },
+              "when": 1350,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "nbfb": false,
+          "_id": "rbxassetid://112423929319383",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "punishable": 0,
+          "name": "ShogunTripleFang",
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "fhb": true,
+          "imdd": 0,
+          "duih": false,
+          "rsd": 0,
+          "umoa": false,
+          "smod": "N/A",
+          "bfht": 0.3,
+          "pfh": false,
+          "after": 0,
+          "imb": false,
+          "dp": false,
+          "pfht": 0.15,
+          "phds": 0,
+          "phd": false,
+          "aatk": false,
+          "nvfb": false,
+          "smn": false,
+          "iae": false,
+          "ha": true,
+          "imxd": 118,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

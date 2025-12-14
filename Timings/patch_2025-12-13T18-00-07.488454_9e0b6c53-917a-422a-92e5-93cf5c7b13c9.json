@@ -1,0 +1,105 @@
+{
+  "patch_id": "9e0b6c53-917a-422a-92e5-93cf5c7b13c9",
+  "timestamp": "2025-12-13T18:00:07.488454",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://9597289518": {
+        "status": "modified",
+        "changes": {
+          "phd": {
+            "from": false,
+            "to": true
+          },
+          "pfh": {
+            "from": true,
+            "to": false
+          },
+          "hso": {
+            "from": -4,
+            "to": -5
+          },
+          "phds": {
+            "from": 0.6,
+            "to": 0.25
+          }
+        }
+      },
+      "rbxassetid://6063195211": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          },
+          "hso": {
+            "from": 3,
+            "to": -5
+          },
+          "phds": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          },
+          "fhb": {
+            "from": true,
+            "to": false
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          }
+        }
+      },
+      "rbxassetid://7616407967": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          },
+          "hso": {
+            "from": 3,
+            "to": -5
+          },
+          "phds": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          },
+          "fhb": {
+            "from": true,
+            "to": false
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          }
+        }
+      },
+      "rbxassetid://6063188218": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.6
+          },
+          "hso": {
+            "from": 3,
+            "to": -5
+          },
+          "phds": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          },
+          "fhb": {
+            "from": true,
+            "to": false
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          }
+        }
+      }
+    }
+  }
+}
