@@ -751,7 +751,7 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, started)
 			return self:notify(timing, "Action 'Teleport Up' blocked because there are players nearby.")
 		end
 
-		humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position + Vector3.new(0, 25, 0))
+		humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position + Vector3.new(0, 75, 0))
 	end
 
 	self:parry(timing, action)
