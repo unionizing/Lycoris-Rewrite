@@ -330,8 +330,8 @@ function Timing.new(values)
 	self.punishable = 0
 	self.after = 0
 	self.rpue = false
-	self.rsd = 0
-	self.rpd = 0
+	self._rsd = 0
+	self._rpd = 0
 	self.duih = false
 	self.actions = ActionContainer.new()
 	self.hitbox = Vector3.zero

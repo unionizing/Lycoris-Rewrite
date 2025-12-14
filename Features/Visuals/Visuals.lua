@@ -681,9 +681,12 @@ local updateCardHovering = LPH_NO_VIRTUALIZE(function()
 
 	local icon = cardFrame:FindFirstChild("Icon")
 	local stats = cardFrame:FindFirstChild("Stats")
-	local class = cardFrame:FindFirstChild("Class")
-	local desc = cardFrame:FindFirstChild("Desc")
 	local title = cardFrame:FindFirstChild("Title")
+
+	local details = cardFrame:FindFirstChild("Details")
+	local desc = details and details:FindFirstChild("Desc")
+	local class = details and details:FindFirstChild("Class")
+
 	if not icon or not stats or not class or not desc or not title then
 		return
 	end
