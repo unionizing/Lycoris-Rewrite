@@ -1,0 +1,38 @@
+{
+  "patch_id": "39d0fef1-cf59-4909-bdcd-3b2cfab42c4c",
+  "timestamp": "2025-11-29T23:43:33.621459",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://123115833203242": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": true,
+            "to": false
+          },
+          "nvfb": {
+            "from": false,
+            "to": true
+          },
+          "bfht": {
+            "from": 0.3,
+            "to": 0.6
+          },
+          "phds": {
+            "from": 1,
+            "to": 0.25
+          },
+          "pfht": {
+            "from": 0.4,
+            "to": 0.25
+          },
+          "dp": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    }
+  }
+}

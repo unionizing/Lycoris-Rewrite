@@ -1,0 +1,102 @@
+{
+  "patch_id": "979ee4b7-7d5d-4dff-950f-ffe5bbc66c4a",
+  "timestamp": "2025-11-29T22:40:55.119837",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://9484850093": {
+        "status": "modified",
+        "changes": {
+          "bfht": {
+            "from": 0.6,
+            "to": 0.3
+          }
+        }
+      },
+      "rbxassetid://5064195992": {
+        "status": "modified",
+        "changes": {
+          "nvfb": {
+            "from": false,
+            "to": true
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          },
+          "phd": {
+            "from": true,
+            "to": false
+          },
+          "dp": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://94626092299428": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": true,
+            "to": false
+          },
+          "nvfb": {
+            "from": false,
+            "to": true
+          },
+          "bfht": {
+            "from": 0.3,
+            "to": 0.6
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          },
+          "dp": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://5067105317": {
+        "status": "modified",
+        "changes": {
+          "nvfb": {
+            "from": false,
+            "to": true
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          },
+          "phd": {
+            "from": true,
+            "to": false
+          },
+          "dp": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://8265980703": {
+        "status": "modified",
+        "changes": {
+          "hitbox": {
+            "from": {
+              "Y": 14,
+              "X": 14,
+              "Z": 18
+            },
+            "to": {
+              "Y": 20,
+              "X": 20,
+              "Z": 20
+            }
+          }
+        }
+      }
+    }
+  }
+}

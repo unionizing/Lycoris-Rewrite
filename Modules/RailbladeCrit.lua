@@ -11,7 +11,7 @@ return function(self, timing)
 	local action = Action.new()
 	action._when = 350
 	action._type = "Parry"
-	action.hitbox = Vector3.new(20, 20, 20)
+	action.hitbox = Vector3.new(20, 20, 25)
 	action.name = string.format("(1) (%.2f) Dynamic Railblade Crit Timing", self.track.Speed)
 	self:action(timing, action)
 
@@ -24,7 +24,7 @@ return function(self, timing)
 	end
 
 	timing.duih = true
-	timing.hitbox = Vector3.new(20, 15, 25)
+	timing.hitbox = Vector3.new(20, 15, 20)
 	timing.fhb = true
 
 	local actionTwo = Action.new()

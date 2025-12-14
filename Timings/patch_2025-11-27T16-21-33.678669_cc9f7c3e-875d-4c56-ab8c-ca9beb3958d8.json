@@ -1,0 +1,121 @@
+{
+  "patch_id": "cc9f7c3e-875d-4c56-ab8c-ca9beb3958d8",
+  "timestamp": "2025-11-27T16:21:33.678669",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://6437665734": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 1,
+            "to": 0.25
+          },
+          "pfh": {
+            "from": true,
+            "to": false
+          },
+          "pfht": {
+            "from": 0.4,
+            "to": 0.25
+          },
+          "dp": {
+            "from": false,
+            "to": true
+          },
+          "bfht": {
+            "from": 0.3,
+            "to": 0.5
+          },
+          "nvfb": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://17108040817": {
+        "status": "modified",
+        "changes": {
+          "nvfb": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    },
+    "effect": {
+      "MetalArmament": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "GolemBeam": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "ShadowSludge": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "DisplayThornsRed": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "DisplayThorns": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "OwlDisperse": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "ManiWindup": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "SilentheartWarn": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": true,
+            "to": null
+          }
+        }
+      }
+    }
+  }
+}

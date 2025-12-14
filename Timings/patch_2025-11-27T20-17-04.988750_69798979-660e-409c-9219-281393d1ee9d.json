@@ -1,0 +1,41 @@
+{
+  "patch_id": "69798979-660e-409c-9219-281393d1ee9d",
+  "timestamp": "2025-11-27T20:17:04.988750",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://13319847815": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 53,
+            "to": 0
+          }
+        }
+      }
+    },
+    "part": {
+      "Gun": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 0,
+            "to": 64
+          },
+          "duih": {
+            "from": true,
+            "to": false
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "fhb": {
+            "from": true,
+            "to": false
+          }
+        }
+      }
+    }
+  }
+}

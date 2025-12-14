@@ -18,7 +18,7 @@ local plistener = ProjectileListener.new("MetalRain")
 ---@param timing AnimationTiming
 return function(self, timing)
 	plistener:connect(function(child)
-		if child.Name ~= "RodMetalRain2" then
+		if child.Name ~= "RodMetalRain" and child.Name ~= "RodMetalRain2" then
 			return
 		end
 
@@ -26,16 +26,15 @@ return function(self, timing)
 		action._when = 200
 		action._type = "Parry"
 		action.name = "Metal Rod Part"
-		action.ihbc = true
+		action.hitbox = Vector3.new(20, 100, 20)
 
 		local pt = PartTiming.new()
 		pt.uhc = false
 		pt.duih = false
 		pt.fhb = false
 		pt.name = "MetalRodProjectile"
-		pt.hitbox = Vector3.new(100, 100, 100)
 		pt.imdd = 0
-		pt.imxd = 100
+		pt.imxd = 20
 		pt.actions:push(action)
 		pt.cbm = true
 

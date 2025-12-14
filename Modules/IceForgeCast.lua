@@ -48,7 +48,7 @@ return function(self, timing)
 		local action = Action.new()
 		action._when = 0
 		action._type = "Parry"
-		action.hitbox = Vector3.new(30, 30, 30)
+		action.hitbox = Vector3.new(50, 50, 50)
 		action.name = "Storm Blades Timing"
 		return self:action(timing, action)
 	end

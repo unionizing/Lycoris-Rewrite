@@ -34,6 +34,111 @@ local AnimationVisualizer = require("Features/Game/AnimationVisualizer")
 ---@module GUI.Library
 local Library = require("GUI/Library")
 
+---@module Utility.Maid
+local Maid = require("Utility/Maid")
+
+---@module Utility.Signal
+local Signal = require("Utility/Signal")
+
+---@module Utility.Configuration
+local Configuration = require("Utility/Configuration")
+
+---@module Utility.InstanceWrapper
+local InstanceWrapper = require("Utility/InstanceWrapper")
+
+-- Services.
+local runService = game:GetService("RunService")
+local players = game:GetService("Players")
+
+-- Simulation state.
+local builderMaid = Maid.new()
+local simulationMaid = Maid.new()
+
+local function runSimulationStep()
+	if not Configuration.expectToggleValue("ShowHitboxSimulation") then
+		return simulationMaid:clean()
+	end
+
+	local character = players.LocalPlayer.Character
+	if not character then
+		return
+	end
+
+	local root = character:FindFirstChild("HumanoidRootPart")
+	if not root then
+		return
+	end
+
+	local type = Configuration.expectOptionValue("HS_HitboxType") or "Block"
+	local size = Vector3.new(
+		Configuration.expectOptionValue("HS_HitboxSizeX") or 4,
+		Configuration.expectOptionValue("HS_HitboxSizeY") or 4,
+		Configuration.expectOptionValue("HS_HitboxSizeZ") or 4
+	)
+
+	local fd = Configuration.expectToggleValue("HS_FacingOffset")
+	local soffset = Configuration.expectOptionValue("HS_ShiftOffset") or 0
+	local cframe = root.CFrame
+
+	-- Calculate CFrame.
+	local usedCFrame = cframe
+
+	if fd then
+		usedCFrame = usedCFrame * CFrame.new(0, 0, -(size.Z / 2))
+	end
+
+	if soffset and soffset ~= 0 then
+		usedCFrame = usedCFrame * CFrame.new(0, 0, soffset)
+	end
+
+	-- Visualize.
+	local simulationPart = InstanceWrapper.create(simulationMaid, "SimulationPart", "Part", workspace)
+	simulationPart.Anchored = true
+	simulationPart.CanCollide = false
+	simulationPart.CanQuery = false
+	simulationPart.Size = size
+	simulationPart.CanTouch = false
+	simulationPart.Material = Enum.Material.ForceField
+	simulationPart.CastShadow = false
+	simulationPart.Transparency = 0.5
+	simulationPart.Parent = workspace
+
+	if type == "Block" then
+		simulationPart.Shape = Enum.PartType.Block
+		simulationPart.CFrame = usedCFrame
+	elseif type == "Ball" then
+		simulationPart.Shape = Enum.PartType.Ball
+		simulationPart.CFrame = usedCFrame
+	elseif type == "Cylinder" then
+		simulationPart.Shape = Enum.PartType.Cylinder
+		simulationPart.CFrame = usedCFrame * CFrame.Angles(0, 0, math.rad(90))
+	end
+
+	-- Detection.
+	local instances = {}
+	local live = workspace:WaitForChild("Live")
+
+	for _, child in next, live:GetChildren() do
+		if child == character then
+			continue
+		end
+
+		instances[#instances + 1] = child
+	end
+
+	local overlapParams = OverlapParams.new()
+	overlapParams.FilterDescendantsInstances = instances
+	overlapParams.FilterType = Enum.RaycastFilterType.Include
+
+	local parts = workspace:GetPartsInPart(simulationPart, overlapParams)
+
+	if #parts > 0 then
+		simulationPart.Color = Color3.fromRGB(0, 255, 0)
+	else
+		simulationPart.Color = Color3.fromRGB(255, 0, 0)
+	end
+end
+
 -- BuilderTab module.
 local BuilderTab = {
 	abs = nil,
@@ -227,6 +332,58 @@ function BuilderTab.initModuleManagerSection(groupbox)
 	end)
 end
 
+---Initialize Hitbox Simulation section.
+---@param groupbox table
+function BuilderTab.initHitboxSimulationSection(groupbox)
+	groupbox:AddToggle("ShowHitboxSimulation", {
+		Text = "Show Hitbox Simulation",
+		Default = false,
+	})
+
+	groupbox:AddDropdown("HS_HitboxType", {
+		Text = "Hitbox Type",
+		Values = { "Block", "Ball", "Cylinder" },
+		Default = "Block",
+	})
+
+	groupbox:AddSlider("HS_HitboxSizeX", {
+		Text = "Hitbox Size X",
+		Min = 0.1,
+		Max = 100,
+		Default = 4,
+		Rounding = 1,
+	})
+
+	groupbox:AddSlider("HS_HitboxSizeY", {
+		Text = "Hitbox Size Y",
+		Min = 0.1,
+		Max = 100,
+		Default = 4,
+		Rounding = 1,
+	})
+
+	groupbox:AddSlider("HS_HitboxSizeZ", {
+		Text = "Hitbox Size Z",
+		Min = 0.1,
+		Max = 100,
+		Default = 4,
+		Rounding = 1,
+	})
+
+	groupbox:AddToggle("HS_FacingOffset", {
+		Text = "Hitbox Facing Offset",
+		Default = false,
+	})
+
+	groupbox:AddSlider("HS_ShiftOffset", {
+		Text = "Hitbox Shift Offset",
+		Min = -10,
+		Max = 10,
+		Default = 0,
+		Rounding = 1,
+	})
+end
+
 ---Initialize tab.
 ---@param window table
 function BuilderTab.init(window)
@@ -237,6 +394,7 @@ function BuilderTab.init(window)
 	BuilderTab.initSaveManagerSection(tab:AddDynamicGroupbox("Save Manager"))
 	BuilderTab.initModuleManagerSection(tab:AddDynamicGroupbox("Module Manager"))
 	BuilderTab.initLoggerSection(tab:AddDynamicGroupbox("Logger"))
+	BuilderTab.initHitboxSimulationSection(tab:AddDynamicGroupbox("Hitbox Simulation"))
 
 	-- Create builder sections.
 	BuilderTab.abs =
@@ -250,6 +408,16 @@ function BuilderTab.init(window)
 	BuilderTab.ebs:init()
 	BuilderTab.pbs:init()
 	BuilderTab.sbs:init()
+
+	-- Signals.
+	local renderStepped = Signal.new(runService.RenderStepped)
+	builderMaid:mark(renderStepped:connect("BuilderTab_RunSimulationStep", runSimulationStep))
+end
+
+---Detach tab.
+function BuilderTab.detach()
+	builderMaid:clean()
+	simulationMaid:clean()
 end
 
 -- Return CombatTab module.

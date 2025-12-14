@@ -1,0 +1,38 @@
+{
+  "patch_id": "2328ea34-d377-42ed-bd49-f90f879f8f19",
+  "timestamp": "2025-12-13T12:20:30.873336",
+  "author": "Blastbrean",
+  "diff": {
+    "part": {
+      "DiskPart": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 107,
+            "to": 2500
+          },
+          "duih": {
+            "from": true,
+            "to": false
+          },
+          "hitbox": {
+            "from": {
+              "Y": 18,
+              "X": 18,
+              "Z": 18
+            },
+            "to": {
+              "Y": 227,
+              "X": 263,
+              "Z": 228
+            }
+          },
+          "uhc": {
+            "from": true,
+            "to": false
+          }
+        }
+      }
+    }
+  }
+}

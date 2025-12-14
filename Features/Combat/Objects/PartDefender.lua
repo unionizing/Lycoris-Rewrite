@@ -77,8 +77,8 @@ end)
 ---Update PartDefender object.
 ---@param self PartDefender
 PartDefender.update = LPH_NO_VIRTUALIZE(function(self)
-	-- Skip if we're not handling delay until in hitbox.
-	if not self.timing.duih then
+	-- Skip if we're not handling delay until in hitbox or we want to use modules.
+	if not self.timing.duih or self.timing.umoa then
 		return
 	end
 
@@ -103,10 +103,23 @@ PartDefender.update = LPH_NO_VIRTUALIZE(function(self)
 
 	-- Get current hitbox state.
 	---@note: If we're using PartDefender, why perserve rotation? It's likely wrong or gonna mess us up.
-	local touching, cframe = self:hitbox(self:cframe(), self.timing.fhb, self.timing.hso, hb, { character })
+	local touching, cframe = self:hitbox(
+		self:cframe(),
+		self.timing.fhb,
+		self.timing.hso,
+		hb,
+		{ character },
+		self.timing.htype or Enum.PartType.Block
+	)
 
 	if cframe then
-		self:visualize(self.vuid, cframe, hb, touching and Color3.fromHex("#DDF527") or Color3.fromHex("#2765F5"))
+		self:visualize(
+			self.vuid,
+			cframe,
+			hb,
+			touching and Color3.fromHex("#DDF527") or Color3.fromHex("#2765F5"),
+			self.timing.htype or Enum.PartType.Block
+		)
 	end
 
 	-- Deny updates if we're not touching the part.
@@ -125,8 +138,14 @@ PartDefender.update = LPH_NO_VIRTUALIZE(function(self)
 	-- Clean all previous tasks. Just to be safe. We already check if it's empty... so.
 	self:clean()
 
-	-- Add actions.
-	return self:actions(self.timing)
+	---@note: Start processing the timing. Add the actions if we're not RPUE.
+	if not self.timing.rpue then
+		return self:actions(self.timing)
+	end
+
+	-- Start RPUE.
+	local info = RepeatInfo.new(self.timing, Latency.rdelay(), self:uid(10))
+	self:srpue(self.entity, self.timing, info)
 end)
 
 ---Create new PartDefender object.
@@ -138,9 +157,16 @@ function PartDefender.new(part, timing)
 		return nil
 	end
 
+	local okey = nil
+
+	-- Hotfix for now; too lazy to do it the animation way.
+	if part.Name:match("VengefulSlash") then
+		okey = "VengefulSlashes"
+	end
+
 	local self = setmetatable(Defender.new(), PartDefender)
 	self.part = part
-	self.timing = timing or self:initial(part, SaveManager.ps, nil, part.Name)
+	self.timing = timing or self:initial(part, SaveManager.ps, nil, okey or part.Name)
 	self.touched = false
 	self.vuid = self:uid(10)
 
@@ -154,8 +180,16 @@ function PartDefender.new(part, timing)
 		self:module(self.timing)
 	end
 
-	-- Handle no hitbox delay with no module.
-	if not self.timing.umoa and not self.timing.duih then
+	-- Handle no hitbox delay.
+	if self.timing.umoa or self.timing.duih then
+		return self
+	end
+
+	local info = RepeatInfo.new(self.timing, Latency.rdelay(), self:uid(10))
+
+	if self.timing.rpue then
+		self:srpue(self.entity, self.timing, info)
+	else
 		self:actions(self.timing)
 	end
 

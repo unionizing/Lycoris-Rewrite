@@ -1,0 +1,30 @@
+{
+  "patch_id": "d82af45a-a7a0-4128-a061-9fc6242709ac",
+  "timestamp": "2025-12-13T12:31:45.322493",
+  "author": "Blastbrean",
+  "diff": {
+    "part": {
+      "DiskPart": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Forced Full Dodge",
+                "name": "1",
+                "hitbox": {
+                  "Y": 0,
+                  "X": 0,
+                  "Z": 0
+                },
+                "when": 0,
+                "ihbc": false
+              }
+            ],
+            "to": []
+          }
+        }
+      }
+    }
+  }
+}

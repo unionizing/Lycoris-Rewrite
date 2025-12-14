@@ -7,6 +7,15 @@ local Logger = require("Utility/Logger")
 ---@module Features.Combat.Defense
 local Defense = require("Features/Combat/Defense")
 
+---@module Utility.Configuration
+local Configuration = require("Utility/Configuration")
+
+---@module GUI.Library
+local Library = require("GUI/Library")
+
+---@module Game.Timings.SaveManager
+local SaveManager = require("Game/Timings/SaveManager")
+
 -- Initialize combat targeting section.
 ---@param tab table
 function CombatTab.initCombatTargetingSection(tab)
@@ -71,6 +80,12 @@ end
 -- Initialize combat whitelist section.
 ---@param groupbox table
 function CombatTab.initCombatWhitelistSection(groupbox)
+	groupbox:AddToggle("PlayerListWhitelisting", {
+		Text = "Player List Whitelisting",
+		Tooltip = "Click your 'L' key on players in the player list to add/remove them from the whitelist.",
+		Default = false,
+	})
+
 	local usernameList = groupbox:AddDropdown("UsernameList", {
 		Text = "Username List",
 		Values = {},
@@ -220,15 +235,6 @@ function CombatTab.initAutoDefenseSection(groupbox)
 		Rounding = 2,
 	})
 
-	afDepBox:AddSlider("FakeMistimeRate", {
-		Text = "Fake Parry Mistime Rate",
-		Min = 0,
-		Max = 100,
-		Default = 0,
-		Suffix = "%",
-		Rounding = 2,
-	})
-
 	afDepBox:AddSlider("IgnoreAnimationEndRate", {
 		Text = "Ignore Animation End Rate",
 		Min = 0,
@@ -265,17 +271,207 @@ function CombatTab.initAutoDefenseSection(groupbox)
 	})
 end
 
----Initialize timing probability section.
+---Create timing override callback.
+---@param callback function
+---@return function
+local function timingOverrideCallback(callback)
+	return function()
+		local overrideData = Library.OverrideData
+		if not overrideData then
+			return false
+		end
+
+		local selectedTo = Configuration.expectOptionValue("TimingOverrideList")
+		if not selectedTo or #selectedTo == 0 then
+			return false
+		end
+
+		local override = overrideData[selectedTo]
+		if not override then
+			return false
+		end
+
+		callback(override)
+	end
+end
+
+---Refresh timing override list.
+local function refreshTimingOverrideList()
+	local overrideData = Library.OverrideData
+	if not overrideData then
+		return
+	end
+
+	local timingList = Options["TimingOverrideList"]
+	if not timingList then
+		return
+	end
+
+	local values = {}
+
+	for rname, _ in next, overrideData do
+		values[#values + 1] = rname
+	end
+
+	timingList:SetValues(values)
+end
+
+---Initialize timings section.
 ---@param groupbox table
-function CombatTab.initTimingProbabilitySection(groupbox) end
+function CombatTab:initTimingsSection(groupbox)
+	self.tol = groupbox:AddDropdown("TimingOverrideList", {
+		Text = "Timing Override List",
+		Values = {},
+		SaveValues = false,
+		Multi = false,
+		AllowNull = true,
+		Callback = function()
+			self.dashInsteadOfParryRate:SetRawValue(0)
+			self.failureRate:SetRawValue(0)
+			self.ignoreAnimationEndRate:SetRawValue(0)
+
+			local overrideData = Library.OverrideData
+			if not overrideData then
+				return false
+			end
+
+			local selectedTo = Configuration.expectOptionValue("TimingOverrideList")
+			if not selectedTo or #selectedTo == 0 then
+				return false
+			end
+
+			local override = overrideData[selectedTo]
+			if not override then
+				return false
+			end
+
+			self.dashInsteadOfParryRate:SetRawValue(override.dipr or 0)
+			self.failureRate:SetRawValue(override.fr or 0)
+			self.ignoreAnimationEndRate:SetRawValue(override.iaer or 0)
+		end,
+	})
+
+	groupbox:AddDivider()
+
+	local names = {}
+	local plist = { SaveManager.as, SaveManager.es, SaveManager.ss, SaveManager.ps }
+
+	---@todo: There should be a specific method for this; I mean as far as I'm aware THERE IS ONE. But, I'm too lazy.
+	for _, pair in next, plist do
+		for _, timing in next, pair:list() do
+			names[#names + 1] = PP_SCRAMBLE_STR(timing.name)
+		end
+	end
+
+	table.sort(names)
+
+	self.ti = groupbox:AddDropdown("TimingOverrideTimingList", {
+		Text = "Timing List",
+		Values = names,
+		Multi = false,
+		AllowNull = true,
+	})
+
+	groupbox:AddButton("Add Timing Override", function()
+		if Library.OverrideData[self.ti.Value] then
+			return Logger.notify("A timing override with that name already exists.")
+		end
+
+		-- Add data.
+		local override = {
+			fr = self.failureRate.Value,
+			dipr = self.dashInsteadOfParryRate.Value,
+			iaer = self.ignoreAnimationEndRate.Value,
+		}
+
+		Library.OverrideData[self.ti.Value] = override
+
+		-- Refresh timing list.
+		refreshTimingOverrideList()
+
+		-- Set timing list value.
+		self.tol:SetValue(self.ti.Value)
+		self.tol:Display()
+	end)
+
+	groupbox:AddButton("Remove Selected Override", function()
+		-- Remove data.
+		Library.OverrideData[self.tol.Value] = nil
+
+		-- Refresh timing list.
+		refreshTimingOverrideList()
+
+		-- Set timing list value.
+		self.tol:SetValue(nil)
+		self.tol:Display()
+	end)
+
+	-- Initial refresh.
+	refreshTimingOverrideList()
+end
+
+---Initialize probabilities section.
+---@param groupbox table
+function CombatTab:initProbabilitiesSection(groupbox)
+	self.failureRate = groupbox:AddSlider("TP_FailureRate", {
+		Text = "Failure Rate",
+		Min = 0,
+		Max = 100,
+		Default = 0,
+		Suffix = "%",
+		Rounding = 2,
+		Callback = timingOverrideCallback(function(override)
+			override.fr = self.failureRate.Value
+		end),
+	})
+
+	self.dashInsteadOfParryRate = groupbox:AddSlider("TP_DashInsteadOfParryRate", {
+		Text = "Dash Instead Of Parry Rate",
+		Min = 0,
+		Max = 100,
+		Default = 0,
+		Suffix = "%",
+		Rounding = 2,
+		Callback = timingOverrideCallback(function(override)
+			override.dipr = self.dashInsteadOfParryRate.Value
+		end),
+	})
+
+	self.ignoreAnimationEndRate = groupbox:AddSlider("TP_IgnoreAnimationEndRate", {
+		Text = "Ignore Animation End Rate",
+		Min = 0,
+		Max = 100,
+		Default = 0,
+		Suffix = "%",
+		Rounding = 2,
+		Callback = timingOverrideCallback(function(override)
+			override.iaer = self.ignoreAnimationEndRate.Value
+		end),
+	})
+end
 
 ---Initialize attack assistance section.
 ---@param groupbox table
 function CombatTab.initAttackAssistanceSection(groupbox)
-	groupbox:AddToggle("AutoFeint", {
+	local afToggle = groupbox:AddToggle("AutoFeint", {
 		Text = "Auto Feint",
 		Default = false,
 		Tooltip = "Attempt to automatically feint your attacks before the parry timing to prevent swing-throughs.",
+	})
+
+	local afDepBox = groupbox:AddDependencyBox()
+
+	afDepBox:AddDropdown("AutoFeintType", {
+		Text = "Auto Feint Type",
+		Values = {
+			"Passive",
+			"Aggressive",
+		},
+		Default = 1,
+	})
+
+	afDepBox:SetupDependencies({
+		{ afToggle, true },
 	})
 end
 
@@ -303,10 +499,40 @@ function CombatTab.initCombatAssistance(groupbox)
 		{ awToggle, true },
 	})
 
-	groupbox:AddToggle("AutoGoldenTongue", {
+	local agtToggle = groupbox:AddToggle("AutoGoldenTongue", {
 		Text = "Auto Golden Tongue",
 		Default = false,
 		Tooltip = "Automatically say a hidden message when your 'Golden Tongue' talent is on cooldown.",
+	})
+
+	local agtDepBox = groupbox:AddDependencyBox()
+
+	agtDepBox:AddToggle("CheckIfInCombat", {
+		Text = "Check If In Combat",
+		Default = false,
+		Tooltip = "Only send the message if we're currently in combat.",
+	})
+
+	agtDepBox:SetupDependencies({
+		{ agtToggle, true },
+	})
+
+	local amfToggle = groupbox:AddToggle("AutoMantraFollowup", {
+		Text = "Auto Mantra Followup",
+		Default = false,
+		Tooltip = "Automatically press the followup button while using a mantra.",
+	})
+
+	local amfDepBox = groupbox:AddDependencyBox()
+
+	amfDepBox:AddToggle("CheckIfMoveHit", {
+		Text = "Check If Move Hit",
+		Default = false,
+		Tooltip = "Only press the followup button if a 'DamagedAnother' effect is detected.",
+	})
+
+	amfDepBox:SetupDependencies({
+		{ amfToggle, true },
 	})
 
 	groupbox:AddToggle("AutoFlowState", {
@@ -335,8 +561,23 @@ function CombatTab.initCombatAssistance(groupbox)
 		Tooltip = "Only change the animation speed of animations that are inside of the 'Auto Parry' animations list.",
 	})
 
-	ascDepBox:AddSlider("AnimationSpeedMultiplier", {
-		Text = "Animation Speed Multiplier",
+	ascDepBox:AddToggle("SwitchBetweenSpeeds", {
+		Text = "Switch Between Speeds",
+		Default = false,
+		Tooltip = "Only switch between values around minimum and maximum animation speeds instead of a random value in between.",
+	})
+
+	ascDepBox:AddSlider("AnimationSpeedMinimum", {
+		Text = "Animation Speed Minimum",
+		Default = 1.0,
+		Min = 0.1,
+		Max = 5,
+		Suffix = "x",
+		Rounding = 2,
+	})
+
+	ascDepBox:AddSlider("AnimationSpeedMaximum", {
+		Text = "Animation Speed Maximum",
 		Default = 1.25,
 		Min = 0.1,
 		Max = 5,
@@ -409,6 +650,30 @@ function CombatTab.initCombatAssistance(groupbox)
 	})
 end
 
+---Initialize debugging section.
+---@param groupbox table
+function CombatTab.initDebuggingSection(groupbox)
+	groupbox:AddToggle("BlockParryState", {
+		Text = "Block Parry State",
+		Default = false,
+	})
+
+	groupbox:AddToggle("BlockDodgeState", {
+		Text = "Block Dodge State",
+		Default = false,
+	})
+
+	groupbox:AddToggle("BlockVentState", {
+		Text = "Block Vent State",
+		Default = false,
+	})
+
+	groupbox:AddToggle("NoBlockingState", {
+		Text = "No Blocking State",
+		Default = false,
+	})
+end
+
 ---Initialize tab.
 ---@param window table
 function CombatTab.init(window)
@@ -417,7 +682,6 @@ function CombatTab.init(window)
 
 	-- Initialize sections.
 	CombatTab.initAutoDefenseSection(tab:AddDynamicGroupbox("Auto Defense"))
-
 	-- Create targeting section tab box.
 	local tabbox = tab:AddDynamicTabbox()
 	CombatTab.initCombatTargetingSection(tabbox:AddTab("Targeting"))
@@ -426,7 +690,16 @@ function CombatTab.init(window)
 	-- Initialize other sections.
 	CombatTab.initAttackAssistanceSection(tab:AddDynamicGroupbox("Attack Assistance"))
 	CombatTab.initCombatAssistance(tab:AddDynamicGroupbox("Combat Assistance"))
-	CombatTab.initTimingProbabilitySection(tab:AddDynamicGroupbox("Timing Probability"))
+
+	-- Create timing probability section tab box.
+	local tpTabbox = tab:AddDynamicTabbox()
+	CombatTab:initTimingsSection(tpTabbox:AddTab("Timings"))
+	CombatTab:initProbabilitiesSection(tpTabbox:AddTab("Probabilities"))
+
+	-- Initialize debugging section.
+	if not LRM_UserNote then
+		CombatTab.initDebuggingSection(tab:AddDynamicGroupbox("Debugging"))
+	end
 end
 
 -- Return CombatTab module.

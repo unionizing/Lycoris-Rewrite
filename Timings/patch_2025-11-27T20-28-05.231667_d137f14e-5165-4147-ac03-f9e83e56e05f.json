@@ -1,0 +1,153 @@
+{
+  "patch_id": "d137f14e-5165-4147-ac03-f9e83e56e05f",
+  "timestamp": "2025-11-27T20:28:05.231667",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://13319847815": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 107,
+            "to": 53
+          },
+          "smod": {
+            "from": "MetalTurret",
+            "to": "N/A"
+          }
+        }
+      },
+      "rbxassetid://14435770311": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.6,
+            "to": 0.25
+          },
+          "pfh": {
+            "from": true,
+            "to": false
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          },
+          "dp": {
+            "from": false,
+            "to": true
+          },
+          "bfht": {
+            "from": 0.3,
+            "to": 0.5
+          },
+          "nvfb": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://14435773739": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.6,
+            "to": 0.25
+          },
+          "pfh": {
+            "from": true,
+            "to": false
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          },
+          "dp": {
+            "from": false,
+            "to": true
+          },
+          "bfht": {
+            "from": 0.3,
+            "to": 0.5
+          },
+          "nvfb": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://14435778571": {
+        "status": "modified",
+        "changes": {
+          "phds": {
+            "from": 0.6,
+            "to": 0.25
+          },
+          "pfh": {
+            "from": true,
+            "to": false
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          },
+          "dp": {
+            "from": false,
+            "to": true
+          },
+          "bfht": {
+            "from": 0.3,
+            "to": 0.5
+          },
+          "nvfb": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    },
+    "part": {
+      "Gun": {
+        "status": "added",
+        "data": {
+          "umoa": false,
+          "pname": "Gun",
+          "smod": "N/A",
+          "hso": 32,
+          "bfht": 0.3,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 0,
+                "X": 0,
+                "Z": 0
+              },
+              "when": 300,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "after": 0,
+          "uhc": true,
+          "nvfb": false,
+          "duih": true,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 7,
+            "X": 7,
+            "Z": 32
+          },
+          "punishable": 0,
+          "name": "MetalTurret",
+          "imxd": 75,
+          "smn": false,
+          "fhb": true,
+          "imdd": 9,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

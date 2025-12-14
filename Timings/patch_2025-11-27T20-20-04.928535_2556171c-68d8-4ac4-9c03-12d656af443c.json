@@ -1,0 +1,46 @@
+{
+  "patch_id": "2556171c-68d8-4ac4-9c03-12d656af443c",
+  "timestamp": "2025-11-27T20:20:04.928535",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "Gun": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 53,
+            "to": 86
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 0,
+                  "X": 32,
+                  "Z": 32
+                },
+                "when": 300,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 6,
+                  "X": 6,
+                  "Z": 32
+                },
+                "when": 300,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

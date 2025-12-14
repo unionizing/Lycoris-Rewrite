@@ -1,5 +1,6 @@
 -- StateListener module. Practically, it is a module to store data / information about what is happening with the character.
 local StateListener = {
+	-- Local data.
 	lMantraActivated = nil,
 	lAnimTiming = nil,
 	lAnimFaction = nil,
@@ -7,6 +8,11 @@ local StateListener = {
 	chainStacks = nil,
 	lastVent = nil,
 	lAnimLatency = nil,
+
+	-- Global data provided for by every AnimationDefender object.
+	-- This is the most recent information from every defender which this gets set for.
+	lADAction = nil,
+	lADAnimation = nil,
 }
 
 ---@module Utility.Signal
@@ -21,6 +27,9 @@ local Configuration = require("Utility/Configuration")
 ---@module Utility.Logger
 local Logger = require("Utility/Logger")
 
+---@module Utility.TaskSpawner
+local TaskSpawner = require("Utility/TaskSpawner")
+
 ---@module Game.InputClient
 local InputClient = require("Game/InputClient")
 
@@ -32,6 +41,9 @@ local ModuleManager = require("Game/Timings/ModuleManager")
 
 ---@module Game.Latency
 local Latency = require("Game/Latency")
+
+---@module Utility.Table
+local Table = require("Utility/Table")
 
 -- Maids.
 local stateMaid = Maid.new()
@@ -261,6 +273,10 @@ StateListener.cvent = LPH_NO_VIRTUALIZE(function()
 	local effectReplicatorModule = require(effectReplicator)
 	local ventCooldownEffect = effectReplicatorModule:FindEffect("NoBurst")
 
+	if Configuration.expectToggleValue("BlockVentState") then
+		return false
+	end
+
 	local character = players.LocalPlayer and players.LocalPlayer.Character
 	if not character then
 		return false
@@ -297,6 +313,10 @@ StateListener.cparry = LPH_NO_VIRTUALIZE(function()
 	local effectReplicatorModule = require(effectReplicator)
 	local parryCooldownEffect = effectReplicatorModule:FindEffect("ParryCool")
 
+	if Configuration.expectToggleValue("BlockParryState") then
+		return false
+	end
+
 	if not effectReplicatorModule:FindEffect("Equipped") then
 		return false
 	end
@@ -322,6 +342,41 @@ StateListener.cfeint = LPH_NO_VIRTUALIZE(function()
 	return true
 end)
 
+---Can we block?
+---@return boolean
+StateListener.cblock = LPH_NO_VIRTUALIZE(function()
+	local character = players.LocalPlayer and players.LocalPlayer.Character
+	if not character then
+		return false
+	end
+
+	if Configuration.expectToggleValue("NoBlockingState") then
+		return false
+	end
+
+	local breakMeter = character:FindFirstChild("BreakMeter")
+	if not breakMeter then
+		return false
+	end
+
+	if breakMeter.Value / breakMeter.MaxValue > 0.6 then
+		return false
+	end
+
+	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
+	local effectReplicatorModule = require(effectReplicator)
+
+	if effectReplicatorModule:FindEffect("ShakyBlock") then
+		return false
+	end
+
+	if effectReplicatorModule:FindEffect("CancelBlock") then
+		return false
+	end
+
+	return true
+end)
+
 ---Can we dodge?
 ---@return boolean
 StateListener.cdodge = LPH_NO_VIRTUALIZE(function()
@@ -329,6 +384,10 @@ StateListener.cdodge = LPH_NO_VIRTUALIZE(function()
 	local effectReplicatorModule = require(effectReplicator)
 	local dodgeCooldownEffect = effectReplicatorModule:FindEffect("NoRoll")
 	local stunCooldownEffect = effectReplicatorModule:FindEffect("Stun")
+
+	if Configuration.expectToggleValue("BlockDodgeState") then
+		return false
+	end
 
 	if dodgeCooldownEffect then
 		return false
@@ -358,6 +417,56 @@ local onEffectReplicated = LPH_NO_VIRTUALIZE(function(effect)
 		if Configuration.expectToggleValue("AutoRagdollRecover") then
 			InputClient.feint()
 		end
+	end
+
+	if effect.Class == "MantraCasted" then
+		TaskSpawner.spawn("StateListener_AutoMantraFollowup", function()
+			---@module Game.QueuedBlocking
+			local QueuedBlocking = require("Game/QueuedBlocking")
+
+			-- Check setting.
+			if not Configuration.expectToggleValue("AutoMantraFollowup") then
+				return
+			end
+
+			-- Get track.
+			local track = StateListener.lAnimationValidTrack
+			if not track or not track.IsPlaying then
+				return
+			end
+
+			local instance = StateListener.lMantraActivated
+			if not instance then
+				return
+			end
+
+			local faction = StateListener.lAnimFaction
+			if not faction then
+				return
+			end
+
+			if not instance.ToolTip:match("Press @Block@") then
+				return
+			end
+
+			local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
+			local effectReplicatorModule = require(effectReplicator)
+
+			if
+				Configuration.expectToggleValue("CheckIfMoveHit")
+				and not effectReplicatorModule:FindEffect("DamagedAnother")
+			then
+				return
+			end
+
+			QueuedBlocking.invoke(QueuedBlocking.BLOCK_TYPE_NORMAL, "AutoMantraFollowup", nil)
+
+			repeat
+				task.wait()
+			until os.clock() - StateListener.lAnimTimestamp >= (faction:when() + 0.100) - Latency.rtt()
+
+			QueuedBlocking.stop("AutoMantraFollowup")
+		end)
 	end
 
 	if effect.Class == "LightAttack" then

@@ -418,6 +418,7 @@ function GameTab.initPlayerMonitoringSection(groupbox)
 		Tooltip = "Steal builds by hovering on them in the player list and pressing 'P' on your keyboard.",
 		Default = false,
 	})
+
 	groupbox:AddToggle("ShowHiddenPlayers", {
 		Text = "Show Hidden Players",
 		Tooltip = "Show hidden players on the player list.",

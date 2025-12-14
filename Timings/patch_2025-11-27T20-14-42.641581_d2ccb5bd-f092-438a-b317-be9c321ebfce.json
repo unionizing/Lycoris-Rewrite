@@ -1,0 +1,26 @@
+{
+  "patch_id": "d2ccb5bd-f092-438a-b317-be9c321ebfce",
+  "timestamp": "2025-11-27T20:14:42.641581",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "Gun": {
+        "status": "modified",
+        "changes": {
+          "duih": {
+            "from": true,
+            "to": false
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "MetalTurret"
+          }
+        }
+      }
+    }
+  }
+}

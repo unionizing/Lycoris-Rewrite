@@ -61,7 +61,7 @@ local MENU_TITLE = "Linoria V2 | Deepwoken"
 if LRM_UserNote then
 	MENU_TITLE = string.format(
 		"(Commit %s) Linoria V2 | Deepwoken First Release",
-		string.sub("897de96bed3048d35e55faf2e820f232f793c64c", 1, 6)
+		string.sub("d355b43769fdff37e90a9324e1250d0fcb6c3bc6", 1, 6)
 	)
 end
 
@@ -202,6 +202,8 @@ end
 ---Detach menu.
 function Menu.detach()
 	menuMaid:clean()
+
+	BuilderTab.detach()
 
 	Library:Unload()
 

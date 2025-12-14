@@ -1,0 +1,55 @@
+{
+  "patch_id": "f5f2e3d6-707f-484e-b73e-d3b847809162",
+  "timestamp": "2025-11-27T18:03:06.788365",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://17120101081": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.25,
+            "to": 0.15
+          },
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 300,
+                  "X": 40,
+                  "Z": 40
+                },
+                "when": 575,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "Release",
+                "hitbox": {
+                  "Y": 300,
+                  "X": 31,
+                  "Z": 31
+                },
+                "when": 575,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      },
+      "rbxassetid://13529982886": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": true,
+            "to": false
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "patch_id": "75653fac-2e12-443c-bff3-83399962f8f5",
+  "timestamp": "2025-11-27T15:54:00.639672",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://16955614856": {
+        "status": "modified",
+        "changes": {
+          "smod": {
+            "from": "N/A",
+            "to": "WyrmCrit"
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    }
+  }
+}

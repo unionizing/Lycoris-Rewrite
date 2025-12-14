@@ -1,0 +1,51 @@
+{
+  "patch_id": "99d543bd-3dce-440e-84b6-226ad72e393a",
+  "timestamp": "2025-11-23T21:23:30.806010",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "IceSpear": {
+        "status": "added",
+        "data": {
+          "umoa": false,
+          "pname": "IceSpear",
+          "smod": "N/A",
+          "hso": 0,
+          "bfht": 0.3,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 0,
+                "X": 0,
+                "Z": 0
+              },
+              "when": 0,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "after": 0,
+          "uhc": true,
+          "nvfb": false,
+          "duih": false,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "IceSpear",
+          "imxd": 86,
+          "smn": false,
+          "fhb": true,
+          "imdd": 28,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

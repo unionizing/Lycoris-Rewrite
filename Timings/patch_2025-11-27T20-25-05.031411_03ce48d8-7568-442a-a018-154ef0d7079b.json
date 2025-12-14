@@ -1,0 +1,317 @@
+{
+  "patch_id": "03ce48d8-7568-442a-a018-154ef0d7079b",
+  "timestamp": "2025-11-27T20:25:05.031411",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "Gun": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "3",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 1300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 800,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "5",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 2300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "4",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 1800,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "7",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 3300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "6",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 2800,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "9",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 4300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "8",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 3800,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "12",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 5300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "11",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 5300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "10",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 4800,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "3",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 1300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 800,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "5",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 2300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "4",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 1800,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "7",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 3300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "6",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 2800,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "9",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 4300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "8",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 3800,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "15",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 7300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "14",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 6800,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "13",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 6300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "12",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 5800,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "11",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 5300,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "10",
+                "hitbox": {
+                  "Y": 9,
+                  "X": 9,
+                  "Z": 32
+                },
+                "when": 4800,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

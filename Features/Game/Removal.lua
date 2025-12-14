@@ -45,7 +45,6 @@ return LPH_NO_VIRTUALIZE(function()
 	-- Original store managers.
 	local echoModifiersMap = removalMaid:mark(OriginalStoreManager.new())
 	local noFogMap = removalMaid:mark(OriginalStoreManager.new())
-	local noBlindMap = removalMaid:mark(OriginalStoreManager.new())
 	local killBricksMap = removalMaid:mark(OriginalStoreManager.new())
 	local lightBarrierMap = removalMaid:mark(OriginalStoreManager.new())
 	local yunShulBarrierMap = removalMaid:mark(OriginalStoreManager.new())
@@ -56,6 +55,9 @@ return LPH_NO_VIRTUALIZE(function()
 	local renderStepped = Signal.new(runService.RenderStepped)
 	local workspaceDescendantAdded = Signal.new(workspace.DescendantAdded)
 	local workspaceDescendantRemoving = Signal.new(workspace.DescendantRemoving)
+
+	-- Originals.
+	local originalBlindseerState = false
 
 	-- Last update.
 	local lastUpdate = os.clock()
@@ -136,32 +138,41 @@ return LPH_NO_VIRTUALIZE(function()
 	end
 
 	---Update no blind.
-	---@param localPlayer Player
-	local function updateNoBlind(localPlayer)
-		local sanityDof = lighting:FindFirstChild("SanityDoF")
-		if not sanityDof then
+	local function updateNoBlind()
+		local localPlayer = players.LocalPlayer
+		local character = localPlayer.Character
+		if not character then
 			return
 		end
 
-		local sanityCorrect = lighting:FindFirstChild("SanityCorrect")
-		if not sanityCorrect then
+		local characterHashes = replicatedStorage:FindFirstChild("CharacterHashes")
+		local characterHashesModule = characterHashes and require(characterHashes)
+		local characterHashData = characterHashesModule and characterHashesModule.GetDynamic(character)
+		if not characterHashData then
 			return
 		end
 
-		noBlindMap:add(sanityDof, "Enabled", false)
-		noBlindMap:add(sanityCorrect, "Enabled", false)
+		originalBlindseerState = characterHashData["Oath: Blindseer"]
 
-		local backpack = localPlayer:FindFirstChild("Backpack")
-		if not backpack then
+		characterHashData["Oath: Blindseer"] = true
+	end
+
+	---Reset no blind.
+	local function resetNoBlind()
+		local localPlayer = players.LocalPlayer
+		local character = localPlayer.Character
+		if not character then
 			return
 		end
 
-		local blindInstance = backpack:FindFirstChild("Talent:Blinded") or backpack:FindFirstChild("Flaw:Blind")
-		if not blindInstance then
+		local characterHashes = replicatedStorage:FindFirstChild("CharacterHashes")
+		local characterHashesModule = characterHashes and require(characterHashes)
+		local characterHashData = characterHashesModule and characterHashesModule.GetDynamic(character)
+		if not characterHashData then
 			return
 		end
 
-		noBlindMap:add(blindInstance, "Parent", nil)
+		characterHashData["Oath: Blindseer"] = originalBlindseerState
 	end
 
 	---Update no blur.
@@ -283,9 +294,9 @@ return LPH_NO_VIRTUALIZE(function()
 		end
 
 		if Configuration.expectToggleValue("NoBlind") then
-			updateNoBlind(localPlayer)
+			updateNoBlind()
 		else
-			noBlindMap:restore()
+			resetNoBlind()
 		end
 
 		if Configuration.expectToggleValue("NoBlur") then
@@ -467,6 +478,7 @@ return LPH_NO_VIRTUALIZE(function()
 		removalMaid:clean()
 
 		-- Restore.
+		resetNoBlind()
 		restoreNoAcidWater()
 
 		-- Log.

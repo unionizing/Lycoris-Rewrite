@@ -221,13 +221,17 @@ local updateGoldenTongue = LPH_NO_VIRTUALIZE(function()
 		return
 	end
 
-	local textChannels = textChatService:FindFirstChild("TextChannels")
-	local rbxGeneral = textChannels and textChannels:FindFirstChild("RBXGeneral")
-	if not rbxGeneral then
+	if Configuration.expectToggleValue("CheckIfInCombat") and not effectReplicatorModule:FindEffect("Combat") then
 		return
 	end
 
-	defenseMaid:mark(TaskSpawner.spawn("Defender_GoldenTongueSendAsync", rbxGeneral.SendAsync, rbxGeneral, ""))
+	local textChannels = textChatService:FindFirstChild("TextChannels")
+	local rbxSystem = textChannels and textChannels:FindFirstChild("RBXSystem")
+	if not rbxSystem then
+		return
+	end
+
+	defenseMaid:mark(TaskSpawner.spawn("Defender_GoldenTongueSendAsync", rbxSystem.SendAsync, rbxSystem, "/help"))
 end)
 
 ---Toggle visualizations.

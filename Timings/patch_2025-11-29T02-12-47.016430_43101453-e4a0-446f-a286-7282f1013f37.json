@@ -1,0 +1,173 @@
+{
+  "patch_id": "43101453-e4a0-446f-a286-7282f1013f37",
+  "timestamp": "2025-11-29T02:12:47.016430",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://7616407967": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          },
+          "phds": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          },
+          "bfht": {
+            "from": 0.5000000596046448,
+            "to": 0.5
+          }
+        }
+      },
+      "rbxassetid://11887892548": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.15,
+            "to": 0.25
+          },
+          "nvfb": {
+            "from": false,
+            "to": true
+          },
+          "phds": {
+            "from": 0.4,
+            "to": 1
+          }
+        }
+      },
+      "rbxassetid://12496646061": {
+        "status": "modified",
+        "changes": {
+          "nvfb": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://131576892263777": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.4,
+            "to": 0.25
+          },
+          "nvfb": {
+            "from": false,
+            "to": true
+          },
+          "pfh": {
+            "from": true,
+            "to": false
+          },
+          "phds": {
+            "from": 1,
+            "to": 0.25
+          },
+          "bfht": {
+            "from": 0.3,
+            "to": 0.5
+          },
+          "dp": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://12496640760": {
+        "status": "modified",
+        "changes": {
+          "nvfb": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      "rbxassetid://123456225328134": {
+        "status": "modified",
+        "changes": {
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.25
+          }
+        }
+      }
+    },
+    "effect": {
+      "ManiWindup": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "DisplayThornsRed": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "GolemBeam": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "OwlDisperse": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "SilentheartWarn": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "DisplayThorns": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "MetalArmament": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      },
+      "ShadowSludge": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": false,
+            "to": null
+          }
+        }
+      }
+    }
+  }
+}

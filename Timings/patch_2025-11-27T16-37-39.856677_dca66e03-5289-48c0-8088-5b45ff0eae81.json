@@ -1,0 +1,85 @@
+{
+  "patch_id": "dca66e03-5289-48c0-8088-5b45ff0eae81",
+  "timestamp": "2025-11-27T16:37:39.856677",
+  "author": "Blastbrean",
+  "diff": {
+    "effect": {
+      "DisplayThorns": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "MetalArmament": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "SilentheartWarn": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 10,
+            "to": 43
+          },
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "GolemBeam": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "ManiWindup": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "OwlDisperse": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "DisplayThornsRed": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "ShadowSludge": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      }
+    }
+  }
+}

@@ -22,8 +22,26 @@ local ActionContainer = require("Game/Timings/ActionContainer")
 ---@field cbm boolean A non-saved field to indicate whether this was non-part-timing created by a module.
 ---@field nvfb boolean No vent fallback.
 ---@field bfht number Block fallback hold time.
+---@field pbfb boolean Prefer block fallback.
+---@field forced boolean Hidden field which allows us to force tasks to go through.
+---@field htype Enum.PartType Shape of hitbox. Never accessible unless inside of a module or inside of real code. This is never serialized.
+---@field rpue boolean Prefer repeat usage.
+---@field _rsd number Repeat start delay. Never access directly.
+---@field _rpd number Repeat parry delay. Never access directly.
 local Timing = {}
 Timing.__index = Timing
+
+---Getter for repeat start delay in seconds
+---@return number
+function Timing:rsd()
+	return PP_SCRAMBLE_NUM(self._rsd) / 1000
+end
+
+---Getter for repeat parry delay in seconds.
+---@return number
+function Timing:rpd()
+	return PP_SCRAMBLE_NUM(self._rpd) / 1000
+end
 
 ---Timing ID. Override me.
 ---@return string
@@ -115,6 +133,26 @@ function Timing:load(values)
 	if typeof(values.bfht) == "number" then
 		self.bfht = values.bfht
 	end
+
+	if typeof(values.rsd) == "string" then
+		self._rsd = tonumber(values.rsd) or 0.0
+	end
+
+	if typeof(values.rpd) == "string" then
+		self._rpd = tonumber(values.rpd) or 0.0
+	end
+
+	if typeof(values.rsd) == "number" then
+		self._rsd = values.rsd
+	end
+
+	if typeof(values.rpd) == "number" then
+		self._rpd = values.rpd
+	end
+
+	if typeof(values.rpue) == "boolean" then
+		self.rpue = values.rpue
+	end
 end
 
 ---Equals check.
@@ -197,6 +235,18 @@ function Timing:equals(other)
 		return false
 	end
 
+	if self.rpue ~= other.rpue then
+		return false
+	end
+
+	if self._rsd ~= other._rsd then
+		return false
+	end
+
+	if self._rpd ~= other._rpd then
+		return false
+	end
+
 	return true
 end
 
@@ -224,6 +274,9 @@ function Timing:clone()
 	clone.hso = self.hso
 	clone.nvfb = self.nvfb
 	clone.bfht = self.bfht
+	clone.rpue = self.rpue
+	clone._rsd = self._rsd
+	clone._rpd = self._rpd
 
 	return clone
 end
@@ -257,6 +310,9 @@ function Timing:serialize()
 		hso = self.hso,
 		nvfb = self.nvfb,
 		bfht = self.bfht,
+		rpue = self.rpue,
+		rsd = self._rsd,
+		rpd = self._rpd,
 	}
 end
 
@@ -273,6 +329,9 @@ function Timing.new(values)
 	self.smn = false
 	self.punishable = 0
 	self.after = 0
+	self.rpue = false
+	self._rsd = 0
+	self._rpd = 0
 	self.duih = false
 	self.actions = ActionContainer.new()
 	self.hitbox = Vector3.zero

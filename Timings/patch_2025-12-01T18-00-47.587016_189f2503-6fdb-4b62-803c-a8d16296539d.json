@@ -1,0 +1,51 @@
+{
+  "patch_id": "189f2503-6fdb-4b62-803c-a8d16296539d",
+  "timestamp": "2025-12-01T18:00:47.587016",
+  "author": "Blastbrean",
+  "diff": {
+    "part": {
+      "VengefulSlashes": {
+        "status": "added",
+        "data": {
+          "umoa": false,
+          "pname": "VengefulSlashes",
+          "smod": "N/A",
+          "hso": 0,
+          "bfht": 0.3,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 0,
+                "X": 0,
+                "Z": 0
+              },
+              "when": 0,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "after": 0,
+          "uhc": true,
+          "nvfb": false,
+          "duih": true,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 15,
+            "X": 15,
+            "Z": 20
+          },
+          "punishable": 0,
+          "name": "VengefulSlashes",
+          "imxd": 183,
+          "smn": false,
+          "fhb": true,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

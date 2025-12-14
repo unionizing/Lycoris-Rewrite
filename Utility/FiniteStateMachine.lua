@@ -6,6 +6,9 @@
 local FiniteStateMachine = {}
 FiniteStateMachine.__index = FiniteStateMachine
 
+---@module Utility.Logger
+local Logger = require("Utility/Logger")
+
 ---Create a new finite state machine.
 ---@param states FiniteState[]
 ---@param initial string
@@ -35,7 +38,7 @@ function FiniteStateMachine:get(identifier)
 		return state
 	end
 
-	return warn(string.format("(%s) State does not exist in states table.", identifier))
+	return Logger.warn(string.format("(%s) State does not exist in states table.", identifier))
 end
 
 ---Get a state
@@ -57,7 +60,7 @@ end
 function FiniteStateMachine:stop()
 	-- Check if already stopped.
 	if not self.started then
-		return warn("Finite state machine has not been started.")
+		return Logger.warn("Finite state machine has not been started.")
 	end
 
 	-- Detach current state.
@@ -73,7 +76,7 @@ end
 function FiniteStateMachine:start()
 	-- Check if already started.
 	if self.started then
-		return warn("Finite state machine has already been started.")
+		return Logger.warn("Finite state machine has already been started.")
 	end
 
 	-- Set initial state.
@@ -89,7 +92,7 @@ end
 ---@param identifier string
 function FiniteStateMachine:transition(identifier)
 	if not self.started then
-		return warn("Finite state machine has not been started.")
+		return Logger.warn("Finite state machine has not been started.")
 	end
 
 	-- Detach old state.

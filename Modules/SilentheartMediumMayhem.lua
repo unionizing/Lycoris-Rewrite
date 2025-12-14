@@ -9,14 +9,22 @@ return function(self, timing)
 
 	local distance = self:distance(self.entity)
 	local action = Action.new()
-	action._when = math.min(400 + distance * 14.5)
+	action._when = 400
 
 	if self.track.Speed >= 0.7 then
-		action._when = math.min(350 + distance * 20, 650)
+		action._when = 350
+	end
+
+	if distance >= 10 then
+		action._when = action._when + 25
+	end
+
+	if distance >= 20 then
+		action._when = action._when + 25
 	end
 
 	action._type = "Parry"
 	action.hitbox = Vector3.new(20, 15, 45)
-	action.name = string.format("(%.2f) Mayhem Silentheart Timing", self.track.Speed)
+	action.name = string.format("(%.2f) (%.2f) Mayhem Silentheart Timing", self.track.Speed, distance)
 	self:action(timing, action)
 end

@@ -79,6 +79,9 @@ function BuilderSection:reset()
 	self.timingHitboxHeight:SetRawValue(0)
 	self.timingHitboxLength:SetRawValue(0)
 	self.timingHitboxWidth:SetRawValue(0)
+	self.repeatParryDelay:SetRawValue(0)
+	self.repeatStartDelay:SetRawValue(0)
+	self.repeatUntilParryEnd:SetRawValue(false)
 	self.useModuleOverActions:SetRawValue(false)
 	self.skipModuleNotification:SetRawValue(false)
 	self.selectedModule:SetRawValue("")
@@ -140,9 +143,49 @@ function BuilderSection:create()
 	return timing
 end
 
----Initialize action tab. Extend me.
+---Initialize action tab.
 function BuilderSection:action()
-	self:baction(self.tabbox:AddTab("Action"))
+	local tab = self.tabbox:AddTab("Action")
+
+	self.repeatUntilParryEnd = tab:AddToggle(nil, {
+		Text = "Repeat Parry Until End",
+		Default = false,
+		Callback = self:tnc(function(timing, value)
+			timing.rpue = value
+		end),
+	})
+
+	local depBoxOn = tab:AddDependencyBox()
+
+	self.repeatStartDelay = depBoxOn:AddInput(nil, {
+		Text = "Repeat Start Delay",
+		Numeric = true,
+		Finished = true,
+		Callback = self:tnc(function(timing, value)
+			timing._rsd = tonumber(value) or 0
+		end),
+	})
+
+	self.repeatParryDelay = depBoxOn:AddInput(nil, {
+		Text = "Repeat Parry Delay",
+		Numeric = true,
+		Finished = true,
+		Callback = self:tnc(function(timing, value)
+			timing._rpd = tonumber(value) or 0
+		end),
+	})
+
+	local depBoxOff = tab:AddDependencyBox()
+
+	self:baction(depBoxOff)
+
+	depBoxOn:SetupDependencies({
+		{ self.repeatUntilParryEnd, true },
+	})
+
+	depBoxOff:SetupDependencies({
+		{ self.repeatUntilParryEnd, false },
+	})
 end
 
 ---Reset action elements.
@@ -517,6 +560,9 @@ function BuilderSection:timing()
 			self.noVentFallback:SetRawValue(found.nvfb)
 			self.blockFallbackHoldTime:SetRawValue(found.bfht)
 			self.noBlockFallback:SetRawValue(found.nbfb)
+			self.repeatParryDelay:SetRawValue(found._rpd)
+			self.repeatStartDelay:SetRawValue(found._rsd)
+			self.repeatUntilParryEnd:SetRawValue(found.rpue)
 
 			-- Load extra elements.
 			self:exload(found)

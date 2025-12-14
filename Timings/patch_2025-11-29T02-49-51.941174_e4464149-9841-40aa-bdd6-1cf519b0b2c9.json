@@ -1,0 +1,60 @@
+{
+  "patch_id": "e4464149-9841-40aa-bdd6-1cf519b0b2c9",
+  "timestamp": "2025-11-29T02:49:51.941174",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://11183196198": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 59,
+            "to": 0
+          }
+        }
+      },
+      "rbxassetid://11183278853": {
+        "status": "added",
+        "data": {
+          "rpd": 0,
+          "hso": 0,
+          "ieae": false,
+          "actions": [],
+          "ndfb": false,
+          "_id": "rbxassetid://11183278853",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "punishable": 0,
+          "name": "IceHeroCritNew",
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "fhb": false,
+          "imdd": 0,
+          "duih": false,
+          "rsd": 0,
+          "umoa": true,
+          "smod": "rbxassetid://11183278853",
+          "bfht": 0.3,
+          "pfh": false,
+          "after": 0,
+          "imb": false,
+          "dp": false,
+          "phd": false,
+          "phds": 0,
+          "pfht": 0.15,
+          "aatk": false,
+          "nvfb": false,
+          "smn": false,
+          "ha": false,
+          "iae": false,
+          "imxd": 86,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

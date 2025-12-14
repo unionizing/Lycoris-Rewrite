@@ -1,0 +1,18 @@
+{
+  "patch_id": "4bac67fe-372a-4741-8b0c-078c23cb115c",
+  "timestamp": "2025-12-13T12:31:17.653201",
+  "author": "Blastbrean",
+  "diff": {
+    "part": {
+      "DiskPart": {
+        "status": "modified",
+        "changes": {
+          "duih": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    }
+  }
+}

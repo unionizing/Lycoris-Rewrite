@@ -116,8 +116,14 @@ SoundDefender.process = LPH_NO_VIRTUALIZE(function(self)
 		return self:module(timing)
 	end
 
-	-- Add actions.
-	return self:actions(timing)
+	---@note: Start processing the timing. Add the actions if we're not RPUE.
+	if not timing.rpue then
+		return self:actions(timing)
+	end
+
+	-- Start RPUE.
+	local info = RepeatInfo.new(timing, Latency.rdelay(), self:uid(10))
+	self:srpue(self.entity, timing, info)
 end)
 
 ---Create new SoundDefender object.

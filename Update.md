@@ -1,35 +1,16 @@
 # Deepwoken Rewrite
-**Module diff vs. previous snapshot: +0/-3/~7 (added/removed/changed)**
-```diff
-- (removed) SilentheartHeavyRelentless
-- (removed) SilentheartLightRelentless
-- (removed) SilentheartMediumRelentless
-+ (changed) CrescentCrit
-+ (changed) SilentheartMediumMayhem
-+ (changed) KatanaCritical
-+ (changed) Scythe
-+ (changed) SilentheartLightMayhem
-+ (changed) EtherBarrage
-+ (changed) Eruption
-```
+**No new modules.**
 
-**Timing diff vs. previous snapshot: +2/-4/~1 (animation: +0/-3/~1, part: +0/-1/~0, effect: +2/-0/~0)**
-```diff
-+ (changed) Animation : Heartwing (by Blastbrean)
-- (removed) Animation : SilentheartMediumRelentless (by Blastbrean)
-- (removed) Animation : SilentheartHeavyRelentless (by Blastbrean)
-- (removed) Animation : SlientheartLightRelentless (by Blastbrean)
-- (removed) Part : MalStrike1 (by Blastbrean)
-+ (added) Effect : ManiWindup (by Blastbrean)
-+ (added) Effect : SilentheartWarn (by Blastbrean)
-```
-*Silentheart should be fully fixed in this update. All variants, all types, flow state or not.*
-*The only thing I am concerned about is the Mani Katti. If it misses the initial parry, it will eat the entire combo.*
+**No new timings.**
 
-**New features?**
+**Any new features?**
 ```diff
-- (bug fix) Micro-profiling is now disabled when silent mode is on
-+ (added) Delayed feinting
+- (bug fix) Fixed 'Talent Highlighting' card hovering
+- (bug fix) Fixed 'RPUE' moves
 ```
+*This is an emergency fix.*
 
-*Your commit ID should be "897de9" when the update is pushed to you.*
+*If you're wondering on what to use or where to buy from...*
+**Buy an executor like Wave @ https://robloxcheatz.com/product?id=6d1f91b5-4599-467a-b9ba-eadef98c63fe&ref=lycoris**
+
+*Your commit ID should == "d355b4" when the update is fully pushed to you.*

@@ -59,17 +59,6 @@ Essential Additions
 
 - 1. Auto Execute Fixes
 
-- 2. "Timing Probability" section
-  - How can we tie "Timing Names" to Probabilities when we click on it in the list?
-
-- 3. New ESP Port
-  - ESP Fade In / Fade Out
-  - ESP Glow?
-  - ESP Focus Keybind
-  - Damage / Healing Numbers
-
-- Look into M1 Feint -> Mantra Feint -> M1
-  
 Farming Fixes
 
 - 4. Clean Up "Echo Farm"
@@ -78,12 +67,13 @@ Farming Fixes
 
 Gank Fixes
 
-- 5. Ignore Allies Rework
-
-- 6. Easier Whitelist / Blaclist
+- 5. Ignore Allies Use ReputationSystem
 
 Quality Of Life
 
+- ESP Focus Keybind
+- Combat Focus Keybind
+  
 - 7. Finish "Extra Keybinds"
     - Keybind builder to partial item search find
     - Instant log ability
@@ -109,19 +99,16 @@ Other Stuff
 
 - Fix "No Blur" Breaking On No Water
   
-- Fix "Info Spoofing"
-    - Guild Chat
-    - User ID 
-
 Research
 
 - No Blind 
 
 - No Hallowing Enchant
   
-- NPC / Mob Notifier (Silhuett, Grudge, Ministry Heartspiller, Maljuror)
+- NPC / Mob Notifier (Silhuett, Grudge, Ministry Heartspiller, Maljuror, Astral Knight/Star Knight) and their location
 
 - CTU Logging (v.s. logging, timezone & region logging)
   
-- Menu Scale & Windows Scale & Notification Scale
+- Menu Scale & Windows Scale 
   
+- Auto Echo Farm Use Gun + Fix Server Hop + Enchant In Fight + Tween Under Self Ignore Others + No Holds Barred To Prevent Whitehat

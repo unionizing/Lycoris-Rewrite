@@ -33,6 +33,9 @@ local playersService = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local lighting = game:GetService("Lighting")
 
+-- Cached IsA.
+local isA = game.IsA
+
 -- Old hooked functions.
 local oldFireServer = nil
 local oldUnreliableFireServer = nil
@@ -213,6 +216,17 @@ local handleActionRolling = LPH_NO_VIRTUALIZE(function(type)
 		end
 
 		if not effectReplicatorModule:HasEffect("Equipped") then
+			return
+		end
+	end
+
+	if type == INPUT_CAST then
+		local lMantraActivated = StateListener.lMantraActivated
+		if not lMantraActivated then
+			return
+		end
+
+		if lMantraActivated.Name:match("Wisp") then
 			return
 		end
 	end
@@ -569,17 +583,33 @@ local onIndex = LPH_NO_VIRTUALIZE(function(...)
 
 	local self = args[1]
 
-	if typeof(self) == "Instance" and typeof(index) == "string" and index == "Value" then
-		if self.Name == "SERVER_NAME" then
-			return Configuration.expectOptionValue("SpoofedServerName")
+	if typeof(self) == "Instance" and typeof(index) == "string" then
+		if index == "Value" then
+			if self.Name == "SERVER_NAME" then
+				return Configuration.expectOptionValue("SpoofedServerName")
+			end
+
+			if self.Name == "SERVER_REGION" then
+				return Configuration.expectOptionValue("SpoofedServerRegion")
+			end
+
+			if self.Name == "SERVER_AGE" then
+				return Configuration.expectOptionValue("SpoofedServerAge")
+			end
 		end
 
-		if self.Name == "SERVER_REGION" then
-			return Configuration.expectOptionValue("SpoofedServerRegion")
-		end
+		if isA(self, "Player") then
+			if index == "DisplayName" then
+				return "Linoria V2 On Top"
+			end
 
-		if self.Name == "SERVER_AGE" then
-			return Configuration.expectOptionValue("SpoofedServerAge")
+			if index == "Name" then
+				return "Linoria V2 On Top"
+			end
+
+			if index == "UserId" then
+				return 000000000
+			end
 		end
 	end
 

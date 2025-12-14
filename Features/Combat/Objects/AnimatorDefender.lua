@@ -40,6 +40,9 @@ local StateListener = require("Features/Combat/StateListener")
 ---@module Game.Latency
 local Latency = require("Game/Latency")
 
+---@module GUI.Library
+local Library = require("GUI/Library")
+
 ---@class AnimatorDefender: Defender
 ---@field animator Animator
 ---@field offset number?
@@ -81,10 +84,17 @@ AnimatorDefender.stopped = LPH_NO_VIRTUALIZE(function(self, track, timing, notif
 		return self:notify(...)
 	end
 
+	local overrideData = Library:GetOverrideData(PP_SCRAMBLE_STR(timing.name))
+	local rate = (Configuration.expectOptionValue("IgnoreAnimationEndRate") or 0.0)
+
+	if overrideData then
+		rate = overrideData.iaer
+	end
+
 	if
-		Configuration.expectToggleValue("AllowFailure")
+		(Configuration.expectToggleValue("AllowFailure") or overrideData)
 		and not timing.rpue
-		and Random.new():NextNumber(1.0, 100.0) <= (Configuration.expectOptionValue("IgnoreAnimationEndRate") or 0.0)
+		and Random.new():NextNumber(1.0, 100.0) <= rate
 		and StateListener.cdodge()
 	then
 		return false, internalNotifyFunction(timing, "Intentionally ignoring animation end to simulate human error.")
@@ -151,7 +161,6 @@ AnimatorDefender.pfh = LPH_NO_VIRTUALIZE(function(self, options)
 	end
 
 	local clone = options:clone()
-	clone.spredict = true
 	clone.hcolor = Color3.new(0, 1, 1)
 	clone.mcolor = Color3.new(1, 1, 0)
 	clone:ucache()
@@ -173,7 +182,6 @@ end)
 AnimatorDefender.phd = LPH_NO_VIRTUALIZE(function(self, timing, options)
 	for _, cframe in next, EntityHistory.pstepped(self.entity, HISTORY_STEPS, timing.phds) or {} do
 		local clone = options:clone()
-		clone.spredict = true
 		clone.cframe = cframe
 		clone.hcolor = Color3.new(0.839215, 0.976470, 0.537254)
 		clone.mcolor = Color3.new(0.564705, 0, 1)
@@ -282,6 +290,7 @@ AnimatorDefender.valid = LPH_NO_VIRTUALIZE(function(self, options)
 	hoptions.ptime = self:fsecs(timing)
 	hoptions.action = action
 	hoptions.entity = self.entity
+	hoptions.visualize = options.visualize
 	hoptions:ucache()
 
 	local info = RepeatInfo.new(timing, Latency.rdelay(), self:uid(10))
@@ -329,10 +338,15 @@ AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 	end
 
 	-- Animation speed changer.
+	local min = Configuration.expectOptionValue("AnimationSpeedMinimum") or 1.0
+	local max = Configuration.expectOptionValue("AnimationSpeedMaximum") or 1.3
+	local rng = Random.new()
+
 	for track, _ in next, self.sct do
 		if not track.IsPlaying then
 			self.sct[track] = nil
 			self.tsc[track] = nil
+			self.multiplier[track] = nil
 			continue
 		end
 
@@ -340,7 +354,31 @@ AnimatorDefender.update = LPH_NO_VIRTUALIZE(function(self)
 			continue
 		end
 
-		local adjusted = track.Speed * (Configuration.expectOptionValue("AnimationSpeedMultiplier") or 1.0)
+		local mode = rng:NextInteger(1, 2)
+		local generated = nil
+
+		if not self.multiplier[track] and not Configuration.expectToggleValue("SwitchBetweenSpeeds") then
+			generated = rng:NextNumber(min, max)
+		end
+
+		if not self.multiplier[track] and Configuration.expectToggleValue("SwitchBetweenSpeeds") then
+			generated = mode == 1 and min or max
+		end
+
+		if not self.multiplier[track] and generated then
+			self.multiplier[track] = generated
+		end
+
+		local multiplier = self.multiplier[track]
+		if not multiplier then
+			continue
+		end
+
+		if multiplier == 1.0 then
+			continue
+		end
+
+		local adjusted = track.Speed * multiplier
 
 		track:AdjustSpeed(adjusted)
 
@@ -441,6 +479,11 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 		return
 	end
 
+	if timing.tag == "Critical" then
+		timing.nbfb = true
+		timing.ha = true
+	end
+
 	---@note: Clean up previous tasks that are still waiting or suspended because they're in a different track.
 	self:clean()
 
@@ -448,32 +491,6 @@ AnimatorDefender.process = LPH_NO_VIRTUALIZE(function(self, track)
 	self.timing = timing
 	self.track = track
 	self.offset = Latency.rdelay()
-
-	-- Fake mistime rate.
-	---@type Action?
-	local faction = timing.actions:stack()[1]
-
-	-- Obviously, we don't want any modules where we don't know how many actions there are.
-	-- We don't want any actions that have a count that is not equal to 1.
-	-- We need to check if we can atleast dash, because we will be going to are fallback.
-	-- We must also check if our action isn't too short or is not a parry type, defeating the purpose.
-	if
-		Configuration.expectToggleValue("AllowFailure")
-		and not timing.umoa
-		and not timing.rpue
-		and timing.actions:count() == 1
-		and Random.new():NextNumber(1.0, 100.0) <= (Configuration.expectOptionValue("FakeMistimeRate") or 0.0)
-		and StateListener.cdodge()
-		and faction
-		and PP_SCRAMBLE_STR(faction._type) == "Parry"
-		and faction:when() > (Latency.rtt() + 0.6)
-	then
-		-- Start deflect.
-		QueuedBlocking.invoke(QueuedBlocking.BLOCK_TYPE_DEFLECT, "Defender_FakeDeflect", nil)
-
-		-- Notify.
-		self:notify(timing, "Intentionally mistimed to simulate human error.")
-	end
 
 	-- Use module over actions.
 	if timing.umoa then
@@ -526,6 +543,7 @@ function AnimatorDefender.new(animator, manimations)
 	self.rpbdata = {}
 	self.sct = {}
 	self.tsc = {}
+	self.multiplier = {}
 
 	self.maid:mark(animationPlayed:connect(
 		"AnimatorDefender_OnAnimationPlayed",

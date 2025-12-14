@@ -1,0 +1,22 @@
+{
+  "patch_id": "96201503-fe0b-4f6f-9db5-d3ad8fe23046",
+  "timestamp": "2025-11-29T20:27:06.839079",
+  "author": "Blastbrean",
+  "diff": {
+    "effect": {
+      "SilentheartWarn": {
+        "status": "modified",
+        "changes": {
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "SilentheartWarn"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "patch_id": "7921e3f2-adb7-4237-87bc-8e5448412f40",
+  "timestamp": "2025-12-13T12:22:30.866460",
+  "author": "Blastbrean",
+  "diff": {
+    "part": {
+      "DiskPart": {
+        "status": "modified",
+        "changes": {
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "SinisterHalo"
+          }
+        }
+      }
+    }
+  }
+}

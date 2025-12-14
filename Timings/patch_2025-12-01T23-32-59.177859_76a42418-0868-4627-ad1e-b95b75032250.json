@@ -1,0 +1,63 @@
+{
+  "patch_id": "76a42418-0868-4627-ad1e-b95b75032250",
+  "timestamp": "2025-12-01T23:32:59.177859",
+  "author": "Juanito",
+  "diff": {
+    "sound": {
+      "rbxassetid://79372618918202": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 2,
+            "to": 0
+          }
+        }
+      },
+      "rbxassetid://186130717": {
+        "status": "added",
+        "data": {
+          "rsd": 0,
+          "umoa": false,
+          "rpd": 0,
+          "alp": true,
+          "smod": "N/A",
+          "hso": 0,
+          "bfht": 0.3,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 6,
+                "X": 6,
+                "Z": 6
+              },
+              "when": 0,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "duih": false,
+          "after": 0,
+          "_id": "rbxassetid://186130717",
+          "nvfb": false,
+          "rpue": false,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "SpecialistStormStrike",
+          "imxd": 2,
+          "smn": false,
+          "fhb": false,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

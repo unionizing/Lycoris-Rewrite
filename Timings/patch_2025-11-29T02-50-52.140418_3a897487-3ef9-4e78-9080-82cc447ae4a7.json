@@ -1,0 +1,18 @@
+{
+  "patch_id": "3a897487-3ef9-4e78-9080-82cc447ae4a7",
+  "timestamp": "2025-11-29T02:50:52.140418",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://11183278853": {
+        "status": "modified",
+        "changes": {
+          "smod": {
+            "from": "rbxassetid://11183278853",
+            "to": "IceHeroBlade"
+          }
+        }
+      }
+    }
+  }
+}

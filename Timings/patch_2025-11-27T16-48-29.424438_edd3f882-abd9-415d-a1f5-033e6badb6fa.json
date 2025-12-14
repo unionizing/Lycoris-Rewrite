@@ -1,0 +1,18 @@
+{
+  "patch_id": "edd3f882-abd9-415d-a1f5-033e6badb6fa",
+  "timestamp": "2025-11-27T16:48:29.424438",
+  "author": "Blastbrean",
+  "diff": {
+    "part": {
+      "EruptionPart": {
+        "status": "modified",
+        "changes": {
+          "duih": {
+            "from": true,
+            "to": false
+          }
+        }
+      }
+    }
+  }
+}

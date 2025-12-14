@@ -1,0 +1,125 @@
+{
+  "patch_id": "981cdfcb-2bbb-4761-b3ad-17c8707db3e5",
+  "timestamp": "2025-12-01T17:41:48.723166",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://14435778571": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "pfht": {
+            "from": 0.25,
+            "to": 0.5
+          },
+          "phd": {
+            "from": true,
+            "to": false
+          },
+          "phds": {
+            "from": 0.25,
+            "to": 0.6
+          },
+          "dp": {
+            "from": true,
+            "to": false
+          },
+          "bfht": {
+            "from": 0.6,
+            "to": 0.3
+          }
+        }
+      },
+      "rbxassetid://14435773739": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "pfht": {
+            "from": 0.25,
+            "to": 0.5
+          },
+          "phd": {
+            "from": true,
+            "to": false
+          },
+          "phds": {
+            "from": 0.25,
+            "to": 0.6
+          },
+          "dp": {
+            "from": true,
+            "to": false
+          },
+          "bfht": {
+            "from": 0.6,
+            "to": 0.3
+          }
+        }
+      },
+      "rbxassetid://14435770311": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "pfht": {
+            "from": 0.25,
+            "to": 0.5
+          },
+          "phd": {
+            "from": true,
+            "to": false
+          },
+          "phds": {
+            "from": 0.25,
+            "to": 0.6
+          },
+          "dp": {
+            "from": true,
+            "to": false
+          },
+          "bfht": {
+            "from": 0.6,
+            "to": 0.3
+          }
+        }
+      },
+      "rbxassetid://6437665734": {
+        "status": "modified",
+        "changes": {
+          "pfh": {
+            "from": false,
+            "to": true
+          },
+          "pfht": {
+            "from": 0.2500000298023224,
+            "to": 0.5
+          },
+          "phd": {
+            "from": true,
+            "to": false
+          },
+          "phds": {
+            "from": 0.2500000298023224,
+            "to": 0.6
+          },
+          "dp": {
+            "from": true,
+            "to": false
+          },
+          "bfht": {
+            "from": 0.6,
+            "to": 0.3
+          }
+        }
+      }
+    }
+  }
+}

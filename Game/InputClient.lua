@@ -11,15 +11,14 @@ local Logger = require("Utility/Logger")
 ---@module Game.KeyHandling
 local KeyHandling = require("Game/KeyHandling")
 
----@module Utility.TaskSpawner
-local TaskSpawner = require("Utility/TaskSpawner")
-
 -- Services.
 local runService = game:GetService("RunService")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local players = game:GetService("Players")
-local debris = game:GetService("Debris")
 local tweenService = game:GetService("TweenService")
+
+-- Functions.
+local unreliableFireServer = Instance.new("UnreliableRemoteEvent").FireServer
 
 -- Cache.
 local inputDataCache = nil
@@ -514,7 +513,8 @@ InputClient.left = LPH_NO_VIRTUALIZE(function(cframe, ignoreChecks)
 	end
 
 	---@note: Missing M1-Hold and Input Buffering functionality but I don't think the caller cares about it.
-	leftClickRemote:FireServer(inAirCheck(), cframe, inputData)
+	-- Call like the game does it so our hooks go through.
+	unreliableFireServer(leftClickRemote, inAirCheck(), cframe, inputData)
 end)
 
 ---Activate mantra.
@@ -648,7 +648,7 @@ InputClient.dodge = LPH_NO_VIRTUALIZE(function(options)
 
 	local characterHashes = replicatedStorage:FindFirstChild("CharacterHashes")
 	local characterHashesModule = characterHashes and require(characterHashes)
-	local characterHashData = characterHashesModule and characterHashesModule.Get(character)
+	local characterHashData = characterHashesModule and characterHashesModule.GetDynamic(character)
 	if not characterHashData then
 		return Logger.warn("Cannot dodge without character hash data.")
 	end
@@ -1359,11 +1359,11 @@ InputClient.dodge = LPH_NO_VIRTUALIZE(function(options)
 								hasAttackAny = false
 							end
 
-							if
-								effectCancel
-								or hasAttackAny
-								or (options.rollCancel and tick() - rollStart > options.rollCancelDelay)
-							then
+							local rollCancelInvoke = (
+								options.rollCancel and tick() - rollStart > options.rollCancelDelay
+							)
+
+							if effectCancel or hasAttackAny or rollCancelInvoke then
 								stopDodge:FireServer(inputData, effectReplicatorModule:HasEffect("LightAttack"))
 
 								if usedRollTrack.IsPlaying then
@@ -1374,6 +1374,7 @@ InputClient.dodge = LPH_NO_VIRTUALIZE(function(options)
 									(
 										effectReplicatorModule:FindEffect("Feint")
 										or effectReplicatorModule:HasEffect("ClientFeint")
+										or rollCancelInvoke
 									)
 									and not cancelLeftTrack.IsPlaying
 									and not cancelRightTrack.IsPlaying
@@ -1653,7 +1654,7 @@ InputClient.cache = LPH_NO_VIRTUALIZE(function()
 	end
 
 	-- Store input data.
-	local inputData = nil
+	local inputData = {}
 
 	-- Get the input data from RenderStepped.
 	for _, connection in next, getconnections(runService.RenderStepped) do

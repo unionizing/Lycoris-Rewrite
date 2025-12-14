@@ -71,17 +71,6 @@ Targeting.viable = LPH_NO_VIRTUALIZE(function()
 			continue
 		end
 
-		local usernameList = Options["UsernameList"]
-
-		local displayNameFound = playerFromCharacter
-			and table.find(usernameList.Values, playerFromCharacter.DisplayName)
-
-		local usernameFound = playerFromCharacter and table.find(usernameList.Values, playerFromCharacter.Name)
-
-		if displayNameFound or usernameFound then
-			continue
-		end
-
 		if
 			playerFromCharacter
 			and PlayerScanning.isAlly(playerFromCharacter)

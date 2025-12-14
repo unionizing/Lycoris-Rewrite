@@ -1,0 +1,34 @@
+{
+  "patch_id": "0319d63f-593a-4cc1-921a-40d143aa7c42",
+  "timestamp": "2025-11-23T21:24:30.838323",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "IceSpear": {
+        "status": "modified",
+        "changes": {
+          "duih": {
+            "from": false,
+            "to": true
+          },
+          "hitbox": {
+            "from": {
+              "Y": 0,
+              "X": 0,
+              "Z": 0
+            },
+            "to": {
+              "Y": 10,
+              "X": 10,
+              "Z": 29
+            }
+          },
+          "imxd": {
+            "from": 86,
+            "to": 150
+          }
+        }
+      }
+    }
+  }
+}

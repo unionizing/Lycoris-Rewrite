@@ -1,0 +1,13 @@
+{
+  "patch_id": "f480908c-f793-4504-97ac-2087d00e6563",
+  "timestamp": "2025-11-27T20:27:04.057102",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "Gun": {
+        "status": "removed",
+        "name": "MetalTurret"
+      }
+    }
+  }
+}

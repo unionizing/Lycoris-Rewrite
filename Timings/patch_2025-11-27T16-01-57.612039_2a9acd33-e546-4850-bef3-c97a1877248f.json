@@ -1,0 +1,22 @@
+{
+  "patch_id": "2a9acd33-e546-4850-bef3-c97a1877248f",
+  "timestamp": "2025-11-27T16:01:57.612039",
+  "author": "Blastbrean",
+  "diff": {
+    "part": {
+      "EruptionPart": {
+        "status": "modified",
+        "changes": {
+          "smod": {
+            "from": "N/A",
+            "to": "Tornado"
+          },
+          "umoa": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    }
+  }
+}

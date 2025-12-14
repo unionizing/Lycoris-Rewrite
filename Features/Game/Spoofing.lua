@@ -301,6 +301,10 @@ return LPH_NO_VIRTUALIZE(function()
 	---Spoof game version.
 	---@param value string
 	function Spoofing.sgv(value)
+		if not Configuration.expectToggleValue("InfoSpoofing") then
+			return
+		end
+
 		local player = players.LocalPlayer
 		if not player then
 			return
@@ -311,8 +315,9 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
-		local worldInfo = playerGui:FindFirstChild("WorldInfo")
-		local infoFrame = worldInfo and worldInfo:FindFirstChild("InfoFrame")
+		local topBarGui = playerGui:FindFirstChild("TopbarGui")
+		local container = topBarGui and topBarGui:FindFirstChild("Container")
+		local infoFrame = container and container:FindFirstChild("InfoFrame")
 		local gameInfo = infoFrame and infoFrame:FindFirstChild("GameInfo")
 		if not gameInfo then
 			return
@@ -329,6 +334,10 @@ return LPH_NO_VIRTUALIZE(function()
 	---Spoof date string.
 	---@param value string
 	function Spoofing.sds(value)
+		if not Configuration.expectToggleValue("InfoSpoofing") then
+			return
+		end
+
 		local player = players.LocalPlayer
 		if not player then
 			return
@@ -339,8 +348,9 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
-		local worldInfo = playerGui:FindFirstChild("WorldInfo")
-		local infoFrame = worldInfo and worldInfo:FindFirstChild("InfoFrame")
+		local topBarGui = playerGui:FindFirstChild("TopbarGui")
+		local container = topBarGui and topBarGui:FindFirstChild("Container")
+		local infoFrame = container and container:FindFirstChild("InfoFrame")
 		local worldInfoFrame = infoFrame and infoFrame:FindFirstChild("WorldInfo")
 		if not worldInfoFrame then
 			return
@@ -357,6 +367,10 @@ return LPH_NO_VIRTUALIZE(function()
 	---Spoof slot string.
 	---@param value string
 	function Spoofing.sss(value)
+		if not Configuration.expectToggleValue("InfoSpoofing") then
+			return
+		end
+
 		local player = players.LocalPlayer
 		if not player then
 			return
@@ -367,8 +381,9 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
-		local worldInfo = playerGui:FindFirstChild("WorldInfo")
-		local infoFrame = worldInfo and worldInfo:FindFirstChild("InfoFrame")
+		local topBarGui = playerGui:FindFirstChild("TopbarGui")
+		local container = topBarGui and topBarGui:FindFirstChild("Container")
+		local infoFrame = container and container:FindFirstChild("InfoFrame")
 		local characterInfo = infoFrame and infoFrame:FindFirstChild("CharacterInfo")
 		if not characterInfo then
 			return
@@ -400,7 +415,7 @@ return LPH_NO_VIRTUALIZE(function()
 	end
 
 	---Refresh changed signals for information.
-	---@note: Attempts to trigger them w/e using 'firesignal' or 'getconnections' because they crash.
+	---@note: Attempts to trigger them w/o using 'firesignal' or 'getconnections' because they crash.
 	function Spoofing.rics()
 		for _, player in next, players:GetPlayers() do
 			Spoofing.facs(player, "Guild")
@@ -432,7 +447,11 @@ return LPH_NO_VIRTUALIZE(function()
 
 		Spoofing.fvcs(serverRegion)
 		Spoofing.fvcs(serverName)
-		Spoofing.fvcs(serverAge)
+
+		-- This function actually caches the last text size and takes the biggest one, so we need to have a pretty small text.
+		local original = serverAge.Value
+		serverAge.Value = "L"
+		serverAge.Value = original
 	end
 
 	---Initialize spoofing.

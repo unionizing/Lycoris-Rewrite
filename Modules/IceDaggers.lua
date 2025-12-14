@@ -26,6 +26,8 @@ return function(self, timing)
 		return
 	end
 
+	timing.forced = true
+
 	-- Track either IceDagger or FleetingSparks
 	local tracker = ProjectileTracker.new(function(candidate)
 		return candidate and candidate.Name and (candidate.Name == "IceDagger" or candidate.Name == "LightningMote")
@@ -91,23 +93,30 @@ return function(self, timing)
 			end)
 		-- === IceDaggers logic ===
 		elseif name == "IceDagger" then
-			while task.wait() do
-				if not projectile or not projectile.Parent then
-					break
-				end
+			TaskSpawner.spawn("IceDagger_MoveStack", function()
+				local onDescendantAdded = Signal.new(Players.LocalPlayer.Character.DescendantAdded)
 
-				local distance = self:distance(projectile)
-				if distance >= 20 then
-					continue
-				end
+				local listenerConn = onDescendantAdded:connect("IceDaggers_EffectListener", function(child)
+					if child.Name ~= "Targeted" then
+						return
+					end
 
-				local action = Action.new()
-				action._when = 0
-				action.ihbc = true
-				action._type = "Parry"
-				action.name = string.format("(%.2f) Ice Daggers Timing", distance)
-				return self:action(timing, action)
-			end
+					if not child.Parent or not child.Parent:IsA("Attachment") then
+						return
+					end
+
+					local action = Action.new()
+					action._when = 200
+					action.ihbc = true
+					action._type = "Parry"
+					action.name = "Ice Daggers Effect"
+					return self:action(timing, action)
+				end)
+
+				task.wait(1.2)
+
+				listenerConn:Disconnect()
+			end)
 		end
 	end)
 
@@ -119,7 +128,7 @@ return function(self, timing)
 		end
 
 		local distance = self:distance(self.entity)
-		if distance > 30 then
+		if distance > 10 then
 			return
 		end
 

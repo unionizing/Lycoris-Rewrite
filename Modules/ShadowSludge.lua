@@ -40,7 +40,7 @@ return function(self, timing)
 			return
 		end
 
-		task.wait(0.1)
+		task.wait(0.02)
 
 		if (child.Position - humanoidRootPart.Position).Magnitude >= 5 then
 			return
@@ -54,7 +54,7 @@ return function(self, timing)
 
 		local action = Action.new()
 		action._when = 0
-		action._type = "Dodge"
+		action._type = "Parry"
 		action.ihbc = true
 		action.name = "Dynamic Shadow Sludge Timing"
 		self:action(timing, action)

@@ -1,0 +1,67 @@
+{
+  "patch_id": "6c362295-863a-4238-8caa-beef6c3a94ca",
+  "timestamp": "2025-11-29T22:42:34.398189",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://7598898608": {
+        "status": "added",
+        "data": {
+          "rpd": 0,
+          "hso": 3,
+          "ieae": false,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 12,
+                "X": 18,
+                "Z": 18
+              },
+              "when": 800,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "_id": "rbxassetid://7598898608",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "punishable": 0,
+          "name": "IceSmashWindup",
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "fhb": true,
+          "imdd": 0,
+          "duih": false,
+          "rsd": 0,
+          "umoa": false,
+          "smod": "N/A",
+          "bfht": 0,
+          "pfh": false,
+          "after": 0,
+          "imb": false,
+          "dp": false,
+          "phd": false,
+          "phds": 0,
+          "pfht": 0.15,
+          "aatk": false,
+          "nvfb": false,
+          "smn": false,
+          "ha": false,
+          "iae": false,
+          "imxd": 53,
+          "tag": "Mantra"
+        }
+      },
+      "rbxassetid://7598889071": {
+        "status": "removed",
+        "name": "IceSmash"
+      }
+    }
+  }
+}

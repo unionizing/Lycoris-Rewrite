@@ -1,0 +1,63 @@
+{
+  "patch_id": "4790df30-a12d-4484-9f4e-e3f76ad86274",
+  "timestamp": "2025-11-29T03:25:20.592519",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://135897775294008": {
+        "status": "added",
+        "data": {
+          "rpd": 0,
+          "hso": 0,
+          "ieae": false,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 14,
+                "X": 14,
+                "Z": 15
+              },
+              "when": 0,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "_id": "rbxassetid://135897775294008",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "punishable": 0,
+          "name": "BackstabStrike",
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "fhb": true,
+          "imdd": 0,
+          "duih": false,
+          "rsd": 0,
+          "umoa": false,
+          "smod": "N/A",
+          "bfht": 0.3,
+          "pfh": false,
+          "after": 0,
+          "imb": false,
+          "dp": false,
+          "phd": false,
+          "phds": 0,
+          "pfht": 0.15,
+          "aatk": false,
+          "nvfb": false,
+          "smn": false,
+          "ha": false,
+          "iae": false,
+          "imxd": 43,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

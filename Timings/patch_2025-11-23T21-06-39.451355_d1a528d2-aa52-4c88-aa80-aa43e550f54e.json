@@ -1,0 +1,42 @@
+{
+  "patch_id": "d1a528d2-aa52-4c88-aa80-aa43e550f54e",
+  "timestamp": "2025-11-23T21:06:39.451355",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "CENTER": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Dodge",
+                "name": "1",
+                "hitbox": {
+                  "Y": 10,
+                  "X": 10,
+                  "Z": 20
+                },
+                "when": 800,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Dodge",
+                "name": "1",
+                "hitbox": {
+                  "Y": 12,
+                  "X": 12,
+                  "Z": 20
+                },
+                "when": 800,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

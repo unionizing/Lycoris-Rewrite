@@ -1,0 +1,18 @@
+{
+  "patch_id": "e4a6651c-7434-4b07-8dd3-7765861af7e9",
+  "timestamp": "2025-11-29T21:08:01.281903",
+  "author": "Blastbrean",
+  "diff": {
+    "animation": {
+      "rbxassetid://12138863931": {
+        "status": "modified",
+        "changes": {
+          "smod": {
+            "from": "WeaponTest",
+            "to": "WeaponFlourishTest"
+          }
+        }
+      }
+    }
+  }
+}

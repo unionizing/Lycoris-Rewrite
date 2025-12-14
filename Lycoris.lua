@@ -304,16 +304,16 @@ function Lycoris.init()
 		details = "Lycoris Rewrite (Attached)",
 		state = string.format(
 			"Currently attached to the script - time elapsed is a session of %s time spent.",
-			LRM_UserNote and "testing" or "developing"
+			LRM_UserNote and "using" or "developing"
 		),
 		timeStart = PersistentData.get("fli") or os.time(),
 		largeImage = {
 			assetId = LRM_UserNote and 109802578297970 or 11289930484,
-			hoverText = LRM_UserNote and "Testing Deepwoken" or "Developing Deepwoken",
+			hoverText = LRM_UserNote and "Using Deepwoken" or "Developing Deepwoken",
 		},
 		smallImage = {
 			assetId = LRM_UserNote and 17278571027 or 15828456271,
-			hoverText = LRM_UserNote and "Testing Deepwoken" or "Developing Deepwoken",
+			hoverText = LRM_UserNote and "Using Deepwoken" or "Developing Deepwoken",
 		},
 	})
 
@@ -376,11 +376,11 @@ function Lycoris.detach()
 			timeStart = PersistentData.get("fli") or os.time(),
 			largeImage = {
 				assetId = LRM_UserNote and 109802578297970 or 11289930484,
-				hoverText = LRM_UserNote and "Not Testing Deepwoken" or "Developing Deepwoken",
+				hoverText = LRM_UserNote and "Not Using Deepwoken" or "Developing Deepwoken",
 			},
 			smallImage = {
 				assetId = LRM_UserNote and 17278571027 or 15828456271,
-				hoverText = LRM_UserNote and "Not Testing Deepwoken" or "Developing Deepwoken",
+				hoverText = LRM_UserNote and "Not Using Deepwoken" or "Developing Deepwoken",
 			},
 		})
 	end

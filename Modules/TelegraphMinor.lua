@@ -36,7 +36,7 @@ return function(self, timing)
 		action._when = 350
 		action._type = "Dodge"
 		action.hitbox = Vector3.new(20, 20, 50)
-		action.name = "Krysiger Timing"
+		action.name = "Kyrsieger Timing"
 		return self:action(timing, action)
 	end
 

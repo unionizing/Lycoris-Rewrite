@@ -1,0 +1,137 @@
+{
+  "patch_id": "f0d67175-e994-403a-be3a-b92a52dab60a",
+  "timestamp": "2025-11-29T03:18:45.014785",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://132047817527671": {
+        "status": "added",
+        "data": {
+          "rpd": 0,
+          "hso": 0,
+          "ieae": false,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 0,
+                "X": 15,
+                "Z": 15
+              },
+              "when": 600,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "_id": "rbxassetid://132047817527671",
+          "mat": 2000,
+          "rpue": false,
+          "srpn": false,
+          "punishable": 0,
+          "name": "BigBrotherCrit",
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "fhb": false,
+          "imdd": 0,
+          "duih": false,
+          "rsd": 0,
+          "umoa": false,
+          "smod": "N/A",
+          "bfht": 0.3,
+          "pfh": false,
+          "after": 0,
+          "imb": false,
+          "dp": false,
+          "phd": false,
+          "phds": 0,
+          "pfht": 0.15,
+          "aatk": false,
+          "nvfb": false,
+          "smn": false,
+          "ha": false,
+          "iae": false,
+          "imxd": 150,
+          "tag": "Critical"
+        }
+      }
+    },
+    "effect": {
+      "ManiWindup": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "DisplayThornsRed": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "GolemBeam": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "OwlDisperse": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "SilentheartWarn": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "DisplayThorns": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "MetalArmament": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      },
+      "ShadowSludge": {
+        "status": "modified",
+        "changes": {
+          "flp": {
+            "from": null,
+            "to": false
+          }
+        }
+      }
+    }
+  }
+}

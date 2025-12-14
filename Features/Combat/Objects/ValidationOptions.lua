@@ -3,6 +3,7 @@
 ---@field action Action The action being checked.
 ---@field timing Timing The timing of the action.
 ---@field notify boolean Whether to notify on failure.
+---@field visualize boolean Whether to visualize the validation process.
 local ValidationOptions = {}
 ValidationOptions.__index = ValidationOptions
 
@@ -15,6 +16,7 @@ ValidationOptions.new = LPH_NO_VIRTUALIZE(function(action, timing)
 	self.action = action
 	self.timing = timing
 	self.notify = true
+	self.visualize = true
 	return self
 end)
 

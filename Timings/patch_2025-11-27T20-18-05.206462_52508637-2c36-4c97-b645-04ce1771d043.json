@@ -1,0 +1,33 @@
+{
+  "patch_id": "52508637-2c36-4c97-b645-04ce1771d043",
+  "timestamp": "2025-11-27T20:18:05.206462",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://13319847815": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 0,
+            "to": 107
+          }
+        }
+      }
+    },
+    "part": {
+      "Gun": {
+        "status": "modified",
+        "changes": {
+          "imxd": {
+            "from": 64,
+            "to": 0
+          },
+          "smod": {
+            "from": "MetalTurret",
+            "to": ""
+          }
+        }
+      }
+    }
+  }
+}

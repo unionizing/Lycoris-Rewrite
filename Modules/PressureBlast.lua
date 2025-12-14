@@ -14,10 +14,16 @@ return function(self, timing)
 
 	local distance = self:distance(self.entity)
 	local action = Action.new()
-	action._when = 600
-	if distance >= 25 then
-		action._when = math.min(700 + distance * 4, 1000)
+	action._when = 500
+
+	if distance >= 8 then
+		action._when = 550
 	end
+
+	if distance > 18 then
+		action._when = 650
+	end
+
 	action._type = "Start Block"
 	action.hitbox = Vector3.new(30 + range, 20 + range, 50 + range)
 	action.name = string.format("(%.2f) Dynamic Pressure Blast Timing", distance)
