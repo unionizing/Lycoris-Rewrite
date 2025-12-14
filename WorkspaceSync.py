@@ -373,8 +373,7 @@ def reconcile_truths(reason: str = ""):
         return
 
     local_truth = current
-    latest_ts = get_latest_patch_timestamp()
-
+  
     # 2) Fetch remote applied patches marker (default: all current patches considered applied)
     remote_applied = set(read_remote_applied_patches())
 

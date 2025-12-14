@@ -28,6 +28,7 @@ local ActionContainer = require("Game/Timings/ActionContainer")
 ---@field rpue boolean Prefer repeat usage.
 ---@field _rsd number Repeat start delay. Never access directly.
 ---@field _rpd number Repeat parry delay. Never access directly.
+---@field nbfb boolean No block fallback.
 local Timing = {}
 Timing.__index = Timing
 
@@ -153,6 +154,10 @@ function Timing:load(values)
 	if typeof(values.rpue) == "boolean" then
 		self.rpue = values.rpue
 	end
+
+	if typeof(values.nbfb) == "boolean" then
+		self.nbfb = values.nbfb
+	end
 end
 
 ---Equals check.
@@ -247,6 +252,10 @@ function Timing:equals(other)
 		return false
 	end
 
+	if self.nbfb ~= other.nbfb then
+		return false
+	end
+
 	return true
 end
 
@@ -277,6 +286,7 @@ function Timing:clone()
 	clone.rpue = self.rpue
 	clone._rsd = self._rsd
 	clone._rpd = self._rpd
+	clone.nbfb = self.nbfb
 
 	return clone
 end
@@ -313,6 +323,7 @@ function Timing:serialize()
 		rpue = self.rpue,
 		rsd = self._rsd,
 		rpd = self._rpd,
+		nbfb = self.nbfb,
 	}
 end
 
@@ -344,6 +355,7 @@ function Timing.new(values)
 	self.hso = 0
 	self.nvfb = false
 	self.bfht = 0.3
+	self.nbfb = false
 
 	if values then
 		self:load(values)
