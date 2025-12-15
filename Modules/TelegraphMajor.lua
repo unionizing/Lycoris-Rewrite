@@ -32,14 +32,14 @@ return function(self, timing)
 	end
 
 	local action = Action.new()
-	action._when = 0
+	action._when = 1000
 	action._type = "Start Slide"
 	action.ihbc = true
 	action.name = "Lord Regent Lariat Start"
 	self:action(timing, action)
 
 	local actionEnd = Action.new()
-	actionEnd._when = 300
+	actionEnd._when = 1300
 	actionEnd._type = "End Slide"
 	actionEnd.ihbc = true
 	actionEnd.name = "Lord Regent Lariat End"
