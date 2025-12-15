@@ -1201,7 +1201,7 @@ local onThrownChildAdded = LPH_NO_VIRTUALIZE(function(child)
 		if child.Name == 'Chest' and child:GetAttribute('LootName') ~= nil then
 			return emplaceObject(child, ChestESP.new("Chest", child, "Chest"))
 		end
-		
+
 		if not child:IsA("Model") and not child:IsA("Part") then
 			return
 		end
@@ -1349,6 +1349,10 @@ onWorkspaceChildAdded = LPH_NO_VIRTUALIZE(function(child)
 
 	if name:match("Boundary") then
 		return emplaceObject(child, PartESP.new("VOIBoundaryESP", child, child.Name))
+	end
+	
+	if child:GetAttribute('Rarity') and child:IsA('MeshPart') then
+		return emplaceObject(child, PartESP.new("VOIWeaponESP", child, child.Name))
 	end
 
 	visualsMaid:mark(TaskSpawner.spawn("Visuals_BRWeaponCheck", function()
