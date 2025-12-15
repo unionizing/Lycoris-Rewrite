@@ -13,6 +13,9 @@ local Task = require("Features/Combat/Objects/Task")
 ---@module Game.QueuedBlocking
 local QueuedBlocking = require("Game/QueuedBlocking")
 
+---@module Game.KeyHandling
+local KeyHandling = require("Game/KeyHandling")
+
 ---@module Utility.Maid
 local Maid = require("Utility/Maid")
 
