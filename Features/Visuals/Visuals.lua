@@ -1205,6 +1205,10 @@ local onThrownChildAdded = LPH_NO_VIRTUALIZE(function(child)
 		if child:WaitForChild("LootUpdated", 0.1) then
 			return emplaceObject(child, ChestESP.new("Chest", child, "Chest"))
 		end
+
+		if child.Name == 'Chest' and child:GetAttribute('LootName') ~= nil then
+			return emplaceObject(child, ChestESP.new("Chest", child, "Chest"))
+		end
 	end))
 end)
 
