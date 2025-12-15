@@ -694,7 +694,23 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, started)
 		end
 	end
 
-	self:notify(timing, "Action type '%s' is being executed.", actionType)
+	local redactedMap = {
+		["Start Slide"] = "1",
+		["End Slide"] = "2",
+		["Teleport Up"] = "3",
+		["Forced Full Dodge"] = "4",
+		["Jump"] = "5",
+		["Start Block"] = "6",
+		["End Block"] = "7",
+		["Parry"] = "8",
+		["Dodge"] = "9",
+	}
+
+	if LRM_UserNote then
+		self:notify(timing, "Action type '%s' is being executed.", redactedMap[actionType] or actionType)
+	else
+		self:notify(timing, "Action type '%s' is being executed.", actionType)
+	end
 
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then
@@ -725,6 +741,24 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, started)
 
 	if actionType == "End Block" then
 		return
+	end
+
+	if actionType == "Start Slide" then
+		local serverSlide = KeyHandling.getRemote("ServerSlide")
+		if not serverSlide then
+			return
+		end
+
+		return serverSlide:FireServer(true)
+	end
+
+	if actionType == "End Slide" then
+		local serverSlideStop = KeyHandling.getRemote("ServerSlideStop")
+		if not serverSlideStop then
+			return
+		end
+
+		return serverSlideStop:FireServer(false)
 	end
 
 	if actionType == "Jump" then
