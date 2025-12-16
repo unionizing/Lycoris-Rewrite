@@ -176,6 +176,12 @@ function CombatTab.initAutoDefenseSection(groupbox)
 		Default = false,
 		Tooltip = "If enabled, the auto defense will fallback to block frames if parry action and/or fallback is not available as a last resort.",
 	})
+	
+	autoDefenseDepBox:AddToggle("UseIFrames", {
+		Text = "Use IFrames",
+		Default = false,
+		Tooltip = "If enabled, the auto defense will ignore parry, block and dodge action if there's already an existing IFrame.",
+	})
 
 	local blatantRollToggle = autoDefenseDepBox:AddToggle("BlatantRoll", {
 		Text = "Blatant Roll",

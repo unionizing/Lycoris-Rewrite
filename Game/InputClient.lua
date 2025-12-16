@@ -595,7 +595,8 @@ InputClient.dodge = LPH_NO_VIRTUALIZE(function(options)
 	end
 
 	if options.direct then
-		return dodge:FireServer("roll", nil, nil, false)
+		dodge:FireServer("roll", nil, nil, false)
+		-- continue so it's "Blatant" but not super blatant.
 	end
 
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
