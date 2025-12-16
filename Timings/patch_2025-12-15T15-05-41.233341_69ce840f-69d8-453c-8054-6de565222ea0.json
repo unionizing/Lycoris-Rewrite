@@ -1,0 +1,97 @@
+{
+  "patch_id": "69ce840f-69d8-453c-8054-6de565222ea0",
+  "timestamp": "2025-12-15T15:05:41.233341",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://100615685249881": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 106,
+                  "X": 106,
+                  "Z": 106
+                },
+                "when": 220,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "4",
+                "hitbox": {
+                  "Y": 106,
+                  "X": 106,
+                  "Z": 106
+                },
+                "when": 1120,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "3",
+                "hitbox": {
+                  "Y": 106,
+                  "X": 106,
+                  "Z": 106
+                },
+                "when": 820,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 106,
+                  "X": 106,
+                  "Z": 106
+                },
+                "when": 520,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 106,
+                  "X": 106,
+                  "Z": 106
+                },
+                "when": 220,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "3",
+                "hitbox": {
+                  "Y": 106,
+                  "X": 106,
+                  "Z": 106
+                },
+                "when": 820,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 106,
+                  "X": 106,
+                  "Z": 106
+                },
+                "when": 520,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

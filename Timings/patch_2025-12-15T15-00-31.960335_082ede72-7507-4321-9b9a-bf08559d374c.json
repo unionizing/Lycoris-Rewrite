@@ -1,0 +1,22 @@
+{
+  "patch_id": "082ede72-7507-4321-9b9a-bf08559d374c",
+  "timestamp": "2025-12-15T15:00:31.960335",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://100947251441923": {
+        "status": "modified",
+        "changes": {
+          "umoa": {
+            "from": false,
+            "to": true
+          },
+          "smod": {
+            "from": "N/A",
+            "to": "RatKingTurnDash"
+          }
+        }
+      }
+    }
+  }
+}

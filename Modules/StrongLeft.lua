@@ -17,7 +17,7 @@ return function(self, timing)
 		action.name = string.format("(%.2f) Duke Strong Left Timing", self.track.Speed)
 	end
 	if self.entity.Name:match(".ratking") then
-		action._when = 280
+		action._when = 240
 		action.hitbox = Vector3.new(30, 30, 40)
 		action.name = string.format("(%.2f) Rat King Strong Left Timing", self.track.Speed)
 	end
