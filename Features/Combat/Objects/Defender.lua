@@ -733,14 +733,13 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, started)
 	options.rollCancel = Configuration.expectToggleValue("RollCancel") and actionType ~= "Forced Full Dodge"
 	options.rollCancelDelay = Configuration.expectOptionValue("RollCancelDelay") or 0.0
 	options.direct = Configuration.expectToggleValue("BlatantRoll")
-	
-	local inIFrame = effectReplicatorModule:FindEffect("Immortal") or
-		effectReplicatorModule:FindEffect("DodgeFrame") or
-		effectReplicatorModule:FindEffect("ParryFrame") or
-		effectReplicatorModule:FindEffect("Ghost")
+
+	local inIFrame = effectReplicatorModule:FindEffect("Immortal")
+		or effectReplicatorModule:FindEffect("DodgeFrame")
+		or effectReplicatorModule:FindEffect("ParryFrame")
+		or effectReplicatorModule:FindEffect("Ghost")
 
 	if actionType == "Dodge" then
-		
 		if Configuration.expectToggleValue("UseIFrames") and inIFrame then
 			return
 		end
@@ -835,10 +834,10 @@ Defender.parry = LPH_NO_VIRTUALIZE(function(self, timing, action)
 	local effectReplicatorModule = effectReplicator and require(effectReplicator)
 
 	-- IFrame checks
-	local inIFrame = effectReplicatorModule:FindEffect("Immortal") or 
-		effectReplicatorModule:FindEffect("DodgeFrame") or
-		effectReplicatorModule:FindEffect("ParryFrame") or
-		effectReplicatorModule:FindEffect("Ghost")
+	local inIFrame = effectReplicatorModule:FindEffect("Immortal")
+		or effectReplicatorModule:FindEffect("DodgeFrame")
+		or effectReplicatorModule:FindEffect("ParryFrame")
+		or effectReplicatorModule:FindEffect("Ghost")
 
 	-- Dash instead of parry.
 	local dashReplacement = Random.new():NextNumber(1.0, 100.0) <= rate

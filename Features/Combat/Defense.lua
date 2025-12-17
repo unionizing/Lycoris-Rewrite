@@ -249,9 +249,6 @@ end)
 
 ---Update visualization.
 local updateVisualizations = LPH_NO_VIRTUALIZE(function()
-
-	-- I've been getting multiple FPS drops with the info of this even with EnableVisualizations off.
-	-- So I'm just gonna early return if it's off.
 	if not Configuration.expectToggleValue("EnableVisualizations") then
 		return
 	end
