@@ -21,7 +21,8 @@ return function(self, timing)
 	self:action(timing, actionTwo)
 
 	if self.entity.Name:match("ratking") then
-		action._when = 440
+		action._when = 400
+		action._type = "Dodge"
 		action.hitbox = Vector3.new(30, 30, 40)
 		action.name = string.format("(%.2f) Rat King Chorus Timing", distance)
 	end
