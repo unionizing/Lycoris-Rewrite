@@ -1,0 +1,49 @@
+{
+  "patch_id": "8e296f90-c362-4ada-b04f-2136e2308e8e",
+  "timestamp": "2025-12-19T13:22:14.359122",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://5762744770": {
+        "status": "removed",
+        "name": "IronConfinement"
+      }
+    },
+    "part": {
+      "Spikes": {
+        "status": "added",
+        "data": {
+          "umoa": false,
+          "rpd": 0,
+          "pname": "Spikes",
+          "smod": "N/A",
+          "hso": 0,
+          "duih": false,
+          "nbfb": false,
+          "bfht": 0.3,
+          "actions": [],
+          "ndfb": false,
+          "rsd": 0,
+          "after": 0,
+          "uhc": true,
+          "nvfb": false,
+          "rpue": false,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "IronConfinement",
+          "imxd": 53,
+          "smn": false,
+          "fhb": false,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

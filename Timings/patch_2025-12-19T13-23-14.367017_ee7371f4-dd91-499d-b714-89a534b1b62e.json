@@ -1,0 +1,13 @@
+{
+  "patch_id": "ee7371f4-dd91-499d-b714-89a534b1b62e",
+  "timestamp": "2025-12-19T13:23:14.367017",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "Spikes": {
+        "status": "removed",
+        "name": "IronConfinement"
+      }
+    }
+  }
+}

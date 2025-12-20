@@ -1,0 +1,108 @@
+{
+  "patch_id": "76c0dd20-8e25-4502-857f-094a1b9108d9",
+  "timestamp": "2025-12-19T13:51:14.475618",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "MoonRing": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 71,
+                  "Z": 71
+                },
+                "when": 800,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 71,
+                  "Z": 71
+                },
+                "when": 800,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "3",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 71,
+                  "Z": 71
+                },
+                "when": 1400,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "2",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 71,
+                  "Z": 71
+                },
+                "when": 1100,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "5",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 71,
+                  "Z": 71
+                },
+                "when": 2000,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "4",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 71,
+                  "Z": 71
+                },
+                "when": 1700,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "7",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 71,
+                  "Z": 71
+                },
+                "when": 2600,
+                "ihbc": false
+              },
+              {
+                "_type": "Parry",
+                "name": "6",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 71,
+                  "Z": 71
+                },
+                "when": 2300,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

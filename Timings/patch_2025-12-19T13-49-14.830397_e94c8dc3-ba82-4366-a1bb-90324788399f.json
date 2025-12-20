@@ -1,0 +1,55 @@
+{
+  "patch_id": "e94c8dc3-ba82-4366-a1bb-90324788399f",
+  "timestamp": "2025-12-19T13:49:14.830397",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "MoonRing": {
+        "status": "added",
+        "data": {
+          "umoa": false,
+          "rpd": 0,
+          "pname": "MoonRing",
+          "smod": "N/A",
+          "hso": 0,
+          "duih": false,
+          "nbfb": false,
+          "bfht": 0.3,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 25,
+                "X": 50,
+                "Z": 75
+              },
+              "when": 800,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "rsd": 0,
+          "after": 0,
+          "uhc": true,
+          "nvfb": false,
+          "rpue": false,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "Trance",
+          "imxd": 150,
+          "smn": false,
+          "fhb": false,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}

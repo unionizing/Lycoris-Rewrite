@@ -1,0 +1,52 @@
+{
+  "patch_id": "705229f5-80e9-4461-bee7-a0e9de7d7046",
+  "timestamp": "2025-12-19T13:20:14.317925",
+  "author": "Juanito",
+  "diff": {
+    "animation": {
+      "rbxassetid://5762744770": {
+        "status": "added",
+        "data": {
+          "rpd": 0,
+          "hso": 0,
+          "ieae": true,
+          "actions": [],
+          "ndfb": false,
+          "nbfb": false,
+          "_id": "rbxassetid://5762744770",
+          "mat": 3000,
+          "rpue": false,
+          "srpn": false,
+          "punishable": 0,
+          "name": "IronConfinement",
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "fhb": false,
+          "imdd": 0,
+          "duih": false,
+          "rsd": 0,
+          "umoa": false,
+          "smod": "N/A",
+          "bfht": 0.3,
+          "pfh": false,
+          "after": 0,
+          "imb": false,
+          "dp": true,
+          "pfht": 0.15,
+          "phds": 3,
+          "phd": true,
+          "aatk": false,
+          "nvfb": false,
+          "smn": false,
+          "iae": true,
+          "ha": false,
+          "imxd": 150,
+          "tag": "Mantra"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "patch_id": "27a76773-b92e-4030-ae40-b4459fb6223e",
+  "timestamp": "2025-12-19T13:29:05.741752",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "ExplosionPartPhoenix": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 41,
+                  "X": 38,
+                  "Z": 41
+                },
+                "when": 0,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 50,
+                  "X": 50,
+                  "Z": 50
+                },
+                "when": 0,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

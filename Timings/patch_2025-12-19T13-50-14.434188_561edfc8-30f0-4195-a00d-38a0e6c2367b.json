@@ -1,0 +1,42 @@
+{
+  "patch_id": "561edfc8-30f0-4195-a00d-38a0e6c2367b",
+  "timestamp": "2025-12-19T13:50:14.434188",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "MoonRing": {
+        "status": "modified",
+        "changes": {
+          "actions": {
+            "from": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 50,
+                  "Z": 75
+                },
+                "when": 800,
+                "ihbc": false
+              }
+            ],
+            "to": [
+              {
+                "_type": "Parry",
+                "name": "1",
+                "hitbox": {
+                  "Y": 25,
+                  "X": 71,
+                  "Z": 71
+                },
+                "when": 800,
+                "ihbc": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

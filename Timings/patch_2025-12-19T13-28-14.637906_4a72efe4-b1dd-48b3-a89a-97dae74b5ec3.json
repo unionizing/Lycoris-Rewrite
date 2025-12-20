@@ -1,0 +1,55 @@
+{
+  "patch_id": "4a72efe4-b1dd-48b3-a89a-97dae74b5ec3",
+  "timestamp": "2025-12-19T13:28:14.637906",
+  "author": "Juanito",
+  "diff": {
+    "part": {
+      "ExplosionPartPhoenix": {
+        "status": "added",
+        "data": {
+          "umoa": false,
+          "rpd": 0,
+          "pname": "ExplosionPartPhoenix",
+          "smod": "N/A",
+          "hso": 0,
+          "duih": false,
+          "nbfb": false,
+          "bfht": 0.3,
+          "actions": [
+            {
+              "_type": "Parry",
+              "name": "1",
+              "hitbox": {
+                "Y": 41,
+                "X": 38,
+                "Z": 41
+              },
+              "when": 0,
+              "ihbc": false
+            }
+          ],
+          "ndfb": false,
+          "rsd": 0,
+          "after": 0,
+          "uhc": true,
+          "nvfb": false,
+          "rpue": false,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "ExplosionPartPhoenix",
+          "imxd": 183,
+          "smn": false,
+          "fhb": false,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}
