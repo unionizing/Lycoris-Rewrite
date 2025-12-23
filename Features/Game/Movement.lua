@@ -162,6 +162,11 @@ return LPH_NO_VIRTUALIZE(function()
 			return
 		end
 
+		-- Heliodar fly fix.
+		if rootPart:FindFirstChild("HelioFlight") then
+			rootPart.HelioFlight:Destroy()
+		end
+
 		local flyBodyVelocity = InstanceWrapper.create(movementMaid, "flyBodyVelocity", "BodyVelocity", rootPart)
 		flyBodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
 

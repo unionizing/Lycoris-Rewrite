@@ -182,6 +182,12 @@ function CombatTab.initAutoDefenseSection(groupbox)
 		Default = false,
 		Tooltip = "If enabled, the auto defense will ignore parry, block and dodge action if there's already an existing invincibility frame.",
 	})
+	
+	autoDefenseDepBox:AddToggle("ParryOnly", {
+		Text = "Parry Dodgeables",
+		Default = false,
+		Tooltip = "If enabled, the auto defense will change dodge actions to parry actions.",
+	})
 
 	local blatantRollToggle = autoDefenseDepBox:AddToggle("BlatantRoll", {
 		Text = "Blatant Roll",

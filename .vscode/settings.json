@@ -69,7 +69,8 @@
         "LRM_SANITIZE",
         "getnilinstances",
         "getcallingscript",
-        "ProjectileTracker"
+        "ProjectileTracker",
+        "setsimulationradius"
     ],
     "robloxLsp.suggestedImports.importIgnore": [
         "**/_Index/**",

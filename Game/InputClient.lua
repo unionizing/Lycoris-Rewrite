@@ -593,11 +593,17 @@ InputClient.dodge = LPH_NO_VIRTUALIZE(function(options)
 	if not dodge then
 		return Logger.warn("Cannot dodge without dodge remote.")
 	end
-
-	if options.direct then
-		return dodge:FireServer("roll", nil, nil, false)
+	
+	local stopDodge = KeyHandling.getRemote("StopDodge")
+	if not stopDodge then
+		return Logger.warn("Cannot dodge without stop dodge remote.")
 	end
 
+	local inputData = InputClient.getInputData()
+	if not inputData then
+		return Logger.warn("Cannot dodge without input data.")
+	end
+	
 	local effectReplicator = replicatedStorage:FindFirstChild("EffectReplicator")
 	if not effectReplicator then
 		return Logger.warn("Cannot dodge without effect replicator.")
@@ -606,6 +612,15 @@ InputClient.dodge = LPH_NO_VIRTUALIZE(function(options)
 	local effectReplicatorModule = require(effectReplicator)
 	if not effectReplicatorModule then
 		return Logger.warn("Cannot dodge without effect replicator module.")
+	end
+
+	if options.direct then
+		dodge:FireServer("roll", nil, nil, false)
+
+		-- Delay required for extra dodge frames.
+		task.wait(.15)
+
+		return stopDodge:FireServer(inputData, effectReplicatorModule:HasEffect("LightAttack"), true)
 	end
 
 	local character = players.LocalPlayer.Character
@@ -632,16 +647,6 @@ InputClient.dodge = LPH_NO_VIRTUALIZE(function(options)
 	local unblock = KeyHandling.getRemote("Unblock")
 	if not unblock then
 		return Logger.warn("Cannot dodge without unblock remote.")
-	end
-
-	local stopDodge = KeyHandling.getRemote("StopDodge")
-	if not stopDodge then
-		return Logger.warn("Cannot dodge without stop dodge remote.")
-	end
-
-	local inputData = InputClient.getInputData()
-	if not inputData then
-		return Logger.warn("Cannot dodge without input data.")
 	end
 
 	local requests = replicatedStorage:FindFirstChild("Requests")
