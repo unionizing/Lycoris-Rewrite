@@ -521,17 +521,17 @@ function StateListener.init()
 	local effectReplicator = replicatedStorage:WaitForChild("EffectReplicator")
 	local effectReplicatorModule = require(effectReplicator)
 	local effectAddedSignal = Signal.new(effectReplicatorModule.EffectAdded)
-	local effectRemovingSignal = Signal.new(effectReplicatorModule.EffectRemoving)
+	local effectRemovedSignal = Signal.new(effectReplicatorModule.EffectRemoved)
 
 	stateMaid:mark(effectAddedSignal:connect("StateListener_EffectReplicated", onEffectReplicated))
-	stateMaid:mark(effectRemovingSignal:connect("StateListener_EffectRemoving", onEffectRemoving))
+	stateMaid:mark(effectRemovedSignal:connect("StateListener_EffectRemoved", onEffectRemoving))
 	stateMaid:mark(liveDescendantAdded:connect("StateListener_DescendantAdded", onDescendantAdded))
 
 	for _, effect in next, effectReplicatorModule.Effects do
 		onEffectReplicated(effect)
 	end
 
-	for _, descendant in next, live:QueryDescendants('Animator') do
+	for _, descendant in next, live:QueryDescendants("Animator") do
 		onDescendantAdded(descendant)
 	end
 

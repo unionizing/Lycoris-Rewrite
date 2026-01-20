@@ -707,6 +707,8 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, started)
 		["End Block"] = "7",
 		["Parry"] = "8",
 		["Dodge"] = "9",
+		["Start Crouch"] = "10",
+		["End Crouch"] = "11",
 	}
 
 	if LRM_UserNote then
@@ -751,8 +753,17 @@ Defender.handle = LPH_NO_VIRTUALIZE(function(self, timing, action, started)
 		return InputClient.dodge(options)
 	end
 
+	---@note: End block is handled elsewhere.
 	if actionType == "End Block" then
 		return
+	end
+
+	if actionType == "Start Crouch" then
+		return InputClient.crouch(true)
+	end
+
+	if actionType == "End Crouch" then
+		return InputClient.crouch(false)
 	end
 
 	if actionType == "Start Slide" then

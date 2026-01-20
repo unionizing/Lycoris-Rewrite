@@ -560,8 +560,22 @@ local updateTalentSheet = LPH_NO_VIRTUALIZE(function(rframe)
 		return
 	end
 
-	local label = talentScroll:FindFirstChildWhichIsA("TextLabel")
-	if not label then
+	local frame = nil
+
+	for _, instance in next, talentScroll:GetChildren() do
+		if not instance:IsA("Frame") then
+			continue
+		end
+
+		if not instance:FindFirstChild("Title") then
+			continue
+		end
+
+		frame = instance
+		break
+	end
+
+	if not frame then
 		return
 	end
 
@@ -604,14 +618,16 @@ local updateTalentSheet = LPH_NO_VIRTUALIZE(function(rframe)
 			continue
 		end
 
-		local nlabel = InstanceWrapper.mark(builderAssistanceMaid, talent, label:Clone())
+		local nframe = InstanceWrapper.mark(builderAssistanceMaid, talent, frame:Clone())
+		nframe.Parent = talentScroll
+		nframe.Name = "M" .. talent
+
+		local nlabel = nframe:FindFirstChild("Title")
 		local pshlocked = (bdata.ddata:possible(talent, bdata.pre) and not bdata.ddata:possible(talent, bdata.post))
-		nlabel.Name = "M" .. talent
 		nlabel.Text = talent
 		nlabel.TextColor3 = pshlocked and Color3.fromRGB(255, 4, 255) or Color3.fromRGB(255, 0, 2)
-		nlabel.Parent = talentScroll
 
-		labelMap[nlabel.Name] = data
+		labelMap[nframe.Name] = data
 	end
 
 	-- pre third step: create a nice looking separator
@@ -631,18 +647,20 @@ local updateTalentSheet = LPH_NO_VIRTUALIZE(function(rframe)
 			return displayName and displayName:match(mantra)
 		end)
 
-		local nlabel = InstanceWrapper.mark(builderAssistanceMaid, mantra, label:Clone())
+		local nframe = InstanceWrapper.mark(builderAssistanceMaid, mantra, frame:Clone())
+		nframe.Parent = talentScroll
+		nframe.Name = "Z" .. mantra
+
+		local nlabel = nframe:FindFirstChild("Title")
 		local pshlocked = (bdata.ddata:possible(mantra, bdata.pre) and not bdata.ddata:possible(mantra, bdata.post))
-		nlabel.Name = "Z" .. mantra
 		nlabel.Text = mantra
 		nlabel.TextColor3 = pshlocked and Color3.fromRGB(255, 4, 255) or Color3.fromRGB(255, 0, 2)
-		nlabel.Parent = talentScroll
 
 		if idx then
 			nlabel.TextColor3 = Color3.fromRGB(9, 255, 0)
 		end
 
-		labelMap[nlabel.Name] = data
+		labelMap[nframe.Name] = data
 	end
 end)
 
@@ -711,7 +729,12 @@ local updateCardHovering = LPH_NO_VIRTUALIZE(function()
 			continue
 		end
 
-		object.TextTransparency = 0.4
+		local title = object:FindFirstChild("Title")
+		if not title then
+			continue
+		end
+
+		title.TextTransparency = 0.4
 
 		hoveringMap[name] = nil
 	end
@@ -725,15 +748,25 @@ local updateCardHovering = LPH_NO_VIRTUALIZE(function()
 			hoveringOverTalent = true
 		end
 
-		local data = labelMap[object.Name]
+		local frameName = object.Name == "Title" and object.Parent.Name or object.Name
+		if not frameName then
+			continue
+		end
+
+		local data = labelMap[frameName]
 		if not data then
 			continue
 		end
 
-		object.TextTransparency = 0.1
+		if object:IsA("TextLabel") then
+			object.TextTransparency = 0.1
+		else
+			local title = object:FindFirstChild("Title")
+			title.TextTransparency = 0.1
+		end
 
 		---@note: Go off names because they should be unique and they constantly regenerate
-		hoveringMap[object.Name] = true
+		hoveringMap[frameName] = true
 
 		-- Set data.
 		firstHoveringData = firstHoveringData or data
