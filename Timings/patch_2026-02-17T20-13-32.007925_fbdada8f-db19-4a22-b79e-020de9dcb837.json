@@ -1,0 +1,44 @@
+{
+  "patch_id": "fbdada8f-db19-4a22-b79e-020de9dcb837",
+  "timestamp": "2026-02-17T20:13:32.007925",
+  "author": "uni",
+  "diff": {
+    "effect": {
+      "GenericTelegraph": {
+        "status": "added",
+        "data": {
+          "umoa": true,
+          "rpd": 0,
+          "smod": "GenericTelegraph",
+          "hso": 0,
+          "flp": false,
+          "ilp": false,
+          "ename": "GenericTelegraph",
+          "nbfb": false,
+          "bfht": 0.3,
+          "actions": [],
+          "ndfb": false,
+          "rsd": 0,
+          "after": 0,
+          "duih": false,
+          "nvfb": false,
+          "rpue": false,
+          "srpn": false,
+          "aatk": false,
+          "hitbox": {
+            "Y": 0,
+            "X": 0,
+            "Z": 0
+          },
+          "punishable": 0,
+          "name": "GenericTelegraph",
+          "imxd": 0,
+          "smn": false,
+          "fhb": true,
+          "imdd": 0,
+          "tag": "Undefined"
+        }
+      }
+    }
+  }
+}
