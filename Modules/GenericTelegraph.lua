@@ -39,7 +39,7 @@ return function(self, timing)
 	    action._when = 950 -- it is 1s but we do want to parry earlier due to the fact the user might not have 'Ping Compensation' on.
 	    action._type = telegraphType == "dodge_only" and "Dodge" or "Parry"
 	    action.ihbc = true
-	    action.name = "Dynamic Weapon Manual Timing"       
+	    action.name = "Weapon Manual Timing"       
         
         return self:action(timing, action)
     end
